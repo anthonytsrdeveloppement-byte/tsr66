@@ -46,3 +46,7 @@ next-env.d.ts
 
 # Netlify : liaison locale du site (PRD 2.1, skill netlify-deploy)
 .netlify
+
+# Python : fichiers compilés (contiennent des chemins locaux)
+__pycache__/
+*.pyc

@@ -67,6 +67,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
 | `docs/remis-au-client/` | Documents remis au client (7.3) | — | Au lot concerné |
 | `CLAUDE.md` | Consigne de démarrage, qui renvoie au PRD | Chaque session | Seulement si le PRD change |
 | `client/LISEZMOI.md` | Où le client dépose ses éléments (7.2) | — | Si 7.2 change |
+| `AGENTS.md` | Consigne officielle de Next.js : lire le guide de la version installée (`node_modules/next/dist/docs/`) avant d'écrire du code | Avant d'écrire du code Next.js | Géré automatiquement par Next.js |
 | `.claude/skills/PROVENANCE.md` | Origine, version figée et réserves de chaque skill, avec `skills-lock.json` | D1 (empreintes vérifiées) | Seulement à l'ajout ou à la mise à jour d'un skill, sur décision de Nicolas |
 - **Rôles** : Claude exécute tout (lecture, contrôles, code, tests, relectures, rapport, roadmap, archive). Nicolas supervise : il valide l'objectif (D2), confirme le résumé (D1), **donne son accord avant toute mise en ligne (F5)**, tranche les décisions et lit le rapport s'il le souhaite. Seules les actions liées à ses comptes lui reviennent, une fois pour toutes : connexion GitHub, installation des plugins, liaison Netlify, achat du domaine.
 - **Skills et plugins retenus** (installés le 2026-09-27 dans `.claude/skills/`, chacun lu en entier par Claude et par deux agents indépendants, figés sur un commit, empreinte de chaque fichier dans `skills-lock.json` ; origine et réserves dans `.claude/skills/PROVENANCE.md`) :
@@ -90,6 +91,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - Les exemples de traceurs, statistiques de visites, scripts ou polices externes, cartes et widgets intégrés ne s'appliquent pas aux pages publiques (6.2).
   - Aucun chiffre ni aucune citation tirés d'un skill ne sont repris sur le site sans source vérifiée (4.1).
   - Les rapports d'outils contenant des chemins locaux ne sont jamais commités (dépôt public).
+  - Pour Next.js, la documentation fournie avec la version installée fait foi, avant les exemples des skills (`AGENTS.md`).
   - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; blocage par GitHub de tout envoi contenant un secret.
 
 ### 2.2 Blocages et registre des dettes
@@ -269,7 +271,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo,
 ### 6.1 Les briques du site
 | Brique | Choix | Rôle |
 |---|---|---|
-| Site | **Next.js** (dernière version stable), pages générées à l'avance | Rapidité maximale, SEO |
+| Site | **Next.js** (dernière version stable : 16.3.6 installée le 2026-09-27), pages générées à l'avance, **Node 24** (version stable longue durée) fixé par le projet | Rapidité maximale, SEO |
 | Animations | **GSAP** (ScrollTrigger, SplitText) + **Lenis** | Les 14 effets de la section 5 |
 | Hébergement | **Netlify** | Mise en ligne, aperçus privés, variables secrètes |
 | Espace Anthony | **Sanity** | Réalisations, photos, horaires, interrupteur « indisponible », demandes d'avis |
@@ -285,6 +287,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo,
   - Seul un compteur anonyme est conservé : nombre de devis, de rappels et de clics sur « Appeler ».
   - L'e-mail d'un client à qui on demande un avis est envoyé directement par le site et n'est jamais enregistré, ni sur le site ni dans Sanity.
 - **Durée de conservation annoncée** : 3 ans après le dernier contact (règle CNIL pour les prospects).
+- **Télémétrie de Next.js désactivée** (statistiques d'usage envoyées par défaut à Vercel) : sur l'ordinateur, dans la CI et sur Netlify.
 - **Aucun cookie, aucun traceur, aucune ressource chargée depuis un autre site sur les pages publiques**, donc aucune bannière cookies. Seul le portail privé d'Anthony utilise la connexion Google et Sanity.
 - **Sanity ne reçoit que des photos de chantier et des textes publics**, jamais de données de prospects. Les photos sont servies depuis tsr66.fr. L'hébergement en Europe est choisi à l'installation si la formule gratuite le permet ; sinon, les clauses contractuelles européennes couvrent le transfert.
 - **Contrats de traitement des données** : Netlify, Resend, Sanity.

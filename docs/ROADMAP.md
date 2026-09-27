@@ -20,12 +20,12 @@
 **Travail de Claude :**
 - ✅ Installation des skills retenus : 17 dossiers, 125 fichiers lus en entier par Claude et par deux agents indépendants, aucun rejet, figés et vérifiés par empreintes (2026-09-27, PRD 2.1)
 - ✅ Dépôt git public créé et protégé : détection et blocage des secrets, alertes de dépendances, branche principale protégée, verrous Claude Code (2026-09-27)
-- ⬜ Installation de Next.js
-- ⬜ Contrôle avant commit : secrets, qualité du code (D6)
-- ⬜ CI GitHub : qualité, tests, CodeQL, secrets, dépendances (F5)
-- ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité (PRD 4.2 et 6.3)
+- ✅ Installation de Next.js 16.3.6 : squelette minimal, Node 24 fixé, versions exactes, scripts d'installation bloqués, télémétrie désactivée, 0 vulnérabilité (2026-09-27)
+- ⬜ Contrôle avant commit : secrets, qualité du code (D6). Les scripts d'installation étant bloqués (`.npmrc`), l'activation des crochets git se fait par une commande dédiée
+- ⬜ CI GitHub : qualité, tests, CodeQL, secrets, dépendances, télémétrie Next.js désactivée (F5)
+- ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité, Node 24 et télémétrie désactivée (PRD 4.2, 6.2 et 6.3)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)
-- ⬜ Contrôles C01 à C07 du registre activés (C01, C02, C08, C09 déjà actifs) (`docs/checklist/4-controles-du-site.md`)
+- ⬜ Contrôles C01 à C07 du registre activés (C01, C02, C03, C08, C09 déjà actifs) (`docs/checklist/4-controles-du-site.md`)
 - ⬜ Premier passage complet de la checklist, avec le premier rapport de session et la première ligne de l'historique
 
 **En parallèle, côté client 👤** : horaires d'ouverture, premières photos et vidéos déposées dans `client/`.
