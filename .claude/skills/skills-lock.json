@@ -1,0 +1,250 @@
+{
+  "reviewed": "2026-09-27",
+  "reviewers": "Claude (lecture intégrale) + 2 agents indépendants (lecture intégrale)",
+  "skills": {
+    "accessibility": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/accessibility",
+      "files": {
+        "SKILL.md": "267fb2a0707d6142f2871f22688203a42ba21291a2aa200fb740936e41362b5d",
+        "references/A11Y-PATTERNS.md": "f10e238dd4dd3c4f51134c2056bc02d3dd4f8fb6ccc9145c2c1ba7aab4d58140",
+        "references/WCAG.md": "16683e025e3833d931c9d880645d98a448827f97e10189b6c8f12c832e7a2361"
+      }
+    },
+    "ai-seo": {
+      "source": "github.com/coreyhaines31/marketingskills",
+      "commit": "5b2c0007766c6a1cf1d53fd8fc73e979e0821022",
+      "path": "skills/ai-seo",
+      "files": {
+        "SKILL.md": "b1ecd93ebc65af886f81bc0a90645c8fd4ffdf68c5b3d4495a9e61481d954d00",
+        "references/agent-readiness.md": "4753dc17755cacba2bf783373399baaf98c82a5d45c645848465ab6a11331cd9",
+        "references/citations-vs-recommendations.md": "88016418b43b7e798dd950eb1240f76dec08c3408038f9a5d83005aff5a4daa3",
+        "references/content-patterns.md": "8adcfcc020a3529eda71f783e4893d3e39e8b0f503fd2fa126e8b75a80963824",
+        "references/content-types.md": "9ad0a871f866efa307fc0d6fe2bd19d443a2276cb396afdd5b4d81fe9b4167e3",
+        "references/format-volatility.md": "4d16bbf46b9702b7ee9cf968005dc21cdd74821d5d8e31bb8dcc52b09457ae59",
+        "references/okf.md": "4abcab5b8ee90b63c5d09c98387a8ec3cdb8f5df33e75d3b4b91eb817283bfd8",
+        "references/platform-ranking-factors.md": "ca3fb8c09fec3445abe611bab2cd1b5f20751c5d51a3a5c63ecd2b85cd458ee8",
+        "references/youtube-ai-citations.md": "e4e3356d4c813e460f29dd37a46a212f9d3f3f06e35320cf62bc3e621e1a53b2"
+      }
+    },
+    "best-practices": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/best-practices",
+      "files": {
+        "SKILL.md": "9d1f10a08cd7a94176ce160ec860dbd3ecfadad75d46546001883f1f907c5c3e",
+        "references/SECURITY.md": "af021e5db37e921c79b8807d63e1cfc02dcf63614d2806cfba04ba44a1366178"
+      }
+    },
+    "code-review-two-axis": {
+      "source": "github.com/mattpocock/skills",
+      "commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "path": "skills/engineering/code-review",
+      "files": {
+        "SKILL.md": "b14c594f1b3e0e7c197c1ea848bb6d5dd217dc35bdc366dce9e37e39ce459efd"
+      }
+    },
+    "core-web-vitals": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/core-web-vitals",
+      "files": {
+        "SKILL.md": "731aa78c0347e8b3e191b75962175bee058ce73817278e610ac0fe546e685914",
+        "references/CLS.md": "c4fa0cd6311720b413018471a6ac9240e87db52af3b6e306ffb6684491f15898",
+        "references/INP.md": "7d40cf6053e9bb8a8a77e02da7c6b25aa8e6c1c092b48d8f9c8f30e9b25cf3a7",
+        "references/LCP.md": "522054d44b7a55409cbde511e8d365f7fa52399dd1e72b8d6b44a92ecddca81f"
+      }
+    },
+    "git-workflow-and-versioning": {
+      "source": "github.com/addyosmani/agent-skills",
+      "commit": "2686b620fc1fed2e8f60c704839c766b8594c6b6",
+      "path": "skills/git-workflow-and-versioning",
+      "files": {
+        "SKILL.md": "b7465d187935c52546d39fdc7bd6ac36d94eda25a9500ef8c18b767d2eb116ea"
+      }
+    },
+    "netlify-deploy": {
+      "source": "github.com/netlify/context-and-tools",
+      "commit": "0830047fec55c33ea3f360b528c2039b9d96d97f",
+      "path": "skills/netlify-deploy",
+      "files": {
+        "SKILL.md": "9dbeaeb03b1491bf5719910aea97f45f17fa009ba7fad9fb564e4ee9d172ee7c",
+        "references/cli-commands.md": "ee13906271ce98bb94721af7f9681ee2d366c87f9db0e7a8c6e9ecd75599edfd",
+        "references/deployment-patterns.md": "30500141db7df8eb20a582965f0c502777c726dfef8edc4bf25f0c25078d591b",
+        "references/netlify-toml.md": "0020510798bfb441e2986ee17a6c153769ece334913680884da8d5a1764508eb"
+      }
+    },
+    "performance": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/performance",
+      "files": {
+        "SKILL.md": "b0c220185d88c61f7770eb127d8facf86c86d2dd1fd82b86e15a4965a0137265",
+        "references/MEASUREMENT.md": "128f6f20c6c8fb55fcccd8b259cf680811022cf262dc55b03e9d623bcb555a99",
+        "references/RUM.md": "a2bdf660ecb23098afbadfb83254d39cef10c0da82938225f61271bad3f81b19"
+      }
+    },
+    "secret-scanning": {
+      "source": "github.com/github/awesome-copilot",
+      "commit": "6c4d33b9cfca967a28bb2962ef4d55e4a384c88c",
+      "path": "skills/secret-scanning",
+      "files": {
+        "SKILL.md": "ebbaf8a49777e8be6d8c220b91bbee935b2aaab81b3ee976562484a339d750db",
+        "references/alerts-and-remediation.md": "4a2c661c87ae7ab74f8011f8c66b9e2595d63b4055b8b8eb62fb5d24141db678",
+        "references/custom-patterns.md": "749576858dae53fb08f5088dba819cb5865d28f8c63d1d4dd6eccfee67128d8f",
+        "references/push-protection.md": "01aeda8a3896cfa3b774b84fdc6cfcfaf85e80c82a326ccac09750b45581eae0"
+      }
+    },
+    "security-and-hardening": {
+      "source": "github.com/addyosmani/agent-skills",
+      "commit": "2686b620fc1fed2e8f60c704839c766b8594c6b6",
+      "path": "skills/security-and-hardening + references/security-checklist.md",
+      "files": {
+        "SKILL.md": "b3a77648dd83cf8d566436381b1e38f00cecabda5d0340a61b4e2b56e52fc1b1",
+        "references/hardening-patterns.md": "6db84c11684a6800738eaef9bcef54546a01481be297469011455c90358dad90",
+        "references/security-checklist.md": "37774056502fe8970dcd2fd27dca5fa31f2a55232649fc3056c89c3af7d62755"
+      }
+    },
+    "seo": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/seo",
+      "files": {
+        "SKILL.md": "57cd16566c2c706186b643644dec2884da89c42f296843364c65a40a4d566ae6",
+        "references/STRUCTURED-DATA.md": "3e03876f41d223c89dfdbc0a0fe3668454e5d8819aad5379f4541fbf0bd67e17"
+      }
+    },
+    "seo-audit": {
+      "source": "github.com/coreyhaines31/marketingskills",
+      "commit": "5b2c0007766c6a1cf1d53fd8fc73e979e0821022",
+      "path": "skills/seo-audit",
+      "files": {
+        "SKILL.md": "9420a6c1ffcf7212766bcb618c28766ecb084631bed8045f3115d42b1230d368",
+        "references/ai-writing-detection.md": "f1e273f56ce7e2215ff218bf903680ddcec0fd026ab90c3ebfb3439ed0edfaa4",
+        "references/international-seo.md": "d2fc76f40eccc422ae0f1d7e5b770095e89a045f38e1d0370811203da57996ff"
+      }
+    },
+    "seo-local": {
+      "source": "github.com/AgriciDaniel/claude-seo",
+      "commit": "e77e783e38eeb738424eb72117abbd2dacdd88af",
+      "path": "skills/seo-local + skills/seo/references/local-*.md",
+      "files": {
+        "LICENSE.txt": "5c617ae0aa59b995e19b3e774fcc2f2ba91b864e0b4c3e18475b139526a2da1e",
+        "SKILL.md": "6246869c86b795c8a78cb98cae9f99c776b73affc99c940d72341e037db93629",
+        "references/local-schema-types.md": "f3541c86511199abaf2237cea7a1aa70bca8c94c82c243517b0a7656f96ee5c1",
+        "references/local-seo-signals.md": "e5383b8cf41105ab6152242f7467a572d31fbd95f359fb4c5aa1271aac2f581d"
+      }
+    },
+    "setup-pre-commit": {
+      "source": "github.com/mattpocock/skills",
+      "commit": "c55ee46073ed923f86ce59a5eb3b6d895095d1b7",
+      "path": "skills/misc/setup-pre-commit",
+      "files": {
+        "SKILL.md": "c9819d7f1e3b198064edc1faa3154224ed67395e9f07f5d3cea4b67cf0a11a98"
+      }
+    },
+    "supply-chain-risk-auditor": {
+      "source": "github.com/trailofbits/skills",
+      "commit": "0cc1c73a5e96749ab32d7ea5e14892fafa6972ae",
+      "path": "plugins/supply-chain-risk-auditor/skills/supply-chain-risk-auditor",
+      "files": {
+        "SKILL.md": "a1254b7f8d3a1731a9a7e1f9cd6c67b59cf84ed6ef7c7fb455db9a14c528ceb4",
+        "scripts/collect.py": "fd75cffad628980a6da521b5d3a40fb5dd16c5bb9ad63a25245e5208d08abff7",
+        "scripts/model.py": "78a20954b76e81216991b57453ceddbdb867035a0d6993b98cfa05a7f8d008d3",
+        "scripts/pyproject.toml": "a79ec30039ce3bc90544b9d833f7edc128232821575736f659d2b2ca0a601f3b",
+        "scripts/render.py": "9d6091645c8a8edf5c50d24bd70ff881efa30b920d93b46ea1775ee2dd328bc7",
+        "scripts/sources.py": "4eb66952dca285b4790d1193b39f240e8015025ee054a215f4c696cbba2478e2",
+        "scripts/uv.lock": "99598cc397a42c945abbc9d839d1c61f1852f414660ce41e2e68bd9cdf664100"
+      }
+    },
+    "vercel-react-best-practices": {
+      "source": "github.com/vercel-labs/agent-skills",
+      "commit": "063bee94c3f4df8453406c830b0a7df0f2860278",
+      "path": "skills/react-best-practices",
+      "files": {
+        "SKILL.md": "8296cff02940e54073e6f781f6f2b927f4f88eb219019d9ce17de1d8977f2743",
+        "rules/_sections.md": "01c59969e4e867f0708c8f8ef9c6d87fab9a07d0586244f429ff84013db8a115",
+        "rules/advanced-effect-event-deps.md": "55ed8f9f27a1bff803d6fa55828176207714b02123cbb97ddb8a90d88024a723",
+        "rules/advanced-event-handler-refs.md": "a3097edeecfb2ff6851cd66ed8cdf0617c3c88180504bee824aa6e75a215bbbc",
+        "rules/advanced-init-once.md": "3e4dc22173eb0e2b6dcf583e3babd862b8696328f8f59aee7c4d746c5bc05f6c",
+        "rules/advanced-use-latest.md": "8a3f64dfe5a77d1564248faf17fe662ae75b55d497a243cb30b38eb07ccbbf9a",
+        "rules/async-api-routes.md": "523338540d73427dc14c0cbb19f2741ebccdf8b105a7b2c1b33d2905cf237a42",
+        "rules/async-cheap-condition-before-await.md": "03107c1f70a293cd58a8abc5474c5548e20ea4efdf01b6d45aae7ad0ac1cb32c",
+        "rules/async-defer-await.md": "f3c142d090615abdcc99d31c123be37b31f0f1ed8d9ec9f7789a3bc6883ae0fb",
+        "rules/async-dependencies.md": "16ef469f877e30c6b8e1e1b4bc3e527312fa3c6318cb785a4eca186ea236131a",
+        "rules/async-parallel.md": "6d2f841896279e976dfcdc1ac89e70771ac188baadfd43c096b5706cb838b961",
+        "rules/async-suspense-boundaries.md": "de05fedac2eb7ae563b887b5a424464ec3dfaf84e5b7797467ebe2a796ac8afc",
+        "rules/bundle-analyzable-paths.md": "62090b5c815fd71bf1133dce754f51abc16a9456d0ccd025fd627de27726e92a",
+        "rules/bundle-barrel-imports.md": "e648f6d54525f07a691357040ca5bff6ea3424788a91ff63812adb29622a671b",
+        "rules/bundle-conditional.md": "09c8259c3efb04fc0abb8e412ccbda217c222ae8118516283e571c995fe3a7d4",
+        "rules/bundle-defer-third-party.md": "3719fb47b191e8db4fe22686ec88448ad5af9e6838585425abbe103d0b642e37",
+        "rules/bundle-dynamic-imports.md": "401817a7369f315fc5a68a1095742ff7d53d0461906880dc9d64a41495ee1986",
+        "rules/bundle-preload.md": "d1f7cc28da7cd5ab249acd287edc5b761afcfb194e9cb62cd44c5f3543db2de2",
+        "rules/client-event-listeners.md": "242a873349febc1ce685e85617994784dbab92c2eaa68aed7fed5a83e7680e93",
+        "rules/client-localstorage-schema.md": "0fb7cdf9dc93fdf22f87e3669f953fb9d4ac9b0be42eec4a29fe9a2560610b88",
+        "rules/client-passive-event-listeners.md": "1f35016f9053de69e884ee9be00654e37979c2ca85f5e57764dc2626ff7acb4b",
+        "rules/client-swr-dedup.md": "644652c39c6cc00de8d1c77a7273612e868dc3f7edda30764164c12ec0f764a3",
+        "rules/js-batch-dom-css.md": "480b891b9eaf96e929dc1e964274a4828e3a78009b7d00ccd965a0d425215959",
+        "rules/js-cache-function-results.md": "3daaa11d24f4295cb6be8bc6f407f2ce83cc7b5bd1f0e68891ea8ab835721dc7",
+        "rules/js-cache-property-access.md": "73e47431e74878a927061bf0ddc7cd91a7556cb35d2573f3421e82300d9ae311",
+        "rules/js-cache-storage.md": "11b826b0433898c1ece2d3547010d8e77db9fb240185748c45db91493de9b6cc",
+        "rules/js-combine-iterations.md": "71add08aeeb43091d4ff4c0b2842cce8b4bdef8ad3e732cc034bb5a84827e746",
+        "rules/js-early-exit.md": "925ce5ce87f3347186ca62212f29cc6baa2b8c85a96d2720ad07c3d0abf781c0",
+        "rules/js-flatmap-filter.md": "9e5b166a41914d975bef7635467f8fb32cd98b5c3126c0bc6f163490812fb5f0",
+        "rules/js-hoist-regexp.md": "f9e9aef2f7c2307dd7310f283df85dcada45fc43e9bb941b0c3aa414dec21ec4",
+        "rules/js-index-maps.md": "5df1bdc2cfabb2c98abd55d26762e5c18189535c2e686184f426082e62920391",
+        "rules/js-length-check-first.md": "8b54a311c826b299272f29187fc58bc55772a04c4a72eeb29456ee96dc9fc624",
+        "rules/js-min-max-loop.md": "87dfb67e2f39df6ad8bcfb5b78c5fb364d3c07554ad188a202408d99f3763421",
+        "rules/js-request-idle-callback.md": "ee08f83905b4011abbc33d594033157d77561b5bbd9b36b04f0f409581ffec32",
+        "rules/js-set-map-lookups.md": "a7fd781a6ba9ad49065961b6f9a90ef486bf6b648390e1a08704025f98e1642b",
+        "rules/js-tosorted-immutable.md": "d0a5e1b0fec48a0a81397957e2f068e224329f7c42cb5feeed8aae6fa64025e8",
+        "rules/rendering-activity.md": "1e5e7eaf3555e61d6a2e900089c676527d26259501db5594f59544b6c664f85a",
+        "rules/rendering-animate-svg-wrapper.md": "9c6ae0ca7a51434e803887c64cded760956579a1452ccb80a461a03f9c937c77",
+        "rules/rendering-conditional-render.md": "2ec2fa23c4148285144687050c52369adba3da2fbe3d486f8d3e0aad8f06f2bc",
+        "rules/rendering-content-visibility.md": "64eee6d5b916fe74df33363994b27fc7f71bea3bcedc7ee04bda23107ca3e6e4",
+        "rules/rendering-hoist-jsx.md": "93b229560fae92005ed9a2a829064607b39b2e984e92d221d05b2d41df2b7c0e",
+        "rules/rendering-hydration-no-flicker.md": "dc7ab358c67c177bca6e6f360fbc935ebe4efa928c0ba3ebd3f9f3d9e2000ca3",
+        "rules/rendering-hydration-suppress-warning.md": "915bacb934e2927d84b37a3f3d225a47b309ac8f9e494ed2bcb66ce07c5676a2",
+        "rules/rendering-resource-hints.md": "351b1095d641717b930f1b2253282b7120af3023bc74e06c17675168d4286864",
+        "rules/rendering-script-defer-async.md": "4cea07b7875ba7fc2c7465ff23b63a2bb334f90aaf2d9293d38d67b05fdb32ab",
+        "rules/rendering-svg-precision.md": "ed468533f6e95f622859c884b122cf21f9f593ed6bb3d500a54de4b9f9bcb9fb",
+        "rules/rendering-usetransition-loading.md": "3a1249c3f13026b6f54ab5712c388df219d6af01b12aa542749acd99a46f4bc1",
+        "rules/rerender-defer-reads.md": "234050a77faf50cb306be10a9e15bd4421134ab5907e75f13e6d78e2bd262dc9",
+        "rules/rerender-dependencies.md": "17eb5830956fb56486fd3cfc7431f5849d39751730c05ad9e77dd4f0c27169c5",
+        "rules/rerender-derived-state-no-effect.md": "cb11ec76f50aa7b6847269f02d79b120c889a30d9ecd2c1d578f75144419c77a",
+        "rules/rerender-derived-state.md": "1c326bb67b01fb084eb00c8911b0a7cff54681c2315b629f88e49b64eaa6481d",
+        "rules/rerender-functional-setstate.md": "5e68df6b2ae8058e67f476ff1ac67bde159f5a9d18df439e46eabcdeb7b52e58",
+        "rules/rerender-lazy-state-init.md": "4ae844740f266fc8cbf050701230286624a2440ec5be67b9a63d9edc3c580573",
+        "rules/rerender-memo-with-default-value.md": "81c47476564ad8a79fc68fc442734255ca7d6829424359464503fda0a9f9a0dd",
+        "rules/rerender-memo.md": "1f258990c2f27ff6256b3cc5c43300631bb3f0d81f749aed08d07fcdcc131dd1",
+        "rules/rerender-move-effect-to-event.md": "abc2cbf167bee056743023351e96806a411d3398da8802093620aecf0721f029",
+        "rules/rerender-no-inline-components.md": "1cc32907a770272524ba682eef9e7efdd8ad4533b6f89b718a1fcd7d1d0eb6a3",
+        "rules/rerender-simple-expression-in-memo.md": "5bdcf2d1558ba5204e643c887b7b4060f89630969425651eb68e96427d97f800",
+        "rules/rerender-split-combined-hooks.md": "6f45d703343484ef9acef9388397f3642966ae6a5a258899a0cf1f9977cfbf6c",
+        "rules/rerender-transitions.md": "60f4033909a62df5e5b8c601494f9e50a562e2f8c1c2d81eac24f38142265f1c",
+        "rules/rerender-use-deferred-value.md": "8c3579576a61a949884167745dcfaf1d5426ba305cc61fd0a79602d70fda4909",
+        "rules/rerender-use-ref-transient-values.md": "f1a649af9d1d0b5c762f6c9c4c1c70c90d7df82aa10296ee87aadb78c1b76c54",
+        "rules/server-after-nonblocking.md": "d0b8d24a3db9f0f65f9e2bddbf230b0e03a5f60e1229d93a4a18f5e7a991c7c2",
+        "rules/server-auth-actions.md": "a2ca8aa102839251c7971ec784560fab943c20b36fe6f80365d4110c13260c23",
+        "rules/server-cache-lru.md": "1924b64561841923b88a657085097a0aeba3e0ba2d5470b9f5c15cc10d6ae70f",
+        "rules/server-cache-react.md": "fddeea6c870bb3da4134b61d54b7d09b83d2603f929b7547cd3dc1dc269edd5c",
+        "rules/server-dedup-props.md": "c2747424cdac46be62f835f245a0aa887b0090b416d28e2ac8676702645eeb37",
+        "rules/server-hoist-static-io.md": "5abea4dd882b13661bd5f7dfb93f9e547d5f08176c61c448ade91b210ed5d49f",
+        "rules/server-no-shared-module-state.md": "4d869bf1cd2f1632e5ca4c0e64b1cf0e71c5f5a0f940bc8a22174d205e735ed7",
+        "rules/server-parallel-fetching.md": "569a2e9fc04f9606686cd75c5894ef8781b502786a7fffe241396846c7733472",
+        "rules/server-parallel-nested-fetching.md": "ad5d9656984d4a959997a2367bf59cc6632297b4634a1dd13a087939d83f30b3",
+        "rules/server-serialization.md": "f4c7d68b29c82381baad059c4a7f09e868e71ec9c3115a26ad3ae7d24c0dfe1f"
+      }
+    },
+    "web-quality-audit": {
+      "source": "github.com/addyosmani/web-quality-skills",
+      "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
+      "path": "skills/web-quality-audit",
+      "files": {
+        "SKILL.md": "1903cfb4dcba987d50dc7a51f6c19ec43830ff924c2c8f78979d8775fbe20f91",
+        "scripts/analyze.sh": "b1b28663af412f746baf5008618e3ae798e322b10ff5ab7ae1830826a6d8e4e2"
+      }
+    }
+  }
+}

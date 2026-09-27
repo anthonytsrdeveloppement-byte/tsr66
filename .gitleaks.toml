@@ -1,0 +1,10 @@
+# Configuration gitleaks du projet TSR66 (PRD fiche D6).
+# Règles par défaut conservées ; une seule exception, la plus étroite possible.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Empreintes SHA-256 des fichiers de skills (skills-lock.json) : ce ne sont pas des secrets"
+condition = "AND"
+paths = ['''^\.claude/skills/skills-lock\.json$''']
+regexes = ['''^[a-f0-9]{64}$''']

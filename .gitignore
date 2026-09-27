@@ -1,0 +1,48 @@
+# Éléments bruts du client (lourds, métadonnées GPS, documents administratifs)
+/client/
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Secrets : uniquement en local (.env.local) et dans Netlify — PRD fiche D6
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# Claude Code : réglages personnels de la machine (jamais versionnés)
+.claude/settings.local.json
+
+# Netlify : liaison locale du site (PRD 2.1, skill netlify-deploy)
+.netlify

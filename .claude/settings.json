@@ -1,0 +1,38 @@
+{
+  "enabledPlugins": {
+    "pr-review-toolkit@claude-plugins-official": true,
+    "claude-security@claude-plugins-official": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(./.env*)",
+      "Read(./client/05-administratif/**)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push --force-with-lease:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "Bash(git filter-repo:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git commit --no-verify:*)",
+      "Bash(git push --no-verify:*)",
+      "Bash(netlify deploy:*)",
+      "Bash(netlify init:*)",
+      "Bash(netlify link:*)",
+      "Bash(npx netlify:*)",
+      "Bash(npm install -g:*)",
+      "Bash(npm i -g:*)",
+      "Bash(npm update -g:*)",
+      "Bash(npm audit fix:*)",
+      "Bash(npx is-agentic:*)",
+      "Bash(gh repo delete:*)",
+      "Bash(gh repo edit --visibility:*)",
+      "Bash(gh secret:*)"
+    ],
+    "ask": [
+      "Bash(gh pr merge:*)",
+      "Bash(git push origin main:*)",
+      "Bash(gh api --method DELETE:*)"
+    ]
+  }
+}
