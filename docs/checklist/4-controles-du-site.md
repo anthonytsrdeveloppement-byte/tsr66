@@ -8,13 +8,14 @@
 ## Lot 0 — Fondations et contrôle
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |
 |---|---|---|---|---|---|
-| C01 | Aucun secret dans le code, l'historique git ni les fichiers produits pour le site | D6, F4 | 🤖 | ⬜ | — |
-| C02 | `client/` et les fichiers `.env` ne sont jamais suivis par git | 2.1, D6 | 🤖 | ⬜ | — |
+| C01 | Aucun secret dans le code, l'historique git ni les fichiers produits pour le site | D6, F4 | 🤖 | ✅ | 2026-09-27 : gitleaks sur tout l'historique, 0 trouvaille (automatisation au contrôle avant commit) |
+| C02 | `client/` et les fichiers `.env` ne sont jamais suivis par git | 2.1, D6 | 🤖 | ✅ | 2026-09-27 : aucun fichier suivi |
 | C03 | 0 vulnérabilité dans les dépendances, tous niveaux confondus | D5, F4 | 🤖 | ⬜ | — |
-| C04 | Aucune fusion dans la version principale sans CI au vert | F5 | 🤖 | ⬜ | — |
+| C04 | Aucune fusion dans la version principale sans CI au vert | F5 | 🤖 | ⬜ | 2026-09-27 : branche protégée (demande de fusion obligatoire, envoi direct refusé, testé) ; CI à brancher |
 | C05 | Aperçus privés et adresse de travail Netlify interdits aux moteurs de recherche | 4.2 | 🤖 | ⬜ | — |
 | C06 | En-têtes de sécurité : seul le code de TSR66 s'exécute, le site ne peut pas être intégré dans une autre page, HTTPS forcé | 6.3 | 🤖 | ⬜ | — |
 | C07 | Documents alignés sur le PRD | 2.1 | 🤖 | ⬜ | — |
+| C09 | Verrous en place : commandes dangereuses refusées par Claude Code, branche principale protégée, identité git masquée | 2.1 | 🤖 | ✅ | 2026-09-27 : `git clean` refusé, envoi direct sur main refusé par GitHub |
 | C08 | Skills installés identiques à la version relue : empreintes conformes à `skills-lock.json` | 2.1 | 🤖 | ✅ | 2026-09-27 : 125/125 fichiers conformes |
 
 ## Lot 1 — Design et animations

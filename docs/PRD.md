@@ -53,7 +53,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
 *Validée le 2026-09-27.*
 
 ### 2.1 Décisions
-- **Dépôt GitHub public** : il donne gratuitement le détecteur de secrets avec blocage d'envoi, l'analyse CodeQL complète, la protection de branche et une CI illimitée. Les secrets sont bloqués sur l'ordinateur avant chaque commit, puis par GitHub. `client/` n'est jamais versionné.
+- **Dépôt GitHub public** (`anthonytsrdeveloppement-byte/tsr66`, créé le 2026-09-27 ; commits signés par l'adresse masquée GitHub du compte, jamais une adresse personnelle) : il donne gratuitement le détecteur de secrets avec blocage d'envoi, l'analyse CodeQL complète, la protection de branche et une CI illimitée. Les secrets sont bloqués sur l'ordinateur avant chaque commit, puis par GitHub. `client/` n'est jamais versionné.
 - **Mémoire du projet** : au démarrage, la source de vérité est constituée des documents du projet (PRD, roadmap, dernier rapport de session). En fin de session, deux écritures sont obligatoires : le rapport de session avec la mise à jour de la roadmap, et `/archive` vers KIT-MEMOIRE. Les rapports ne contiennent aucune information sensible, puisque le dépôt est public.
 - **Carte des documents** (tous alignés sur ce PRD, qui fait foi) :
 
@@ -90,6 +90,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - Les exemples de traceurs, statistiques de visites, scripts ou polices externes, cartes et widgets intégrés ne s'appliquent pas aux pages publiques (6.2).
   - Aucun chiffre ni aucune citation tirés d'un skill ne sont repris sur le site sans source vérifiée (4.1).
   - Les rapports d'outils contenant des chemins locaux ne sont jamais commités (dépôt public).
+  - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; blocage par GitHub de tout envoi contenant un secret.
 
 ### 2.2 Blocages et registre des dettes
 Pour ne pas être bloqué par des détails, chaque problème relève de l'une de deux catégories. En cas de doute, c'est Nicolas qui tranche.
