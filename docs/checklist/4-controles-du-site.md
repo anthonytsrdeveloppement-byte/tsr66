@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | C01 | Aucun secret dans le code, l'historique git ni les fichiers produits pour le site | D6, F4 | 🤖 | ✅ | 2026-09-27 : gitleaks sur tout l'historique, 0 trouvaille (automatisation au contrôle avant commit) |
 | C02 | `client/` et les fichiers `.env` ne sont jamais suivis par git | 2.1, D6 | 🤖 | ✅ | 2026-09-27 : aucun fichier suivi |
-| C03 | 0 vulnérabilité dans les dépendances, tous niveaux confondus | D5, F4 | 🤖 | ⬜ | — |
+| C03 | Dépendances : 0 vulnérabilité, versions exactes, scripts d'installation bloqués, signatures du registre vérifiées | D5, F4 | 🤖 | ✅ | 2026-09-27 : `npm audit` 0, 345/345 signatures, audit chaîne d'approvisionnement 0 faille (9 directes, 389 indirectes) |
 | C04 | Aucune fusion dans la version principale sans CI au vert | F5 | 🤖 | ⬜ | 2026-09-27 : branche protégée (demande de fusion obligatoire, envoi direct refusé, testé) ; CI à brancher |
 | C05 | Aperçus privés et adresse de travail Netlify interdits aux moteurs de recherche | 4.2 | 🤖 | ⬜ | — |
 | C06 | En-têtes de sécurité : seul le code de TSR66 s'exécute, le site ne peut pas être intégré dans une autre page, HTTPS forcé | 6.3 | 🤖 | ⬜ | — |
