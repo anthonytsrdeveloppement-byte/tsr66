@@ -19,12 +19,13 @@
 
 **Travail de Claude :**
 - ✅ Installation des skills retenus : 17 dossiers, 125 fichiers lus en entier par Claude et par deux agents indépendants, aucun rejet, figés et vérifiés par empreintes (2026-09-27, PRD 2.1)
-- ⬜ Dépôt git public et installation de Next.js
+- ✅ Dépôt git public créé et protégé : détection et blocage des secrets, alertes de dépendances, branche principale protégée, verrous Claude Code (2026-09-27)
+- ⬜ Installation de Next.js
 - ⬜ Contrôle avant commit : secrets, qualité du code (D6)
 - ⬜ CI GitHub : qualité, tests, CodeQL, secrets, dépendances (F5)
 - ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité (PRD 4.2 et 6.3)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)
-- ⬜ Contrôles C01 à C07 du registre activés (C08 déjà actif) (`docs/checklist/4-controles-du-site.md`)
+- ⬜ Contrôles C01 à C07 du registre activés (C01, C02, C08, C09 déjà actifs) (`docs/checklist/4-controles-du-site.md`)
 - ⬜ Premier passage complet de la checklist, avec le premier rapport de session et la première ligne de l'historique
 
 **En parallèle, côté client 👤** : horaires d'ouverture, premières photos et vidéos déposées dans `client/`.
