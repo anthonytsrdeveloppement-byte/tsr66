@@ -18,7 +18,13 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # Seuls les passages d'une demande de fusion remplacée sont annulés, jamais ceux de main.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    # « bash » seul ajoute pipefail : une commande en échec dans un enchaînement fait échouer l'étape.
+    shell: bash
 
 env:
   # Télémétrie de Next.js désactivée (PRD 6.2).
@@ -83,16 +89,14 @@ jobs:
           git show "origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
           gitleaks git --redact --no-banner --ignore-gitleaks-allow \
             --config "$cfg/config.toml" --gitleaks-ignore-path "$cfg" .
-      - name: Fichiers SVG (ignorés par défaut par gitleaks, mais publiés en texte)
+      - name: SVG et package-lock.json, sur tout l'historique (ignorés par défaut par gitleaks)
         run: |
-          svg="$RUNNER_TEMP/svg"
-          mkdir -p "$svg"
-          git ls-files -z -- '*.svg' | while IFS= read -r -d '' f; do
-            cp "$f" "$svg/$(echo "$f" | tr '/' '_').txt"
-          done
-          gitleaks dir --redact --no-banner --ignore-gitleaks-allow \
-            --config "$RUNNER_TEMP/gitleaks/config.toml" \
-            --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks" "$svg"
+          # Passés par l'entrée standard : aucune exclusion par nom de fichier ne s'applique.
+          git log -p --all --full-history -- \
+            ':(glob,icase)**/*.svg' ':(glob,icase)**/package-lock.json' \
+            | gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
+              --config "$RUNNER_TEMP/gitleaks/config.toml" \
+              --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks"
 
   dependances:
     name: Dépendances
