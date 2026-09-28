@@ -12,7 +12,7 @@
 // Affiche ✅/❌ par contrôle. Code de sortie 1 au moindre échec.
 
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -194,22 +194,26 @@ verifier(
   `fin de lot : L1 à L7 (${pointsLot.size})`
 );
 const texteRegistre = docs[`${DOSSIER_CHECKLIST}/4-controles-du-site.md`];
-const registre = toutes(
-  texteRegistre,
-  /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|/gmu
-);
+// Toute ligne qui commence par « | C » doit être lue : une ligne mal formée
+// (numéro, état ou type inconnu), même en double d'une ligne correcte,
+// échapperait sinon à tous les contrôles du registre.
+const LIGNE_CONTROLE =
+  /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|/u;
+const lignesRegistre = texteRegistre
+  .split("\n")
+  .filter((ligne) => ligne.startsWith("| C"));
+const registre = lignesRegistre
+  .map((ligne) => ligne.match(LIGNE_CONTROLE))
+  .filter(Boolean);
 const numeros = registre.map(([, n]) => n);
-// Toute ligne de contrôle doit être lue : une ligne mal formée (état ou type
-// inconnu) échapperait sinon à tous les contrôles du registre.
-const lignesRegistre = toutes(texteRegistre, /^\| (C\d\d) \|/gm).map(
-  ([, n]) => n
-);
-const malFormees = lignesRegistre.filter((n) => !numeros.includes(n));
+const malFormees = lignesRegistre
+  .filter((ligne) => !LIGNE_CONTROLE.test(ligne))
+  .map((ligne) => ligne.slice(0, 12).trim());
 verifier(
   !malFormees.length,
   `registre : chaque ligne lue (numéro, PRD, type, état)${suite(malFormees)}`
 );
-// 45 contrôles aujourd'hui : moins de 40 signale un registre tronqué.
+// 46 contrôles aujourd'hui : moins de 40 signale un registre tronqué.
 verifier(
   numeros.length === new Set(numeros).size && numeros.length >= 40,
   `registre : ${numeros.length} contrôles, numéros uniques`
@@ -428,6 +432,11 @@ const ecarts = [];
 let nombre = 0;
 for (const skill of declares) {
   const fichiers = verrou[skill]?.files ?? {};
+  // Un skill vidé (dossier et empreintes) ne doit pas passer : son SKILL.md
+  // est toujours déclaré.
+  if (!Object.hasOwn(fichiers, "SKILL.md")) {
+    ecarts.push(`${skill} : SKILL.md non déclaré`);
+  }
   for (const [fichier, attendu] of Object.entries(fichiers)) {
     nombre += 1;
     const chemin = join(SKILLS, skill, fichier);
@@ -462,7 +471,12 @@ function parcourir(dossier, relatif) {
     }
   }
 }
-if (existsSync(SKILLS)) parcourir(SKILLS, "");
+// Le dossier lui-même ne doit pas être un lien vers un autre endroit.
+if (existsSync(SKILLS) && lstatSync(SKILLS).isDirectory()) {
+  parcourir(SKILLS, "");
+} else {
+  ecarts.push(".claude/skills : absent ou lien symbolique");
+}
 const nonDeclares = installes.filter((s) => !declares.includes(s)).sort();
 const manquants = declares.filter((s) => !installes.includes(s)).sort();
 const horsPrd = [
@@ -479,7 +493,7 @@ verifier(
     !nonDeclares.length &&
     !manquants.length &&
     !horsPrd.length,
-  `skills : ${nombre} fichiers conformes aux empreintes, ${declares.length} skills du PRD 2.1` +
+  `skills : ${nombre} fichiers comparés aux empreintes, ${declares.length} skills déclarés, identiques au PRD 2.1` +
     (ecarts.length ? ` → écarts ${ecarts.slice(0, 5).join(", ")}` : "") +
     (nonDeclares.length ? ` → dossiers non déclarés ${nonDeclares}` : "") +
     (manquants.length ? ` → dossiers manquants ${manquants}` : "") +
