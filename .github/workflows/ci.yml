@@ -1,0 +1,131 @@
+# CI GitHub (PRD 2.1, checklist F5, contrôle C04) : rejoue sur les serveurs de
+# GitHub tous les contrôles du crochet avant commit, plus CodeQL et l'audit des
+# dépendances. Aucune fusion dans main sans ces 4 contrôles au vert.
+# Actions figées par empreinte de commit (mises à jour par Dependabot, relues).
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  schedule:
+    # Chaque lundi : nouvelles failles publiées entre-temps (dépendances, CodeQL).
+    - cron: "17 5 * * 1"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Télémétrie de Next.js désactivée (PRD 6.2).
+  NEXT_TELEMETRY_DISABLED: "1"
+
+jobs:
+  qualite:
+    name: Qualité
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Dépendances à l'identique (scripts d'installation bloqués par .npmrc)
+        run: npm ci
+      - name: Mise en forme
+        run: npm run format:check
+      - name: Qualité du code
+        run: npm run lint -- --max-warnings=0
+      - name: Types
+        run: npm run typecheck
+      - name: Compilation
+        run: npm run build
+
+  secrets:
+    name: Secrets
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+      GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Installation de gitleaks (empreinte vérifiée)
+        run: |
+          curl -sSfL -o gitleaks.tgz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum --check --strict
+          mkdir -p "$RUNNER_TEMP/bin"
+          tar -xzf gitleaks.tgz -C "$RUNNER_TEMP/bin" gitleaks
+          rm gitleaks.tgz
+          echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
+      - name: Tout l'historique, sans exception ajoutée par la demande de fusion
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          if [ -n "$(git ls-files -- '*.gitleaksignore' '.gitleaksignore')" ]; then
+            echo "::error::Fichier .gitleaksignore interdit (exceptions aux secrets)"
+            exit 1
+          fi
+          cfg="$RUNNER_TEMP/gitleaks"
+          mkdir -p "$cfg"
+          # Configuration de la branche de destination : une demande de fusion
+          # ne peut pas élargir ses propres exceptions.
+          git show "origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
+          gitleaks git --redact --no-banner --ignore-gitleaks-allow \
+            --config "$cfg/config.toml" --gitleaks-ignore-path "$cfg" .
+      - name: Fichiers SVG (ignorés par défaut par gitleaks, mais publiés en texte)
+        run: |
+          svg="$RUNNER_TEMP/svg"
+          mkdir -p "$svg"
+          git ls-files -z -- '*.svg' | while IFS= read -r -d '' f; do
+            cp "$f" "$svg/$(echo "$f" | tr '/' '_').txt"
+          done
+          gitleaks dir --redact --no-banner --ignore-gitleaks-allow \
+            --config "$RUNNER_TEMP/gitleaks/config.toml" \
+            --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks" "$svg"
+
+  dependances:
+    name: Dépendances
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Aucune vulnérabilité, tous niveaux confondus
+        run: npm audit --audit-level=low
+      - name: Signatures du registre npm
+        run: npm audit signatures
+
+  codeql:
+    name: CodeQL
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: github/codeql-action/init@1c5b675653bb5c22dbe9b12b556ec555138e09fd # v4.38.1
+        with:
+          languages: javascript-typescript, actions
+          build-mode: none
+          queries: security-extended
+      - uses: github/codeql-action/analyze@1c5b675653bb5c22dbe9b12b556ec555138e09fd # v4.38.1
