@@ -136,7 +136,7 @@ function verifierReponse(chemin, reponse) {
     `C06 ${chemin} : X-Powered-By présent (${h("x-powered-by")})`
   );
   // Hors tsr66.fr, chaque réponse interdit l'indexation.
-  if (!base.startsWith("https://tsr66.fr")) {
+  if (!siteOfficiel) {
     verifier(
       /noindex/.test(h("x-robots-tag")),
       `C05 ${chemin} : X-Robots-Tag = ${h("x-robots-tag") || "absent"}`
@@ -146,6 +146,9 @@ function verifierReponse(chemin, reponse) {
 
 const adresse = process.argv[2];
 const base = (adresse ?? `http://127.0.0.1:${PORT}`).replace(/\/$/, "");
+// Nom de domaine exact : « https://tsr66.fr.autre-site.com » n'est pas tsr66.fr.
+const { protocol, hostname } = new URL(base);
+const siteOfficiel = protocol === "https:" && hostname === "tsr66.fr";
 let serveur;
 
 async function attendreServeur() {
