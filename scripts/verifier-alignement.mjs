@@ -194,14 +194,15 @@ verifier(
   `fin de lot : L1 à L7 (${pointsLot.size})`
 );
 const texteRegistre = docs[`${DOSSIER_CHECKLIST}/4-controles-du-site.md`];
-// Toute ligne qui commence par « | C » doit être lue : une ligne mal formée
-// (numéro, état ou type inconnu), même en double d'une ligne correcte,
-// échapperait sinon à tous les contrôles du registre.
+// Toute ligne de tableau dont la 1re case commence par « C » et un chiffre
+// (espaces et casse quelconques) doit être lue : une ligne mal formée (numéro,
+// état ou type inconnu), même en double d'une ligne correcte, échapperait
+// sinon à tous les contrôles du registre.
 const LIGNE_CONTROLE =
   /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|/u;
 const lignesRegistre = texteRegistre
   .split("\n")
-  .filter((ligne) => ligne.startsWith("| C"));
+  .filter((ligne) => /^\s*\|\s*c\d/i.test(ligne));
 const registre = lignesRegistre
   .map((ligne) => ligne.match(LIGNE_CONTROLE))
   .filter(Boolean);
@@ -471,11 +472,14 @@ function parcourir(dossier, relatif) {
     }
   }
 }
-// Le dossier lui-même ne doit pas être un lien vers un autre endroit.
-if (existsSync(SKILLS) && lstatSync(SKILLS).isDirectory()) {
+// Ni le dossier des skills ni .claude ne doivent être un lien vers un autre
+// endroit.
+const vraiDossier = (chemin) =>
+  existsSync(chemin) && lstatSync(chemin).isDirectory();
+if (vraiDossier(join(RACINE, ".claude")) && vraiDossier(SKILLS)) {
   parcourir(SKILLS, "");
 } else {
-  ecarts.push(".claude/skills : absent ou lien symbolique");
+  ecarts.push(".claude ou .claude/skills : absent ou lien symbolique");
 }
 const nonDeclares = installes.filter((s) => !declares.includes(s)).sort();
 const manquants = declares.filter((s) => !installes.includes(s)).sort();
