@@ -1,15 +1,20 @@
 // Contrôles C05 et C06 (PRD 4.2 et 6.3) : interdiction d'indexation hors de
 // tsr66.fr et en-têtes de sécurité, vérifiés sur de vraies réponses HTTP.
 //
-//   node scripts/verifier-entetes.mjs             site compilé, servi en local
-//   node scripts/verifier-entetes.mjs <adresse>   site en ligne (aperçu Netlify)
+//   node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verifier-entetes.mjs
+//       site compilé, servi en local par next start (CI). Ne prouve pas ce que
+//       sert Netlify : ses fichiers /_next/static reçoivent netlify.toml.
+//   node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/verifier-entetes.mjs <adresse>
+//       site en ligne (adresse Netlify, rendue publique le temps du contrôle).
 //
-// Code de sortie 1 au moindre écart.
+// Le drapeau masque l'avertissement de Node sur next.config.ts (fichier
+// TypeScript lu directement par Node 24). Code de sortie 1 au moindre écart.
 
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { createServer } from "node:net";
 
-const PORT = 3999;
+const DELAI_REQUETE = 10_000;
 const erreurs = [];
 
 function verifier(condition, message) {
@@ -17,13 +22,23 @@ function verifier(condition, message) {
 }
 
 // 1. La règle d'indexation de next.config.ts : seul tsr66.fr en production.
+// next.config.ts lit CONTEXT et URL à son chargement : chaque cas le recharge
+// sous une adresse distincte (« ?cas= »), sinon Node renverrait la copie en cache.
 async function entetesDeLaConfiguration(env, cas) {
   const avant = { CONTEXT: process.env.CONTEXT, URL: process.env.URL };
   Object.assign(process.env, env);
   try {
     const config = (await import(`../next.config.ts?cas=${cas}`)).default;
-    const [regle] = await config.headers();
-    return new Map(regle.headers.map((h) => [h.key.toLowerCase(), h.value]));
+    const regles = await config.headers();
+    // Une seule règle, pour tout le site : une règle ajoutée sur un sous-chemin
+    // pourrait remplacer un en-tête sans que les 3 chemins testés le voient.
+    verifier(
+      regles.length === 1 && regles[0].source === "/:path*",
+      `C06 : next.config.ts doit avoir une seule règle d'en-têtes, pour « /:path* »`
+    );
+    return new Map(
+      regles[0].headers.map(({ key, value }) => [key.toLowerCase(), value])
+    );
   } finally {
     for (const [cle, valeur] of Object.entries(avant)) {
       if (valeur === undefined) delete process.env[cle];
@@ -60,16 +75,35 @@ for (const [i, { env, indexable }] of casIndexation.entries()) {
 }
 
 // Fichiers servis directement par Netlify : netlify.toml doit donner exactement
-// les mêmes en-têtes que next.config.ts hors tsr66.fr.
-const blocNetlify =
-  readFileSync(new URL("../netlify.toml", import.meta.url), "utf8")
-    .split(/^\s*\[headers\.values\]\s*$/m)[1]
-    ?.split(/^\s*\[/m)[0] ?? "";
-const entetesNetlify = new Map(
-  [...blocNetlify.matchAll(/^\s*([A-Za-z-]+)\s*=\s*"(.*)"\s*$/gm)].map(
-    ([, cle, valeur]) => [cle.toLowerCase(), valeur]
-  )
+// les mêmes en-têtes que next.config.ts hors tsr66.fr. Lecture stricte : une
+// seule règle [[headers]], pour « /* », et chaque ligne de valeurs comprise.
+const netlifyToml = readFileSync(
+  new URL("../netlify.toml", import.meta.url),
+  "utf8"
 );
+const reglesNetlify = netlifyToml.split(/^\s*\[\[headers\]\]\s*$/m).slice(1);
+verifier(
+  reglesNetlify.length === 1,
+  `C06 : netlify.toml doit avoir une seule règle [[headers]] (${reglesNetlify.length} trouvée(s))`
+);
+const [regleNetlify = ""] = reglesNetlify;
+verifier(
+  /^\s*for\s*=\s*"\/\*"\s*$/m.test(regleNetlify.split(/^\s*\[/m)[0]),
+  `C06 : la règle [[headers]] de netlify.toml doit porter sur « /* »`
+);
+const lignesValeurs = (
+  regleNetlify.split(/^\s*\[headers\.values\]\s*$/m)[1] ?? ""
+)
+  .split(/^\s*\[/m)[0]
+  .split("\n")
+  .map((ligne) => ligne.trim())
+  .filter((ligne) => ligne && !ligne.startsWith("#"));
+const entetesNetlify = new Map();
+for (const ligne of lignesValeurs) {
+  const [, cle, valeur] = /^([A-Za-z-]+) = "([^"\\]*)"$/.exec(ligne) ?? [];
+  verifier(cle, `C06 : ligne de netlify.toml non comprise : ${ligne}`);
+  if (cle) entetesNetlify.set(cle.toLowerCase(), valeur);
+}
 const entetesPages = await entetesDeLaConfiguration(
   { CONTEXT: "", URL: "" },
   "netlify"
@@ -83,10 +117,15 @@ for (const cle of new Set([...entetesPages.keys(), ...entetesNetlify.keys()])) {
 
 // 2. Les en-têtes réellement envoyés par le serveur.
 function verifierReponse(chemin, reponse) {
-  const h = (nom) => reponse.headers.get(nom) ?? "";
-  const csp = h("content-security-policy");
+  const entete = (nom) => reponse.headers.get(nom) ?? "";
+  const verifierEgal = (nom, attendu) =>
+    verifier(
+      entete(nom) === attendu,
+      `C06 ${chemin} : ${nom} = ${entete(nom) || "absent"}`
+    );
+
   const directives = new Map(
-    csp
+    entete("content-security-policy")
       .split(";")
       .map((d) => d.trim().split(/\s+/))
       .filter(([nom]) => nom)
@@ -129,80 +168,96 @@ function verifierReponse(chemin, reponse) {
     directives.has("upgrade-insecure-requests"),
     `C06 ${chemin} : CSP upgrade-insecure-requests absent`
   );
+  verifierEgal("x-frame-options", "DENY");
+  verifierEgal("x-content-type-options", "nosniff");
+  verifierEgal("referrer-policy", "strict-origin-when-cross-origin");
+  verifierEgal("cross-origin-opener-policy", "same-origin");
+  // Une seule valeur HSTS (deux en-têtes fusionnés donneraient une virgule).
+  const hsts = entete("strict-transport-security");
+  const dureeHsts = /^max-age=(\d+)/.exec(hsts)?.[1];
   verifier(
-    h("x-frame-options") === "DENY",
-    `C06 ${chemin} : X-Frame-Options = ${h("x-frame-options") || "absent"}`
-  );
-  const hsts = /max-age=(\d+)/.exec(h("strict-transport-security"));
-  verifier(
-    hsts && Number(hsts[1]) >= 31536000,
-    `C06 ${chemin} : Strict-Transport-Security = ${h("strict-transport-security") || "absent"}`
-  );
-  verifier(
-    h("x-content-type-options") === "nosniff",
-    `C06 ${chemin} : X-Content-Type-Options = ${h("x-content-type-options") || "absent"}`
+    !hsts.includes(",") && Number(dureeHsts) >= 31536000,
+    `C06 ${chemin} : strict-transport-security = ${hsts || "absent"}`
   );
   verifier(
-    h("referrer-policy") === "strict-origin-when-cross-origin",
-    `C06 ${chemin} : Referrer-Policy = ${h("referrer-policy") || "absent"}`
+    entete("permissions-policy").includes("camera=()"),
+    `C06 ${chemin} : permissions-policy = ${entete("permissions-policy") || "absent"}`
   );
   verifier(
-    h("permissions-policy").includes("camera=()"),
-    `C06 ${chemin} : Permissions-Policy = ${h("permissions-policy") || "absent"}`
+    !entete("x-powered-by"),
+    `C06 ${chemin} : x-powered-by présent (${entete("x-powered-by")})`
   );
+  // Hors tsr66.fr, chaque réponse interdit l'indexation ; sur tsr66.fr, aucune
+  // ne l'interdit (C60, mise en ligne).
+  const noindex = /noindex/.test(entete("x-robots-tag"));
   verifier(
-    h("cross-origin-opener-policy") === "same-origin",
-    `C06 ${chemin} : Cross-Origin-Opener-Policy = ${h("cross-origin-opener-policy") || "absent"}`
+    noindex !== siteOfficiel,
+    `C05 ${chemin} : x-robots-tag = ${entete("x-robots-tag") || "absent"}`
   );
-  verifier(
-    !h("x-powered-by"),
-    `C06 ${chemin} : X-Powered-By présent (${h("x-powered-by")})`
-  );
-  // Hors tsr66.fr, chaque réponse interdit l'indexation.
-  if (!siteOfficiel) {
-    verifier(
-      /noindex/.test(h("x-robots-tag")),
-      `C05 ${chemin} : X-Robots-Tag = ${h("x-robots-tag") || "absent"}`
-    );
-  }
+}
+
+function portLibre() {
+  return new Promise((resolve, reject) => {
+    const essai = createServer()
+      .once("error", reject)
+      .listen(0, "127.0.0.1", () => {
+        const { port } = essai.address();
+        essai.close(() => resolve(port));
+      });
+  });
 }
 
 const adresse = process.argv[2];
-const base = (adresse ?? `http://127.0.0.1:${PORT}`).replace(/\/$/, "");
+const port = adresse ? null : await portLibre();
+const base = (adresse ?? `http://127.0.0.1:${port}`).replace(/\/$/, "");
 // Nom de domaine exact : « https://tsr66.fr.autre-site.com » n'est pas tsr66.fr.
 const { protocol, hostname } = new URL(base);
 const siteOfficiel = protocol === "https:" && hostname === "tsr66.fr";
+const lire = (chemin) =>
+  fetch(`${base}${chemin}`, {
+    redirect: "manual",
+    signal: AbortSignal.timeout(DELAI_REQUETE),
+  });
 let serveur;
 
-async function attendreServeur() {
-  for (let essai = 0; essai < 60; essai++) {
-    try {
-      await fetch(base);
-      return;
-    } catch {
-      await new Promise((r) => setTimeout(r, 500));
+async function demarrerServeurLocal() {
+  serveur = spawn(
+    "./node_modules/.bin/next",
+    ["start", "-p", String(port), "-H", "127.0.0.1"],
+    {
+      stdio: ["ignore", "ignore", "pipe"],
+      env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" },
     }
-  }
-  throw new Error("le serveur local ne répond pas");
+  );
+  let sortie = "";
+  serveur.stderr.on("data", (d) => (sortie += d));
+  const arret = new Promise((_, reject) =>
+    serveur.once("exit", (code) =>
+      reject(new Error(`next start arrêté (code ${code}) : ${sortie.trim()}`))
+    )
+  );
+  const pret = (async () => {
+    for (let essai = 0; essai < 60; essai++) {
+      try {
+        await lire("/");
+        return;
+      } catch {
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    }
+    throw new Error("le serveur local ne répond pas");
+  })();
+  await Promise.race([pret, arret]);
 }
 
 try {
-  if (!adresse) {
-    serveur = spawn(
-      "./node_modules/.bin/next",
-      ["start", "-p", String(PORT), "-H", "127.0.0.1"],
-      { stdio: "ignore", env: { ...process.env, NEXT_TELEMETRY_DISABLED: "1" } }
-    );
-    await attendreServeur();
-  }
-  const accueil = await fetch(`${base}/`, { redirect: "manual" });
+  if (!adresse) await demarrerServeurLocal();
+  const accueil = await lire("/");
   verifier(accueil.status === 200, `/ : statut ${accueil.status}`);
   const html = await accueil.text();
   verifierReponse("/", accueil);
 
-  const introuvable = await fetch(`${base}/page-inexistante-c06`, {
-    redirect: "manual",
-  });
+  const introuvable = await lire("/page-inexistante-c06");
   verifier(
     introuvable.status === 404,
     `/page-inexistante-c06 : statut ${introuvable.status}`
@@ -212,7 +267,7 @@ try {
   const script = /src="(\/_next\/static\/[^"]+\.js)"/.exec(html)?.[1];
   verifier(script, "aucun fichier /_next/static trouvé dans l'accueil");
   if (script) {
-    const fichier = await fetch(`${base}${script}`, { redirect: "manual" });
+    const fichier = await lire(script);
     verifier(fichier.status === 200, `${script} : statut ${fichier.status}`);
     verifierReponse("fichier /_next/static", fichier);
   }
@@ -227,5 +282,9 @@ if (erreurs.length) {
   process.exit(1);
 }
 console.log(
-  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, netlify.toml identique, 3 réponses vérifiées`
+  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, netlify.toml identique, 3 réponses vérifiées${
+    adresse
+      ? ""
+      : " (serveur local : les fichiers servis par Netlify se vérifient avec son adresse)"
+  }`
 );

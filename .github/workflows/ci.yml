@@ -1,6 +1,7 @@
 # CI GitHub (PRD 2.1, checklist F5, contrôle C04) : rejoue sur les serveurs de
-# GitHub tous les contrôles du crochet avant commit, plus CodeQL et l'audit des
-# dépendances. Aucune fusion dans main sans ces 4 contrôles au vert.
+# GitHub tous les contrôles du crochet avant commit, plus CodeQL, l'audit des
+# dépendances, les en-têtes du site (C05, C06) et les secrets dans les fichiers
+# publiés (C01). Aucune fusion dans main sans ces contrôles au vert.
 # Actions figées par empreinte de commit (mises à jour par Dependabot, relues).
 name: CI
 
@@ -29,15 +30,15 @@ defaults:
 env:
   # Télémétrie de Next.js désactivée (PRD 6.2).
   NEXT_TELEMETRY_DISABLED: "1"
+  # gitleaks : version et empreinte en un seul endroit (jobs Qualité et Secrets).
+  GITLEAKS_VERSION: "8.30.1"
+  GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
 
 jobs:
   qualite:
     name: Qualité
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    env:
-      GITLEAKS_VERSION: "8.30.1"
-      GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -78,23 +79,35 @@ jobs:
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
       - name: Aucun secret dans les fichiers publiés (C01)
         run: |
-          # Fichiers envoyés aux navigateurs : tout le contenu passe par l'entrée
+          # Fichiers envoyés aux navigateurs (code, pages HTML et données des pages
+          # préparées à l'avance, public/) : tout le contenu passe par l'entrée
           # standard (aucune exclusion par nom de fichier), règles par défaut de
           # gitleaks, sans exception du dépôt.
           printf '[extend]\nuseDefault = true\n' > "$RUNNER_TEMP/gitleaks-defaut.toml"
-          dossiers=(.next/static)
+          dossiers=(.next/static .next/server/app)
           if [ -d public ]; then dossiers+=(public); fi
-          find "${dossiers[@]}" -type f -print0 | xargs -0 cat \
-            | gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
-              --config "$RUNNER_TEMP/gitleaks-defaut.toml" --gitleaks-ignore-path "$RUNNER_TEMP"
+          find "${dossiers[@]}" -type f -print0 | xargs -0 cat > "$RUNNER_TEMP/publies.txt"
+          # Rien à lire ne doit jamais donner un scan vert.
+          if [ ! -s "$RUNNER_TEMP/publies.txt" ]; then
+            echo "::error::Aucun fichier publié trouvé à scanner"
+            exit 1
+          fi
+          gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
+            --config "$RUNNER_TEMP/gitleaks-defaut.toml" --gitleaks-ignore-path "$RUNNER_TEMP" \
+            < "$RUNNER_TEMP/publies.txt"
+      - name: Même version de npm pour Netlify et le projet
+        run: |
+          projet="$(node -p 'require("./package.json").packageManager')"
+          netlify="npm@$(sed -n 's/^ *NPM_VERSION = "\(.*\)"$/\1/p' netlify.toml)"
+          if [ "$projet" != "$netlify" ]; then
+            echo "::error::package.json ($projet) et netlify.toml ($netlify) diffèrent"
+            exit 1
+          fi
 
   secrets:
     name: Secrets
     runs-on: ubuntu-24.04
     timeout-minutes: 10
-    env:
-      GITLEAKS_VERSION: "8.30.1"
-      GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
