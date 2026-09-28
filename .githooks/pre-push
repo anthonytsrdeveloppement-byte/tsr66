@@ -1,0 +1,39 @@
+#!/bin/sh
+# Contrôle avant envoi (PRD 2.1, checklist D6) : chaque commit envoyé est
+# scanné, y compris ceux créés sans passer par le contrôle avant commit
+# (cherry-pick, rebase, revert, am). Activé avec les autres crochets.
+set -eu
+ACTION="envoi"
+. "$(dirname "$0")/_commun.sh"
+
+echo "▶ Contrôle avant envoi"
+verifier_gitleaks
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+preparer_config "$tmp"
+
+# Dépôt distant visé (argument 1 donné par git) : seuls les commits déjà
+# présents sur CE dépôt sont exclus du scan.
+distant="$1"
+zero="0000000000000000000000000000000000000000"
+# « || [ -n … ] » : la dernière ligne est lue même sans retour à la ligne final.
+while read -r local_ref local_sha remote_ref remote_sha || [ -n "${local_ref:-}" ]; do
+  # Suppression d'une branche distante : rien à scanner.
+  [ "$local_sha" = "$zero" ] && continue
+  if [ "$remote_sha" = "$zero" ]; then
+    # Nouvelle branche : les commits absents de GitHub.
+    set -- "$local_sha" --not --remotes="$distant"
+  else
+    git cat-file -e "$remote_sha^{commit}" 2>/dev/null \
+      || refuser "Version distante inconnue sur cet ordinateur (lancer « git fetch », puis recommencer)"
+    set -- "$remote_sha..$local_sha"
+  fi
+  # Fusions comprises (contenu ajouté en résolvant un conflit).
+  GIT_ATTR_SOURCE="$ARBRE_VIDE" git log -p --text --no-ext-diff --no-textconv \
+    --diff-merges=first-parent "$@" -- . ':(exclude).claude/skills/skills-lock.json' \
+    >"$tmp/envoi.diff"
+  scanner_diff "$tmp/envoi.diff" "$tmp"
+  local_ref=""
+done
+
+echo "✔ Contrôle avant envoi : tout est vert"

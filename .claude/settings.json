@@ -65,7 +65,10 @@
       "Edit(./tsconfig.json)",
       "Edit(./.prettierrc.json)",
       "Edit(./.prettierignore)",
-      "Edit(./.npmrc)"
+      "Edit(./.npmrc)",
+      "Edit(./package.json)",
+      "Edit(./.github/**)",
+      "Edit(./.nvmrc)"
     ]
   }
 }

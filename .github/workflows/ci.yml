@@ -43,16 +43,26 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+      - name: Crochets git exécutables
+        run: |
+          # Un crochet non exécutable est ignoré par git sans aucune erreur.
+          bad="$(git ls-files -s .githooks | awk '$4 != ".githooks/_commun.sh" && $1 != "100755" {print $4}')"
+          if [ -n "$bad" ]; then
+            echo "::error::Crochets non exécutables : $bad"
+            exit 1
+          fi
       - name: Dépendances à l'identique (scripts d'installation bloqués par .npmrc)
         run: npm ci
+      # Outils appelés directement, pas par les scripts de package.json :
+      # une modification de ces scripts ne peut pas vider les contrôles.
       - name: Mise en forme
-        run: npm run format:check
+        run: ./node_modules/.bin/prettier --check .
       - name: Qualité du code
-        run: npm run lint -- --max-warnings=0
+        run: ./node_modules/.bin/eslint --max-warnings=0
       - name: Types
-        run: npm run typecheck
+        run: ./node_modules/.bin/next typegen && ./node_modules/.bin/tsc --noEmit
       - name: Compilation
-        run: npm run build
+        run: ./node_modules/.bin/next build
 
   secrets:
     name: Secrets
@@ -92,16 +102,28 @@ jobs:
           # Configuration de la branche de destination : une demande de fusion
           # ne peut pas élargir ses propres exceptions.
           git show "origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
+          # Témoin : un faux jeton créé à l'instant (jamais écrit ni affiché) doit être
+          # détecté, sinon la configuration est inopérante (vidée, règles désactivées).
+          temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36 || true)"
+          if printf 'token = "%s"\n' "$temoin" | gitleaks stdin --no-banner --config "$cfg/config.toml" >/dev/null 2>&1; then
+            echo "::error::Configuration gitleaks inopérante : le jeton témoin n'est pas détecté"
+            exit 1
+          fi
+          # Fusions comprises : le contenu ajouté en résolvant un conflit est scanné.
           gitleaks git --redact --no-banner --ignore-gitleaks-allow \
+            --log-opts="--all --full-history --diff-merges=first-parent" \
             --config "$cfg/config.toml" --gitleaks-ignore-path "$cfg" .
-      - name: SVG et package-lock.json, sur tout l'historique (ignorés par défaut par gitleaks)
+      - name: Tout l'historique sans exclusion par nom de fichier
         run: |
-          # Passés par l'entrée standard : aucune exclusion par nom de fichier ne s'applique.
-          git log -p --all --full-history -- \
-            ':(glob,icase)**/*.svg' ':(glob,icase)**/package-lock.json' \
-            | gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
-              --config "$RUNNER_TEMP/gitleaks/config.toml" \
-              --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks"
+          # gitleaks ignore par défaut certains noms (SVG, images, lockfiles, bootstrap*.js…) :
+          # passé par l'entrée standard, tout le contenu est lu. Seul skills-lock.json est
+          # retiré (empreintes SHA-256), il est scanné à l'étape précédente avec son exception étroite.
+          git log -p --text --no-ext-diff --no-textconv --all --full-history \
+            --diff-merges=first-parent -- . ':(exclude).claude/skills/skills-lock.json' \
+            > "$RUNNER_TEMP/historique.diff"
+          gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
+            --config "$RUNNER_TEMP/gitleaks/config.toml" \
+            --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks" < "$RUNNER_TEMP/historique.diff"
 
   dependances:
     name: Dépendances
