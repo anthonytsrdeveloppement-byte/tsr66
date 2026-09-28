@@ -8,7 +8,7 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **En cours : Lot 0**, prochaine étape : la liaison Netlify
+- ➡️ **En cours : Lot 0**, prochaine étape : contrôle d'alignement des documents automatisé (C07)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
@@ -27,8 +27,9 @@
 - ✅ Tri des 4 premières propositions de Dependabot : React 19.3.0 accepté (testé, audité) ; TypeScript 7, ESLint 10 et types de Node 26 refusés, avec une règle pour ne plus les reproposer (2026-09-28)
 - ✅ Rattrapage des contrôles oubliés à la clôture (2026-09-28) : Semgrep, Aikido, relecteurs `pr-review-toolkit`, relecture sécurité avec les grilles du projet. Trous corrigés : secrets cachés derrière certains noms de fichiers, fusions, `cherry-pick`, configuration vidée, adresse e-mail dans les fusions. Délai de 7 jours imposé par npm ; signalement privé des failles activé
 - ⬜ Avant les premiers secrets (Lot 4) : empêcher Claude Code de lire `.env.local` par une commande (bac à sable de Claude Code ou règle dédiée)
+- ⬜ 👤 Avant les premiers secrets (Lot 4) : dans Netlify, aperçus des demandes venant d'un fork désactivés ou soumis à approbation, clés marquées « secret » et limitées à la production (revue sécurité du 2026-09-28)
 - ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire dès le premier code qui en demande (Lot 1)
-- ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité, Node 24 et télémétrie désactivée (PRD 4.2, 6.2 et 6.3)
+- ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; en-têtes de sécurité et `noindex` sur pages et fichiers ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)
 - ⬜ Contrôles C01 à C07 du registre activés (C01, C02, C03, C08, C09 déjà actifs) (`docs/checklist/4-controles-du-site.md`)
 - ⬜ Premier passage complet de la checklist, avec le premier rapport de session et la première ligne de l'historique
@@ -47,7 +48,7 @@
 **Objectif** : Anthony publie une réalisation depuis son téléphone.
 **Utilise** : compte Sanity (Lot 0), charte (Lot 1).
 - ⬜ Sanity : hébergement en Europe vérifié (PRD 6.2)
-- ⬜ Portail `tsr66.fr/espace` aux couleurs de TSR66, connexion Google, adresses autorisées (PRD 3.2)
+- ⬜ Portail `tsr66.fr/espace` aux couleurs de TSR66, connexion Google, adresses autorisées (PRD 3.2) ; vérifier que `Cross-Origin-Opener-Policy: same-origin` ne gêne pas la connexion Google, et un `noindex` propre à `/espace`
 - ⬜ Réalisations et photos (GPS supprimé, format et taille contrôlés), horaires, interrupteur « indisponible »
 
 ## Lot 3 — Pages publiques, SEO et GEO
@@ -70,7 +71,7 @@
 ## Lot 5 — Mise en ligne
 **Objectif** : le site est en ligne sur tsr66.fr.
 **Utilise** : tous les lots précédents.
-- ⬜ tsr66.fr branché sur Netlify, seul domaine indexable, IndexNow actif (PRD 4.2)
+- ⬜ tsr66.fr branché sur Netlify, seul domaine indexable, IndexNow actif (PRD 4.2) : voir les points notés au contrôle C60 (règle d'indexation selon l'adresse visitée, `noindex` des fichiers, HSTS `includeSubDomains`)
 - ⬜ Google Search Console, Bing Webmaster Tools
 - ⬜ Audit SEO et GEO final, scan approfondi `claude-security`, **zéro dette ouverte**, aucun contenu provisoire, textes validés
 - ⬜ Mentions légales complètes (décennale et médiateur, s'ils sont fournis)
@@ -79,6 +80,7 @@
 - 👤 Décisions : statistiques de visites, et qui gère la fiche Google et les annuaires (PRD 4.4)
 
 ## À chaque fin de lot
+- Contrôle C05/C06 sur l'adresse Netlify (projet ouvert 2 minutes avec l'accord de Nicolas)
 - Réévaluer les versions majeures écartées dans `.github/dependabot.yml` (TypeScript, ESLint) : les adopter dès que la configuration de Next.js les prend en charge
 - Checklist de fin de lot L1 à L7 (`docs/checklist/3-fin-de-lot.md`) : objectif démontré, contrôles du lot activés, scan `claude-security`, dettes échues, formules gratuites (PRD 6.1)
 
