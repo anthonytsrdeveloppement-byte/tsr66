@@ -8,14 +8,14 @@
 ## Lot 0 — Fondations et contrôle
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |
 |---|---|---|---|---|---|
-| C01 | Aucun secret dans le code, l'historique git ni les fichiers produits pour le site | D6, F4 | 🤖 | ✅ | 2026-09-27 : gitleaks sur tout l'historique, 0 trouvaille (automatisation au contrôle avant commit) |
+| C01 | Aucun secret dans le code, l'historique git ni les fichiers produits pour le site | D6, F4 | 🤖 | ✅ | 2026-09-27 : gitleaks sur tout l'historique, 0 trouvaille ; contrôle avant commit en place (`.githooks/pre-commit`) : faux secret refusé, y compris avec les 5 astuces de contournement testées (commentaire d'exception, fichier d'exceptions, configuration locale élargie, variable d'environnement, exception ajoutée dans un commit précédent). Risque résiduel : les exceptions par défaut de gitleaks ne lisent pas les images, les PDF, les SVG ni `package-lock.json`, à couvrir par la CI |
 | C02 | `client/` et les fichiers `.env` ne sont jamais suivis par git | 2.1, D6 | 🤖 | ✅ | 2026-09-27 : aucun fichier suivi |
-| C03 | Dépendances : 0 vulnérabilité, versions exactes, scripts d'installation bloqués, signatures du registre vérifiées | D5, F4 | 🤖 | ✅ | 2026-09-27 : `npm audit` 0, 345/345 signatures, audit chaîne d'approvisionnement 0 faille (9 directes, 389 indirectes) |
+| C03 | Dépendances : 0 vulnérabilité, versions exactes, scripts d'installation bloqués, signatures du registre vérifiées | D5, F4 | 🤖 | ✅ | 2026-09-27 : `npm audit` 0, 351/351 signatures, audit chaîne d'approvisionnement 0 faille (11 directes, 392 indirectes) |
 | C04 | Aucune fusion dans la version principale sans CI au vert | F5 | 🤖 | ⬜ | 2026-09-27 : branche protégée (demande de fusion obligatoire, envoi direct refusé, testé) ; CI à brancher |
 | C05 | Aperçus privés et adresse de travail Netlify interdits aux moteurs de recherche | 4.2 | 🤖 | ⬜ | — |
 | C06 | En-têtes de sécurité : seul le code de TSR66 s'exécute, le site ne peut pas être intégré dans une autre page, HTTPS forcé | 6.3 | 🤖 | ⬜ | — |
 | C07 | Documents alignés sur le PRD | 2.1 | 🤖 | ⬜ | — |
-| C09 | Verrous en place : commandes dangereuses refusées par Claude Code, branche principale protégée, identité git masquée | 2.1 | 🤖 | ✅ | 2026-09-27 : `git clean` refusé, envoi direct sur main refusé par GitHub |
+| C09 | Verrous en place : commandes dangereuses refusées par Claude Code, branche principale protégée, identité git masquée, contrôle avant commit actif (`git rev-parse --git-path hooks` = `.githooks`) et difficile à contourner par Claude, la CI restant le vrai rempart | 2.1 | 🤖 | ✅ | 2026-09-28 : `git clean` refusé, envoi direct sur main refusé par GitHub ; contrôle avant commit activé par Nicolas (`.githooks`), désactivation et contournement par Claude refusés. Risque résiduel accepté jusqu'à la CI : certaines écritures rares de commande (options courtes groupées, casse mélangée) échappent aux règles de Claude Code |
 | C08 | Skills installés identiques à la version relue : empreintes conformes à `skills-lock.json` | 2.1 | 🤖 | ✅ | 2026-09-27 : 125/125 fichiers conformes |
 
 ## Lot 1 — Design et animations
