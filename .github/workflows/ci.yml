@@ -82,6 +82,11 @@ jobs:
             echo "::error::Fichier .gitleaksignore interdit (exceptions aux secrets)"
             exit 1
           fi
+          # Tout fichier est lu comme du texte : un .gitattributes (« -diff », « binary »)
+          # ou un octet nul ne peut pas cacher un secret aux scans (prioritaire sur .gitattributes).
+          attrs="$(git rev-parse --git-path info/attributes)"
+          mkdir -p "$(dirname "$attrs")"
+          printf '* diff\n' > "$attrs"
           cfg="$RUNNER_TEMP/gitleaks"
           mkdir -p "$cfg"
           # Configuration de la branche de destination : une demande de fusion
