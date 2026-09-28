@@ -1,0 +1,32 @@
+# Mises à jour proposées par Dependabot (PRD 2.1, D5) : une demande de fusion
+# par mise à jour, rejouée par la CI, fusionnée seulement sur le « oui » de
+# Nicolas. Délai de 7 jours après publication (prudence contre les versions
+# piégées) ; les correctifs de sécurité, eux, arrivent sans délai.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
+    groups:
+      next-react:
+        patterns:
+          - "next"
+          - "eslint-config-next"
+          - "react"
+          - "react-dom"
+          - "@types/react"
+          - "@types/react-dom"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    cooldown:
+      default-days: 7
+    open-pull-requests-limit: 5
