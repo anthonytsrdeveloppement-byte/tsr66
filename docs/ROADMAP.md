@@ -24,6 +24,7 @@
 - ✅ Contrôle avant commit (D6) : secrets (gitleaks), mise en forme (Prettier), qualité du code (ESLint) et types, sur le contenu exact de chaque commit. Testé : faux secret (et 5 astuces de contournement), code incorrect et erreur de type refusés, mise en forme corrigée automatiquement (2026-09-27)
 - ✅ 👤 Contrôle avant commit activé sur l'ordinateur par Nicolas (`npm run hooks:install`, 2026-09-28). Claude Code n'a pas le droit de toucher à ce réglage
 - ✅ CI GitHub : qualité (mise en forme, code, types, compilation), secrets (tout l'historique, SVG et `package-lock.json` compris), dépendances (0 faille, signatures), CodeQL ; télémétrie Next.js désactivée ; les 5 contrôles sont obligatoires avant toute fusion, même pour l'administrateur ; blocage prouvé par une demande de fusion de test ; Dependabot chaque lundi, délai de 7 jours (2026-09-28)
+- ✅ Tri des 4 premières propositions de Dependabot : React 19.3.0 accepté (testé, audité) ; TypeScript 7, ESLint 10 et types de Node 26 refusés, avec une règle pour ne plus les reproposer (2026-09-28)
 - ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire dès le premier code qui en demande (Lot 1)
 - ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité, Node 24 et télémétrie désactivée (PRD 4.2, 6.2 et 6.3)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)
@@ -76,6 +77,7 @@
 - 👤 Décisions : statistiques de visites, et qui gère la fiche Google et les annuaires (PRD 4.4)
 
 ## À chaque fin de lot
+- Réévaluer les versions majeures écartées dans `.github/dependabot.yml` (TypeScript, ESLint) : les adopter dès que la configuration de Next.js les prend en charge
 - Checklist de fin de lot L1 à L7 (`docs/checklist/3-fin-de-lot.md`) : objectif démontré, contrôles du lot activés, scan `claude-security`, dettes échues, formules gratuites (PRD 6.1)
 
 ## Après la mise en ligne
