@@ -8,7 +8,7 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **En cours : Lot 0**, prochaine étape : premier passage complet de la checklist avec tous les contrôles C01 à C09 actifs, puis fin du Lot 0 (L1 à L7)
+- ➡️ **En cours : Lot 0**, prochaine étape : premier passage complet de la checklist avec tous les contrôles C01 à C09 actifs, puis fin du Lot 0 (L1 à L7) ; achat de tsr66.fr toujours attendu (👤)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.

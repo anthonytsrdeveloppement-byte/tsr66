@@ -4,70 +4,102 @@
 //
 //   node scripts/verifier-alignement.mjs
 //
-// La mémoire de Claude (hors dépôt) n'existe que sur l'ordinateur : en CI, les
-// contrôles qui la lisent sont annoncés comme non vérifiés, jamais comptés verts.
-// Sur l'ordinateur, une mémoire introuvable est un échec.
+// Ce qui n'existe que sur l'ordinateur (mémoire de Claude, dossier client/ non
+// versionné) est annoncé comme non vérifié en CI, jamais compté vert. Sur
+// l'ordinateur, son absence est un échec.
+// Rien à lire ne donne jamais un contrôle vert : repère introuvable, liste vide
+// ou fichier manquant sont des échecs lisibles.
 // Affiche ✅/❌ par contrôle. Code de sortie 1 au moindre échec.
 
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
-import { join, relative } from "node:path";
+import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RACINE = fileURLToPath(new URL("..", import.meta.url)).replace(/\/$/, "");
-const EN_CI = process.env.CI === "true";
+// GITHUB_ACTIONS n'est défini que par GitHub : un CI=true posé ailleurs ne
+// peut pas faire sauter les contrôles propres à l'ordinateur.
+const EN_CI = process.env.GITHUB_ACTIONS === "true";
 // Dossier de Claude Code pour ce projet : chemin absolu du dépôt, chaque
 // caractère non alphanumérique remplacé par « - ».
 const MEMOIRE = join(
-  homedir(),
   ".claude/projects",
   RACINE.replace(/[^A-Za-z0-9]/g, "-"),
   "memory/projet-tsr66.md"
 );
-const CK = "docs/checklist";
+const DOSSIER_CHECKLIST = "docs/checklist";
+const HORS_DEPOT = ["client/LISEZMOI.md"]; // client/ n'est jamais versionné (PRD 2.1)
 
-const lire = (chemin) => readFileSync(join(RACINE, chemin), "utf8");
 const resultats = [];
 const nonVerifies = [];
 function verifier(condition, message) {
   resultats.push([Boolean(condition), message]);
 }
-const entre = (texte, debut, fin) =>
-  texte.slice(texte.indexOf(debut), texte.indexOf(fin));
+const suite = (liste) => (liste.length ? ` → ${liste.join(", ")}` : "");
 const toutes = (texte, regex) => [...texte.matchAll(regex)];
+const unAN = (lettre, n) =>
+  Array.from({ length: n }, (_, i) => `${lettre}${i + 1}`);
 
-const docs = Object.fromEntries(
-  [
-    "docs/PRD.md",
-    "docs/ROADMAP.md",
-    "docs/DETTES.md",
-    "CLAUDE.md",
-    "client/LISEZMOI.md",
-    `${CK}/LISEZMOI.md`,
-    `${CK}/1-demarrage.md`,
-    `${CK}/2-fin-de-session.md`,
-    `${CK}/3-fin-de-lot.md`,
-    `${CK}/4-controles-du-site.md`,
-    `${CK}/historique.md`,
-    `${CK}/sessions/MODELE_RAPPORT.md`,
-  ].map((chemin) => {
-    // Un document manquant est un échec lisible, pas un arrêt du script.
-    if (existsSync(join(RACINE, chemin))) return [chemin, lire(chemin)];
-    verifier(false, `${chemin} : introuvable`);
-    return [chemin, ""];
-  })
-);
+// Un fichier manquant est un échec lisible, pas un arrêt du script.
+function lire(chemin) {
+  if (existsSync(join(RACINE, chemin))) {
+    return readFileSync(join(RACINE, chemin), "utf8");
+  }
+  verifier(false, `${chemin} : introuvable`);
+  return "";
+}
+// Portion de texte entre deux repères. Un repère renommé est un échec : sinon
+// la portion serait vide et les contrôles qui la lisent passeraient à vide.
+function entre(texte, debut, fin) {
+  const i = texte.indexOf(debut);
+  const j = i < 0 ? -1 : texte.indexOf(fin, i + debut.length);
+  if (j < 0) {
+    verifier(false, `repère introuvable : « ${i < 0 ? debut : fin} »`);
+    return "";
+  }
+  return texte.slice(i, j);
+}
+
+const docs = {};
+for (const chemin of [
+  "docs/PRD.md",
+  "docs/ROADMAP.md",
+  "docs/DETTES.md",
+  "CLAUDE.md",
+  "client/LISEZMOI.md",
+  `${DOSSIER_CHECKLIST}/LISEZMOI.md`,
+  `${DOSSIER_CHECKLIST}/1-demarrage.md`,
+  `${DOSSIER_CHECKLIST}/2-fin-de-session.md`,
+  `${DOSSIER_CHECKLIST}/3-fin-de-lot.md`,
+  `${DOSSIER_CHECKLIST}/4-controles-du-site.md`,
+  `${DOSSIER_CHECKLIST}/historique.md`,
+  `${DOSSIER_CHECKLIST}/sessions/MODELE_RAPPORT.md`,
+]) {
+  if (EN_CI && HORS_DEPOT.includes(chemin)) continue;
+  docs[chemin] = lire(chemin);
+}
+if (EN_CI) {
+  nonVerifies.push(
+    `${HORS_DEPOT.join(", ")} : hors dépôt, vérifié sur l'ordinateur`
+  );
+}
 const prd = docs["docs/PRD.md"];
 const roadmap = docs["docs/ROADMAP.md"];
 const checklist = Object.entries(docs)
-  .filter(([chemin]) => chemin.startsWith(CK))
+  .filter(([chemin]) => chemin.startsWith(DOSSIER_CHECKLIST))
   .map(([, texte]) => texte)
   .join("");
 let memoire = null;
-if (existsSync(MEMOIRE)) memoire = readFileSync(MEMOIRE, "utf8");
-else if (EN_CI) nonVerifies.push("mémoire de Claude : absente en CI");
-else verifier(false, `mémoire de Claude introuvable (${MEMOIRE})`);
+if (existsSync(join(homedir(), MEMOIRE))) {
+  memoire = readFileSync(join(homedir(), MEMOIRE), "utf8");
+} else if (EN_CI) {
+  nonVerifies.push(
+    "mémoire de Claude : absente en CI (termes obsolètes et faits comparés au PRD, vérifiés sur l'ordinateur)"
+  );
+} else {
+  verifier(false, `mémoire de Claude introuvable (~/${MEMOIRE})`);
+}
 
 // 1. Termes obsolètes (les négations explicites sont tolérées)
 const OBSOLETES = {
@@ -90,22 +122,26 @@ function obsoletes(texte) {
     OBSOLETES[terme].test(nettoye)
   );
 }
-const trouves = (liste) => (liste.length ? ` → ${liste.join(", ")}` : "");
 for (const [chemin, texte] of Object.entries(docs)) {
   const liste = obsoletes(texte);
-  verifier(!liste.length, `${chemin} : aucun terme obsolète${trouves(liste)}`);
+  verifier(!liste.length, `${chemin} : aucun terme obsolète${suite(liste)}`);
 }
 if (memoire !== null) {
   const liste = obsoletes(memoire);
   verifier(
     !liste.length,
-    `mémoire projet : aucun terme obsolète${trouves(liste)}`
+    `mémoire projet : aucun terme obsolète${suite(liste)}`
   );
 }
 
 // 2. Carte des documents : chaque document cité existe
-const carte = entre(prd, "**Carte des documents**", "### 2.2");
-for (const [, chemin] of toutes(carte, /^\| `([^`]+)` \|/gm)) {
+const carte = toutes(
+  entre(prd, "**Carte des documents**", "### 2.2"),
+  /^\| `([^`]+)` \|/gm
+).map(([, chemin]) => chemin);
+verifier(carte.length > 0, `carte 2.1 : ${carte.length} documents listés`);
+for (const chemin of carte) {
+  if (EN_CI && HORS_DEPOT.includes(chemin)) continue;
   verifier(existsSync(join(RACINE, chemin)), `carte 2.1 : ${chemin} existe`);
 }
 
@@ -119,26 +155,23 @@ const renvois = new Set([
 ]);
 const introuvables = [...renvois].filter((n) => !sections.has(n)).sort();
 verifier(
-  !introuvables.length,
-  `ROADMAP : ${renvois.size} renvois au PRD valides` +
-    (introuvables.length ? ` → introuvables ${introuvables.join(", ")}` : "")
+  renvois.size > 0 && !introuvables.length,
+  `ROADMAP : ${renvois.size} renvois au PRD valides${suite(introuvables)}`
 );
 
 // 4. Fiches de checklist (dossier docs/checklist/)
 const titresFiches = new Map(
   toutes(
-    docs[`${CK}/1-demarrage.md`] + docs[`${CK}/2-fin-de-session.md`],
-    /\*\*([DF]\d) — (.+?)\*\*/g
+    docs[`${DOSSIER_CHECKLIST}/1-demarrage.md`] +
+      docs[`${DOSSIER_CHECKLIST}/2-fin-de-session.md`],
+    /\*\*([DF]\d+) — (.+?)\*\*/g
   ).map(([, fiche, titre]) => [fiche, titre])
 );
 const fiches = new Set(titresFiches.keys());
-const attendues = [
-  ...Array.from({ length: 7 }, (_, i) => `D${i + 1}`),
-  ...Array.from({ length: 6 }, (_, i) => `F${i + 1}`),
-];
+const attendues = [...unAN("D", 7), ...unAN("F", 6)];
 verifier(
   fiches.size === attendues.length && attendues.every((f) => fiches.has(f)),
-  `checklist : 13 fiches D1–D7 / F1–F6 (${fiches.size})`
+  `checklist : ${attendues.length} fiches D1–D7 / F1–F6 (${fiches.size})`
 );
 const section23 = entre(prd, "### 2.3", "## 3.");
 verifier(
@@ -148,24 +181,35 @@ verifier(
   "PRD 2.3 : titres des fiches identiques au dossier checklist"
 );
 verifier(
-  !/\*\*[DF]\d — /.test(prd),
+  !/\*\*[DF]\d+ — /.test(prd),
   "PRD : fiches non dupliquées (détail uniquement dans docs/checklist/)"
 );
 const pointsLot = new Set(
-  toutes(docs[`${CK}/3-fin-de-lot.md`], /^\| (L\d) — /gm).map(([, l]) => l)
+  toutes(docs[`${DOSSIER_CHECKLIST}/3-fin-de-lot.md`], /^\| (L\d+) — /gm).map(
+    ([, l]) => l
+  )
 );
 verifier(
-  pointsLot.size === 7 &&
-    Array.from({ length: 7 }, (_, i) => `L${i + 1}`).every((l) =>
-      pointsLot.has(l)
-    ),
+  pointsLot.size === 7 && unAN("L", 7).every((l) => pointsLot.has(l)),
   `fin de lot : L1 à L7 (${pointsLot.size})`
 );
+const texteRegistre = docs[`${DOSSIER_CHECKLIST}/4-controles-du-site.md`];
 const registre = toutes(
-  docs[`${CK}/4-controles-du-site.md`],
+  texteRegistre,
   /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|/gmu
 );
 const numeros = registre.map(([, n]) => n);
+// Toute ligne de contrôle doit être lue : une ligne mal formée (état ou type
+// inconnu) échapperait sinon à tous les contrôles du registre.
+const lignesRegistre = toutes(texteRegistre, /^\| (C\d\d) \|/gm).map(
+  ([, n]) => n
+);
+const malFormees = lignesRegistre.filter((n) => !numeros.includes(n));
+verifier(
+  !malFormees.length,
+  `registre : chaque ligne lue (numéro, PRD, type, état)${suite(malFormees)}`
+);
+// 45 contrôles aujourd'hui : moins de 40 signale un registre tronqué.
 verifier(
   numeros.length === new Set(numeros).size && numeros.length >= 40,
   `registre : ${numeros.length} contrôles, numéros uniques`
@@ -179,31 +223,32 @@ const sansRenvoi = registre.flatMap(([, n, refs]) =>
 );
 verifier(
   !sansRenvoi.length,
-  "registre : chaque contrôle renvoie à une section du PRD ou à une fiche" +
-    (sansRenvoi.length ? ` → ${sansRenvoi.join(", ")}` : "")
+  `registre : chaque contrôle renvoie à une section du PRD ou à une fiche${suite(sansRenvoi)}`
 );
-const modele = docs[`${CK}/sessions/MODELE_RAPPORT.md`];
+const modele = docs[`${DOSSIER_CHECKLIST}/sessions/MODELE_RAPPORT.md`];
 verifier(
   [...pointsLot].every((l) => modele.includes(`| ${l} `)) &&
     modele.includes("4-controles-du-site.md"),
   "modèle de rapport : fin de lot et registre prévus"
 );
-const finDeSession = docs[`${CK}/2-fin-de-session.md`];
+const finDeSession = docs[`${DOSSIER_CHECKLIST}/2-fin-de-session.md`];
 verifier(
   finDeSession.includes("historique.md") &&
     finDeSession.includes("4-controles-du-site.md"),
   "F1/F6 : registre rejoué et historique complété"
 );
 for (const chemin of [
-  `${CK}/sessions/MODELE_RAPPORT.md`,
+  `${DOSSIER_CHECKLIST}/sessions/MODELE_RAPPORT.md`,
   "CLAUDE.md",
   "docs/ROADMAP.md",
-  `${CK}/LISEZMOI.md`,
+  `${DOSSIER_CHECKLIST}/LISEZMOI.md`,
 ]) {
-  const citees = toutes(docs[chemin], /\b([DF][1-7])\b/g).map(([, f]) => f);
+  const inconnues = toutes(docs[chemin], /\b([DF]\d+)\b/g)
+    .map(([, f]) => f)
+    .filter((f) => !fiches.has(f));
   verifier(
-    citees.every((f) => fiches.has(f)),
-    `${chemin} : fiches citées existantes`
+    !inconnues.length,
+    `${chemin} : fiches citées existantes${suite([...new Set(inconnues)])}`
   );
 }
 const controlesAbsents = [
@@ -211,11 +256,11 @@ const controlesAbsents = [
 ].filter((c) => !numeros.includes(c));
 verifier(
   !controlesAbsents.length,
-  "contrôles C cités dans le PRD et la roadmap : existants" +
-    (controlesAbsents.length ? ` → ${controlesAbsents.join(", ")}` : "")
+  `contrôles C cités dans le PRD et la roadmap : existants${suite(controlesAbsents)}`
 );
 
-// 5. Chaque skill retenu a un usage défini
+// 5. Chaque skill retenu a un usage défini. Liste écrite ici exprès : un skill
+// retiré du PRD par erreur est ainsi détecté.
 const RETENUS = [
   "git-workflow-and-versioning",
   "supply-chain-risk-auditor",
@@ -232,18 +277,17 @@ const RETENUS = [
   "pr-review-toolkit",
   "claude-security",
 ];
-const horsListe =
-  prd.replace(entre(prd, "- **Skills et plugins retenus**", "### 2.2"), "") +
-  checklist;
+const listeSkills = entre(prd, "- **Skills et plugins retenus**", "### 2.2");
+const horsListe = prd.replace(listeSkills, "") + checklist;
 for (const skill of RETENUS) {
   verifier(
-    horsListe.includes(skill),
-    `skill ${skill} : usage défini hors de la liste`
+    listeSkills.includes(`\`${skill}\``) && horsListe.includes(skill),
+    `skill ${skill} : retenu au PRD, usage défini hors de la liste`
   );
 }
 
 // 6. Logique d'ordre de la roadmap
-const lots = toutes(roadmap, /^## Lot (\d)/gm).map((m) => [m[1], m.index]);
+const lots = toutes(roadmap, /^## Lot (\d+)/gm).map((m) => [m[1], m.index]);
 function lotDe(texte) {
   const position = roadmap.indexOf(texte);
   if (position < 0) return null;
@@ -316,10 +360,12 @@ verifier(
     .includes("docs/sessions"),
   "plus aucun renvoi à l'ancien dossier docs/sessions"
 );
-verifier(
-  docs["client/LISEZMOI.md"].includes("section 7.2"),
-  "client/LISEZMOI.md renvoie au PRD 7.2"
-);
+if (!EN_CI) {
+  verifier(
+    docs["client/LISEZMOI.md"].includes("section 7.2"),
+    "client/LISEZMOI.md renvoie au PRD 7.2"
+  );
+}
 const gitignore = lire(".gitignore");
 verifier(
   gitignore.includes("/client/") && gitignore.includes(".env*"),
@@ -346,44 +392,98 @@ for (const [nom, fait] of Object.entries(FAITS)) {
 }
 
 // 9. Skills : fichiers installés identiques à la version relue (C08).
-// Tout fichier présent et non déclaré (y compris caché) est un écart.
+// Les skills déclarés sont exactement ceux du PRD 2.1 : vider le fichier
+// d'empreintes et les dossiers ne donne pas un contrôle vert.
 const SKILLS = join(RACINE, ".claude/skills");
-const verrou = JSON.parse(lire(".claude/skills/skills-lock.json")).skills;
+const DOSSIERS_DU_PRD = new Set(
+  listeSkills
+    .split("\n")
+    .filter((ligne) => /^ {2}- `/.test(ligne))
+    .flatMap((ligne) => {
+      const renomme = ligne.match(/installé sous le nom `([^`]+)`/);
+      if (renomme) return [renomme[1]];
+      if (ligne.includes("` : `")) {
+        return toutes(ligne.split("` : ")[1], /`([^`]+)`/g).map(([, n]) => n);
+      }
+      return [ligne.match(/`([^`]+)`/)[1]];
+    })
+);
+let verrou = {};
+try {
+  verrou = JSON.parse(lire(".claude/skills/skills-lock.json") || "{}").skills;
+} catch {
+  verifier(false, ".claude/skills/skills-lock.json : illisible");
+}
+if (typeof verrou !== "object" || verrou === null) verrou = {};
+const declares = Object.keys(verrou);
+// Noms simples uniquement : un nom avec « .. » ou « / » en tête ferait lire un
+// fichier hors du dossier des skills.
+const nomSur = (chemin) =>
+  chemin
+    .split("/")
+    .every((partie) => /^[\w.-]+$/.test(partie) && !/^\.\.?$/.test(partie));
 const empreinte = (chemin) =>
   createHash("sha256").update(readFileSync(chemin)).digest("hex");
-const ecarts = Object.entries(verrou).flatMap(([skill, { files }]) =>
-  Object.entries(files)
-    .filter(([fichier, attendu]) => {
-      const chemin = join(SKILLS, skill, fichier);
-      return !existsSync(chemin) || empreinte(chemin) !== attendu;
-    })
-    .map(([fichier]) => `${skill}/${fichier}`)
-);
-const entrees = readdirSync(SKILLS, { withFileTypes: true, recursive: true });
-const installes = entrees
-  .filter((e) => e.isDirectory() && e.parentPath === SKILLS)
-  .map((e) => e.name);
-for (const e of entrees.filter((e) => !e.isDirectory())) {
-  const chemin = relative(SKILLS, join(e.parentPath, e.name));
-  if (chemin === "skills-lock.json" || chemin === "PROVENANCE.md") continue;
-  const [skill, ...reste] = chemin.split("/");
-  if (!(reste.join("/") in (verrou[skill]?.files ?? {}))) {
-    ecarts.push(`en trop : ${chemin}`);
+const ecarts = [];
+let nombre = 0;
+for (const skill of declares) {
+  const fichiers = verrou[skill]?.files ?? {};
+  for (const [fichier, attendu] of Object.entries(fichiers)) {
+    nombre += 1;
+    const chemin = join(SKILLS, skill, fichier);
+    if (!nomSur(`${skill}/${fichier}`)) {
+      ecarts.push(`nom refusé : ${skill}/${fichier}`);
+    } else if (!existsSync(chemin) || empreinte(chemin) !== attendu) {
+      ecarts.push(`${skill}/${fichier}`);
+    }
   }
 }
-const declares = Object.keys(verrou);
+// Parcours sans suivre les liens symboliques : un lien, ou tout ce qui n'est
+// ni dossier ni fichier ordinaire, est un écart.
+const installes = [];
+function parcourir(dossier, relatif) {
+  for (const e of readdirSync(dossier, { withFileTypes: true })) {
+    const chemin = relatif ? `${relatif}/${e.name}` : e.name;
+    if (e.isDirectory()) {
+      if (!relatif) installes.push(e.name);
+      parcourir(join(dossier, e.name), chemin);
+    } else if (!e.isFile()) {
+      ecarts.push(`ni fichier ni dossier : ${chemin}`);
+    } else if (!relatif) {
+      if (!["skills-lock.json", "PROVENANCE.md"].includes(e.name)) {
+        ecarts.push(`en trop : ${chemin}`);
+      }
+    } else {
+      const [skill, ...reste] = chemin.split("/");
+      const fichiers = Object.hasOwn(verrou, skill) ? verrou[skill].files : {};
+      if (!Object.hasOwn(fichiers ?? {}, reste.join("/"))) {
+        ecarts.push(`en trop : ${chemin}`);
+      }
+    }
+  }
+}
+if (existsSync(SKILLS)) parcourir(SKILLS, "");
 const nonDeclares = installes.filter((s) => !declares.includes(s)).sort();
 const manquants = declares.filter((s) => !installes.includes(s)).sort();
-const nombre = Object.values(verrou).reduce(
-  (total, { files }) => total + Object.keys(files).length,
-  0
-);
+const horsPrd = [
+  ...declares
+    .filter((s) => !DOSSIERS_DU_PRD.has(s))
+    .map((s) => `${s} (absent du PRD)`),
+  ...[...DOSSIERS_DU_PRD]
+    .filter((s) => !declares.includes(s))
+    .map((s) => `${s} (non déclaré)`),
+].sort();
 verifier(
-  !ecarts.length && !nonDeclares.length && !manquants.length,
-  `skills : ${nombre} fichiers conformes aux empreintes` +
+  nombre > 0 &&
+    !ecarts.length &&
+    !nonDeclares.length &&
+    !manquants.length &&
+    !horsPrd.length,
+  `skills : ${nombre} fichiers conformes aux empreintes, ${declares.length} skills du PRD 2.1` +
     (ecarts.length ? ` → écarts ${ecarts.slice(0, 5).join(", ")}` : "") +
     (nonDeclares.length ? ` → dossiers non déclarés ${nonDeclares}` : "") +
-    (manquants.length ? ` → dossiers manquants ${manquants}` : "")
+    (manquants.length ? ` → dossiers manquants ${manquants}` : "") +
+    (horsPrd.length ? ` → écart avec le PRD ${horsPrd.join(", ")}` : "")
 );
 
 for (const [bon, message] of resultats) {
@@ -393,6 +493,6 @@ for (const message of nonVerifies) console.log(`⏭️  ${message}`);
 const echecs = resultats.filter(([bon]) => !bon).length;
 console.log(
   `\n${resultats.length - echecs}/${resultats.length} contrôles OK` +
-    (nonVerifies.length ? ` · ${nonVerifies.length} non vérifié ici` : "")
+    (nonVerifies.length ? ` · ${nonVerifies.length} non vérifiés ici` : "")
 );
 process.exit(echecs ? 1 : 0);
