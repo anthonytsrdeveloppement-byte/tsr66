@@ -53,7 +53,7 @@ if ! git show origin/main:.gitleaks.toml >"$tmp/config.toml" 2>/dev/null \
   echo "✖ Aucune configuration gitleaks de référence (version principale ou dernier commit) : commit refusé." >&2
   exit 1
 fi
-if ! gitleaks git --pre-commit --staged --redact --no-banner \
+if ! GIT_ATTR_SOURCE=4b825dc642cb6eb9a060e54bf8d69288fbee4904 gitleaks git --pre-commit --staged --redact --no-banner \
   --config "$tmp/config.toml" --gitleaks-ignore-path "$tmp" --ignore-gitleaks-allow; then
   echo "✖ Secret détecté : commit refusé. Retirer le secret du fichier (valeur jamais recopiée ailleurs)." >&2
   exit 1
