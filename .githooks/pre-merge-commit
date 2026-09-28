@@ -1,0 +1,4 @@
+#!/bin/sh
+# Une fusion locale sans conflit passe par ce crochet et non par pre-commit :
+# les mêmes contrôles s'appliquent.
+exec "$(dirname "$0")/pre-commit"

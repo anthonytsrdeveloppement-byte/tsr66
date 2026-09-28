@@ -1,0 +1,71 @@
+#!/bin/sh
+# Contrôle avant commit (PRD 2.1, checklist D6) : rien ne quitte l'ordinateur
+# sans ces vérifications. Activation une fois par copie du dépôt :
+#   npm run hooks:install
+# Un contrôle en échec refuse le commit. Le contournement (--no-verify) est
+# interdit (PRD 2.1, règles d'usage des skills). La CI GitHub rejoue tout.
+set -eu
+
+GITLEAKS_VERSION="8.30.1"
+
+echo "▶ Contrôle avant commit"
+
+# 1. Outils identiques (D4) : la version de Node fixée par .nvmrc.
+expected_node="v$(cat .nvmrc)"
+if [ "$(node -v 2>/dev/null || true)" != "$expected_node" ] && [ -s "${NVM_DIR:-$HOME/.nvm}/nvm.sh" ]; then
+  # nvm n'est pas compatible avec « set -eu » : options suspendues le temps du chargement.
+  set +eu
+  . "${NVM_DIR:-$HOME/.nvm}/nvm.sh" --no-use
+  nvm use --silent >/dev/null 2>&1
+  set -eu
+fi
+if [ "$(node -v 2>/dev/null || true)" != "$expected_node" ]; then
+  echo "✖ Node $expected_node requis (voir .nvmrc) : commit refusé." >&2
+  exit 1
+fi
+if [ ! -x ./node_modules/.bin/lint-staged ]; then
+  echo "✖ Dépendances absentes : lancer « npm ci », puis recommencer." >&2
+  exit 1
+fi
+
+# 2. Secrets (D6) : gitleaks sur le contenu exact du commit.
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "✖ gitleaks introuvable : commit refusé." >&2
+  exit 1
+fi
+if [ "$(gitleaks version)" != "$GITLEAKS_VERSION" ]; then
+  echo "✖ gitleaks $GITLEAKS_VERSION requis, trouvé $(gitleaks version) : commit refusé." >&2
+  exit 1
+fi
+# Aucune exception possible depuis l'ordinateur : la configuration est celle
+# de la version principale publiée (jamais une version locale ni une variable
+# d'environnement) ; les commentaires « gitleaks:allow » et tout fichier
+# .gitleaksignore sont refusés.
+unset GITLEAKS_CONFIG GITLEAKS_CONFIG_TOML
+if [ -e .gitleaksignore ] || [ -n "$(git ls-files -- '*.gitleaksignore' '.gitleaksignore')" ]; then
+  echo "✖ Fichier .gitleaksignore interdit (exceptions aux secrets) : commit refusé." >&2
+  exit 1
+fi
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+if ! git show origin/main:.gitleaks.toml >"$tmp/config.toml" 2>/dev/null \
+  && ! git show HEAD:.gitleaks.toml >"$tmp/config.toml" 2>/dev/null; then
+  echo "✖ Aucune configuration gitleaks de référence (version principale ou dernier commit) : commit refusé." >&2
+  exit 1
+fi
+if ! gitleaks git --pre-commit --staged --redact --no-banner \
+  --config "$tmp/config.toml" --gitleaks-ignore-path "$tmp" --ignore-gitleaks-allow; then
+  echo "✖ Secret détecté : commit refusé. Retirer le secret du fichier (valeur jamais recopiée ailleurs)." >&2
+  exit 1
+fi
+
+# 3. Mise en forme et qualité du code, sur les seuls fichiers du commit.
+./node_modules/.bin/lint-staged --config .lintstagedrc.mjs
+
+# 4. Types, à chaque commit, sur une copie exacte du contenu du commit
+#    (y compris les suppressions ; les fichiers hors commit sont ignorés).
+git checkout-index -a --prefix="$tmp/commit/"
+ln -s "$PWD/node_modules" "$tmp/commit/node_modules"
+(cd "$tmp/commit" && npm run --silent typecheck)
+
+echo "✔ Contrôle avant commit : tout est vert"

@@ -8,7 +8,7 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **Prochaine étape : Lot 0**, qui commence par les actions 👤
+- ➡️ **En cours : Lot 0**, prochaine étape : la CI GitHub
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
@@ -21,7 +21,8 @@
 - ✅ Installation des skills retenus : 17 dossiers, 125 fichiers lus en entier par Claude et par deux agents indépendants, aucun rejet, figés et vérifiés par empreintes (2026-09-27, PRD 2.1)
 - ✅ Dépôt git public créé et protégé : détection et blocage des secrets, alertes de dépendances, branche principale protégée, verrous Claude Code (2026-09-27)
 - ✅ Installation de Next.js 16.3.6 : squelette minimal, Node 24 fixé, versions exactes, scripts d'installation bloqués, télémétrie désactivée, 0 vulnérabilité (2026-09-27)
-- ⬜ Contrôle avant commit : secrets, qualité du code (D6). Les scripts d'installation étant bloqués (`.npmrc`), l'activation des crochets git se fait par une commande dédiée
+- ✅ Contrôle avant commit (D6) : secrets (gitleaks), mise en forme (Prettier), qualité du code (ESLint) et types, sur le contenu exact de chaque commit. Testé : faux secret (et 5 astuces de contournement), code incorrect et erreur de type refusés, mise en forme corrigée automatiquement (2026-09-27)
+- ✅ 👤 Contrôle avant commit activé sur l'ordinateur par Nicolas (`npm run hooks:install`, 2026-09-28). Claude Code n'a pas le droit de toucher à ce réglage
 - ⬜ CI GitHub : qualité, tests, CodeQL, secrets, dépendances, télémétrie Next.js désactivée (F5)
 - ⬜ Liaison Netlify (`netlify-deploy`), aperçus privés **non indexables**, en-têtes de sécurité, Node 24 et télémétrie désactivée (PRD 4.2, 6.2 et 6.3)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)

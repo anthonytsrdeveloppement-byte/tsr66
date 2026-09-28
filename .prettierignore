@@ -1,0 +1,10 @@
+# Prettier ignore déjà tout ce que .gitignore ignore (client/, .next/, .env…).
+
+# Skills figés : leurs empreintes sont vérifiées (C08), ils ne sont jamais modifiés.
+.claude/skills/
+
+# Documents rédigés à la main : Prettier réalignerait les tableaux et changerait la mise en forme.
+*.md
+
+# Fichier généré par npm.
+package-lock.json
