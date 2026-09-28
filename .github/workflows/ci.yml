@@ -1,7 +1,8 @@
 # CI GitHub (PRD 2.1, checklist F5, contrôle C04) : rejoue sur les serveurs de
 # GitHub tous les contrôles du crochet avant commit, plus CodeQL, l'audit des
-# dépendances, les en-têtes du site (C05, C06) et les secrets dans les fichiers
-# publiés (C01). Aucune fusion dans main sans ces contrôles au vert.
+# dépendances, les en-têtes du site (C05, C06), les secrets dans les fichiers
+# publiés (C01), l'alignement des documents et les empreintes des skills (C07,
+# C08). Aucune fusion dans main sans ces contrôles au vert.
 # Actions figées par empreinte de commit (mises à jour par Dependabot, relues).
 name: CI
 
@@ -55,6 +56,10 @@ jobs:
             echo "::error::Crochets non exécutables : $bad"
             exit 1
           fi
+      # La mémoire de Claude (hors dépôt) est annoncée « non vérifiée ici » :
+      # elle est contrôlée en D1 et F6 sur l'ordinateur.
+      - name: Documents alignés sur le PRD, skills conformes (C07, C08)
+        run: node scripts/verifier-alignement.mjs
       - name: Dépendances à l'identique (scripts d'installation bloqués par .npmrc)
         run: npm ci
       # Outils appelés directement, pas par les scripts de package.json :
