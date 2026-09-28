@@ -7,6 +7,7 @@
 // Code de sortie 1 au moindre écart.
 
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 
 const PORT = 3999;
 const erreurs = [];
@@ -55,6 +56,28 @@ for (const [i, { env, indexable }] of casIndexation.entries()) {
     `C05 : CONTEXT=${env.CONTEXT || "(vide)"} URL=${env.URL || "(vide)"} → ${
       interdit ? "interdit" : "indexable"
     }, attendu ${indexable ? "indexable" : "interdit"}`
+  );
+}
+
+// Fichiers servis directement par Netlify : netlify.toml doit donner exactement
+// les mêmes en-têtes que next.config.ts hors tsr66.fr.
+const blocNetlify =
+  readFileSync(new URL("../netlify.toml", import.meta.url), "utf8")
+    .split(/^\s*\[headers\.values\]\s*$/m)[1]
+    ?.split(/^\s*\[/m)[0] ?? "";
+const entetesNetlify = new Map(
+  [...blocNetlify.matchAll(/^\s*([A-Za-z-]+)\s*=\s*"(.*)"\s*$/gm)].map(
+    ([, cle, valeur]) => [cle.toLowerCase(), valeur]
+  )
+);
+const entetesPages = await entetesDeLaConfiguration(
+  { CONTEXT: "", URL: "" },
+  "netlify"
+);
+for (const cle of new Set([...entetesPages.keys(), ...entetesNetlify.keys()])) {
+  verifier(
+    entetesPages.get(cle) === entetesNetlify.get(cle),
+    `C06 : ${cle} différent entre next.config.ts et netlify.toml`
   );
 }
 
@@ -204,5 +227,5 @@ if (erreurs.length) {
   process.exit(1);
 }
 console.log(
-  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, 3 réponses vérifiées`
+  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, netlify.toml identique, 3 réponses vérifiées`
 );
