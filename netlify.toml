@@ -1,0 +1,20 @@
+# Compilation du site chez Netlify (PRD 6.1). Ce fichier prime sur les réglages
+# de l'interface Netlify. Jamais de secret ici : le dépôt est public (PRD 6.3).
+# Version de Node : lue par Netlify dans .nvmrc.
+
+[build]
+  # Réinstallation à l'identique du fichier de verrouillage (checklist D4),
+  # scripts d'installation bloqués par .npmrc, puis compilation.
+  command = "npm ci && ./node_modules/.bin/next build"
+  publish = ".next"
+
+[build.environment]
+  # Télémétrie de Next.js désactivée (PRD 6.2).
+  NEXT_TELEMETRY_DISABLED = "1"
+  # Même version de npm que le projet (package.json, packageManager).
+  NPM_VERSION = "11.19.0"
+
+# Module Netlify pour Next.js, version figée dans package.json (PRD 2.1,
+# décision de Nicolas du 2026-09-28) : Netlify ne choisit pas la version.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
