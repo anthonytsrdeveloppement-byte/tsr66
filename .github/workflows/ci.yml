@@ -108,7 +108,7 @@ jobs:
           cache: npm
       - run: npm ci
       - name: Aucune vulnérabilité, tous niveaux confondus
-        run: npm audit --audit-level=low
+        run: echo "Échec volontaire (test de blocage)" && exit 1
       - name: Signatures du registre npm
         run: npm audit signatures
 
