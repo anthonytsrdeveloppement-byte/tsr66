@@ -12,6 +12,18 @@ updates:
     cooldown:
       default-days: 7
     open-pull-requests-limit: 5
+    ignore:
+      # Types de Node alignés sur la version de Node du projet (24, voir .nvmrc) :
+      # ils changent de version majeure en même temps que Node, sur décision.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+      # Refusés le 2026-09-28 : la configuration ESLint de Next.js ne prend en
+      # charge ni TypeScript 7 ni ESLint 10 (CI en échec). À réévaluer à chaque
+      # fin de lot (roadmap).
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
     groups:
       next-react:
         patterns:
