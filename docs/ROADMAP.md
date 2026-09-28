@@ -29,7 +29,7 @@
 - ⬜ Avant les premiers secrets (Lot 4) : empêcher Claude Code de lire `.env.local` par une commande (bac à sable de Claude Code ou règle dédiée)
 - ⬜ 👤 Avant les premiers secrets (Lot 4) : dans Netlify, aperçus des demandes venant d'un fork désactivés ou soumis à approbation, clés marquées « secret » et limitées à la production (revue sécurité du 2026-09-28)
 - ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire dès le premier code qui en demande (Lot 1)
-- ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; en-têtes de sécurité et `noindex` sur pages et fichiers ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
+- ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; aperçus et adresse de travail **non indexables** (`noindex` sur pages et fichiers), en-têtes de sécurité ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ⬜ Contrôle d'alignement des documents automatisé, utilisé en D1 et F6 (PRD 2.1)
 - ⬜ Contrôles C01 à C07 du registre activés (C01, C02, C03, C08, C09 déjà actifs) (`docs/checklist/4-controles-du-site.md`)
 - ⬜ Premier passage complet de la checklist, avec le premier rapport de session et la première ligne de l'historique
