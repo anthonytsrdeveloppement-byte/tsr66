@@ -60,6 +60,12 @@
     "ask": [
       "Bash(gh pr merge:*)",
       "Bash(git push origin main:*)",
+      "Bash(git push*production*)",
+      "Bash(git push*--all*)",
+      "Bash(git push*--mirror*)",
+      "Bash(git push*+*)",
+      "Bash(gh api*--method PATCH*)",
+      "Bash(gh api*--method POST*)",
       "Bash(gh api --method DELETE:*)",
       "Edit(./eslint.config.mjs)",
       "Edit(./tsconfig.json)",

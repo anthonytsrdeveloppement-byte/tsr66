@@ -115,6 +115,25 @@ for (const cle of new Set([...entetesPages.keys(), ...entetesNetlify.keys()])) {
   );
 }
 
+// Mise en ligne (C04) : la compilation de production commence toujours par la
+// garde qui refuse un commit absent de main. Un seul bloc [context.…] autorisé.
+const blocsContexte = netlifyToml.match(/^\s*\[context\b.*$/gm) ?? [];
+verifier(
+  blocsContexte.length === 1 &&
+    blocsContexte[0].trim() === "[context.production]",
+  `C04 : netlify.toml doit avoir un seul bloc de contexte, [context.production] (${blocsContexte.join(", ") || "aucun"})`
+);
+const blocProduction =
+  netlifyToml
+    .split(/^\s*\[context\.production\]\s*$/m)[1]
+    ?.split(/^\s*\[/m)[0] ?? "";
+verifier(
+  /^\s*command = "node scripts\/garde-production\.mjs && [^"]+"\s*$/m.test(
+    blocProduction
+  ),
+  "C04 : la compilation de production doit commencer par node scripts/garde-production.mjs"
+);
+
 // 2. Les en-têtes réellement envoyés par le serveur.
 function verifierReponse(chemin, reponse) {
   const entete = (nom) => reponse.headers.get(nom) ?? "";
@@ -282,7 +301,7 @@ if (erreurs.length) {
   process.exit(1);
 }
 console.log(
-  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, netlify.toml identique, 3 réponses vérifiées${
+  `✓ C05 et C06 conformes (${base}) : ${casIndexation.length} cas d'indexation, netlify.toml identique, garde de mise en ligne présente (C04), 3 réponses vérifiées${
     adresse
       ? ""
       : " (serveur local : les fichiers servis par Netlify se vérifient avec son adresse)"

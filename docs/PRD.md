@@ -92,7 +92,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - Aucun chiffre ni aucune citation tirés d'un skill ne sont repris sur le site sans source vérifiée (4.1).
   - Les rapports d'outils contenant des chemins locaux ne sont jamais commités (dépôt public).
   - Pour Next.js, la documentation fournie avec la version installée fait foi, avant les exemples des skills (`AGENTS.md`).
-  - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; blocage par GitHub de tout envoi contenant un secret.
+  - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; branche `production`, la seule mise en ligne par Netlify : ni envoi forcé ni suppression, même pour l'administrateur, 4 contrôles de la CI exigés, et une garde de compilation qui refuse tout commit absent de la branche principale (`scripts/garde-production.mjs`) ; blocage par GitHub de tout envoi contenant un secret.
 
 ### 2.2 Blocages et registre des dettes
 Pour ne pas être bloqué par des détails, chaque problème relève de l'une de deux catégories. En cas de doute, c'est Nicolas qui tranche.
@@ -273,12 +273,12 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo,
 |---|---|---|
 | Site | **Next.js** (dernière version stable : 16.3.6 installée le 2026-09-27), pages générées à l'avance, **Node 24** (version stable longue durée) fixé par le projet | Rapidité maximale, SEO |
 | Animations | **GSAP** (ScrollTrigger, SplitText) + **Lenis** | Les 14 effets de la section 5 |
-| Hébergement | **Netlify** | Mise en ligne, aperçus privés, variables secrètes |
+| Hébergement | **Netlify** | Mise en ligne (branche `production`, voir ci-dessous), aperçus privés, variables secrètes |
 | Espace Anthony | **Sanity** | Réalisations, photos, horaires, interrupteur « indisponible », demandes d'avis |
 | E-mails | **Resend**, depuis `…@tsr66.fr` | Confirmations, alertes de rappel, demandes d'avis |
 | Code | **GitHub**, dépôt public | Historique, contrôles automatiques |
 
-**Coût visé : 0 €/mois** grâce aux formules gratuites de Netlify, Sanity et Resend (3 000 e-mails/mois, 100/jour), plus le domaine (≈ 10 à 15 €/an). **La consommation par rapport aux limites gratuites est vérifiée à chaque fin de lot**, et le dépassement d'une limite est signalé avant qu'il ne coûte.
+**Coût visé : 0 €/mois** grâce aux formules gratuites de Netlify, Sanity et Resend (3 000 e-mails/mois, 100/jour), plus le domaine (≈ 10 à 15 €/an). **La consommation par rapport aux limites gratuites est vérifiée à chaque fin de lot**, et le dépassement d'une limite est signalé avant qu'il ne coûte. Chez Netlify, seule une mise en ligne consomme des crédits (15 sur 300 par mois ; plafond strict : au-delà, les sites sont mis en pause) ; les aperçus et la version principale sont gratuits (documentation Netlify « How credits work », relevé du compte le 2026-09-29). La mise en ligne n'a donc lieu qu'**une fois par lot**, avec l'accord de Nicolas (décision du 2026-09-29).
 
 ### 6.2 Données personnelles (RGPD)
 - **Le site ne garde aucune donnée personnelle.**

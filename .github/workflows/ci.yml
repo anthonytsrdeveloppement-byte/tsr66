@@ -142,8 +142,9 @@ jobs:
           cfg="$RUNNER_TEMP/gitleaks"
           mkdir -p "$cfg"
           # Configuration de la branche de destination : une demande de fusion
-          # ne peut pas élargir ses propres exceptions.
-          git show "origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
+          # ne peut pas élargir ses propres exceptions. Nom complet : une étiquette
+          # ou une branche nommée « origin/main » ne peut pas la remplacer.
+          git show "refs/remotes/origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
           # Témoin : un faux jeton créé à l'instant (jamais écrit ni affiché) doit être
           # détecté, sinon la configuration est inopérante (vidée, règles désactivées).
           temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36 || true)"

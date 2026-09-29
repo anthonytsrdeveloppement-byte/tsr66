@@ -8,7 +8,8 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **En cours : Lot 0**, prochaine étape : fin du Lot 0, checklist L1 à L7 (`docs/checklist/3-fin-de-lot.md`) ; achat de tsr66.fr toujours attendu (👤)
+- ✅ **Lot 0 terminé** (2026-09-29, checklist de fin de lot L1 à L5 au vert)
+- ➡️ **Prochaine étape : Lot 1**. En début de session : brancher Aikido sur l'espace du projet (la clé personnelle a été retirée) ; puis les maquettes ; achat de tsr66.fr toujours attendu (👤)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
@@ -24,6 +25,7 @@
 - ✅ Contrôle avant commit (D6) : secrets (gitleaks), mise en forme (Prettier), qualité du code (ESLint) et types, sur le contenu exact de chaque commit. Testé : faux secret (et 5 astuces de contournement), code incorrect et erreur de type refusés, mise en forme corrigée automatiquement (2026-09-27)
 - ✅ 👤 Contrôle avant commit activé sur l'ordinateur par Nicolas (`npm run hooks:install`, 2026-09-28). Claude Code n'a pas le droit de toucher à ce réglage
 - ✅ CI GitHub : qualité (mise en forme, code, types, compilation), secrets (tout l'historique, SVG et `package-lock.json` compris), dépendances (0 faille, signatures), CodeQL ; télémétrie Next.js désactivée ; les 5 contrôles sont obligatoires avant toute fusion, même pour l'administrateur ; blocage prouvé par une demande de fusion de test ; Dependabot chaque lundi, délai de 7 jours (2026-09-28)
+- ✅ Réévaluation de fin de lot (2026-09-29) : TypeScript 6.0.3 adopté (pris en charge par la configuration ESLint de Next.js, tout au vert) ; TypeScript 7 et ESLint 10 toujours écartés. ESLint 9 n'est plus maintenu par ses auteurs : outil de contrôle, jamais envoyé sur le site, à remplacer dès que Next.js accepte ESLint 10
 - ✅ Tri des 4 premières propositions de Dependabot : React 19.3.0 accepté (testé, audité) ; TypeScript 7, ESLint 10 et types de Node 26 refusés, avec une règle pour ne plus les reproposer (2026-09-28)
 - ✅ Rattrapage des contrôles oubliés à la clôture (2026-09-28) : Semgrep, Aikido, relecteurs `pr-review-toolkit`, relecture sécurité avec les grilles du projet. Trous corrigés : secrets cachés derrière certains noms de fichiers, fusions, `cherry-pick`, configuration vidée, adresse e-mail dans les fusions. Délai de 7 jours imposé par npm ; signalement privé des failles activé
 - ⬜ Avant les premiers secrets (Lot 4) : empêcher Claude Code de lire `.env.local` par une commande (bac à sable de Claude Code ou règle dédiée)
@@ -31,7 +33,9 @@
 - ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire dès le premier code qui en demande (Lot 1)
 - ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; aperçus et adresse de travail **non indexables** (`noindex` sur pages et fichiers), en-têtes de sécurité ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ✅ Contrôle d'alignement des documents automatisé, dans le dépôt (`scripts/verifier-alignement.mjs`) : utilisé en D1 et F6, et rejoué par la CI à chaque envoi avec les empreintes des skills ; testé sur des documents abîmés exprès (2026-09-28, PRD 2.1)
+- ✅ Mise en ligne séparée des fusions (2026-09-29) : chaque mise en ligne coûte 15 crédits Netlify sur 300 par mois (60 déjà consommés par 4 fusions). Branche `production` créée et protégée sur GitHub (4 contrôles de la CI obligatoires, ni suppression ni envoi forcé, même pour l'administrateur), garde de compilation qui refuse tout commit absent de la version principale (`scripts/garde-production.mjs`, vérifiée par C04) ; 👤 Netlify ne publie plus que `production`, `main` garde ses aperçus gratuits
 - ✅ Contrôles C01 à C09 du registre activés (`docs/checklist/4-controles-du-site.md`, 2026-09-28)
+- ✅ Fin du Lot 0 (2026-09-29) : L1 à L5 au vert, scan approfondi (0 faille au-dessus de faible, 2 faibles corrigées ou consignées), contrôle réel C05/C06, formules gratuites relevées
 - ✅ Premier passage complet de la checklist, avec tous les contrôles C01 à C09 actifs : D1 à D7, F1 à F6, rapport et ligne d'historique (2026-09-28, session C07)
 
 **En parallèle, côté client 👤** : horaires d'ouverture, premières photos et vidéos déposées dans `client/`.
@@ -71,7 +75,7 @@
 ## Lot 5 — Mise en ligne
 **Objectif** : le site est en ligne sur tsr66.fr.
 **Utilise** : tous les lots précédents.
-- ⬜ tsr66.fr branché sur Netlify, seul domaine indexable, IndexNow actif (PRD 4.2) : voir les points notés au contrôle C60 (règle d'indexation selon l'adresse visitée, `noindex` des fichiers, HSTS `includeSubDomains`)
+- ⬜ tsr66.fr branché sur Netlify (branche `production`), seul domaine indexable, IndexNow actif (PRD 4.2) : voir les points notés au contrôle C60 (règle d'indexation selon l'adresse visitée, `noindex` des fichiers, HSTS `includeSubDomains`)
 - ⬜ Google Search Console, Bing Webmaster Tools
 - ⬜ Audit SEO et GEO final, scan approfondi `claude-security`, **zéro dette ouverte**, aucun contenu provisoire, textes validés
 - ⬜ Mentions légales complètes (décennale et médiateur, s'ils sont fournis)
@@ -80,7 +84,8 @@
 - 👤 Décisions : statistiques de visites, et qui gère la fiche Google et les annuaires (PRD 4.4)
 
 ## À chaque fin de lot
-- Contrôle C05/C06 sur l'adresse Netlify (projet ouvert 2 minutes avec l'accord de Nicolas)
+- Mise en ligne (PRD 6.1, fiche F5 ⑥) : sur le « oui » de Nicolas, la branche `production` est avancée, sans fusion ni réécriture, jusqu'au dernier commit de la version principale validé par la CI ; la garde de compilation refuse tout autre commit
+- Contrôle C05/C06 sur `tsr66.netlify.app` (mise en ligne) et `main--tsr66.netlify.app` (version principale), après la mise en ligne (projet ouvert 2 minutes avec l'accord de Nicolas)
 - Réévaluer les versions majeures écartées dans `.github/dependabot.yml` (TypeScript, ESLint) : les adopter dès que la configuration de Next.js les prend en charge
 - Checklist de fin de lot L1 à L7 (`docs/checklist/3-fin-de-lot.md`) : objectif démontré, contrôles du lot activés, scan `claude-security`, dettes échues, formules gratuites (PRD 6.1)
 

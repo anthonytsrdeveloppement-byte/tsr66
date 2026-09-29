@@ -8,6 +8,11 @@
   command = "npm ci && ./node_modules/.bin/next build"
   publish = ".next"
 
+# Mise en ligne (branche production, une fois par lot, PRD 6.1) : seul un commit
+# déjà fusionné dans main est compilé, sinon échec sans rien publier (C04).
+[context.production]
+  command = "node scripts/garde-production.mjs && npm ci && ./node_modules/.bin/next build"
+
 [build.environment]
   # Télémétrie de Next.js désactivée (PRD 6.2).
   NEXT_TELEMETRY_DISABLED = "1"

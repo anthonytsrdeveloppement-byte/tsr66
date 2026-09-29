@@ -27,7 +27,7 @@ verifier_gitleaks() {
 # vérifiée par un témoin : un faux jeton créé à l'instant, jamais écrit ni
 # affiché, doit être détecté. Sinon la configuration est inopérante.
 preparer_config() {
-  git show origin/main:.gitleaks.toml >"$1/config.toml" 2>/dev/null \
+  git show refs/remotes/origin/main:.gitleaks.toml >"$1/config.toml" 2>/dev/null \
     || git show HEAD:.gitleaks.toml >"$1/config.toml" 2>/dev/null \
     || refuser "Aucune configuration gitleaks de référence"
   temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36)"

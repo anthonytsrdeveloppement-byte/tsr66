@@ -43,10 +43,10 @@
 **F5 — Envoi sur GitHub et mise en ligne**
 | Rubrique | Contenu |
 |---|---|
-| Règle | Rien n'entre dans la version principale (mise en ligne par Netlify) sans CI GitHub au vert **et** accord de Nicolas |
-| Contrôle | ① commits propres (`git-workflow-and-versioning`) ② envoi de la branche et ouverture d'une demande de fusion ③ CI GitHub qui rejoue tous les contrôles ④ aperçu privé Netlify, lien transmis à Nicolas ⑤ fusion uniquement sur son « oui » |
+| Règle | Rien n'entre dans la version principale sans CI GitHub au vert **et** accord de Nicolas. La mise en ligne (branche `production`, publiée par Netlify) n'a lieu qu'en fin de lot, avec le même accord (PRD 6.1) |
+| Contrôle | ① commits propres (`git-workflow-and-versioning`) ② envoi de la branche et ouverture d'une demande de fusion ③ CI GitHub qui rejoue tous les contrôles ④ aperçu privé Netlify, lien transmis à Nicolas ⑤ fusion uniquement sur son « oui » ⑥ en fin de lot seulement : mise en ligne sur un second « oui », la branche `production` étant avancée (sans fusion ni réécriture) jusqu'à un commit de la version principale déjà validé par la CI |
 | Résultat attendu | CI au vert, aperçu consultable, fusion validée |
-| Si c'est rouge | CI en échec : correction sur la branche. Pas d'accord : rien n'est mis en ligne, la branche attend |
+| Si c'est rouge | CI en échec : correction sur la branche. Pas d'accord : rien n'est fusionné ni mis en ligne, la branche attend |
 | Preuve | Liens de la demande de fusion et de l'aperçu, résultat de la CI dans le rapport |
 
 **F6 — Mémoire de la session**
