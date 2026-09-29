@@ -1,6 +1,7 @@
 // Contrôles C07 et C08 (PRD 2.1) : documents alignés sur le PRD, qui fait foi,
 // et skills identiques à la version relue (empreintes de skills-lock.json).
-// Lancé en D1 et F6 sur l'ordinateur, et par la CI à chaque envoi.
+// Lancé en D1 et F6 sur l'ordinateur, et par la CI à chaque demande de fusion,
+// à chaque envoi vers main et chaque lundi.
 //
 //   node scripts/verifier-alignement.mjs
 //
@@ -11,6 +12,7 @@
 // ou fichier manquant sont des échecs lisibles.
 // Affiche ✅/❌ par contrôle. Code de sortie 1 au moindre échec.
 
+import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
 import { homedir } from "node:os";
@@ -18,8 +20,9 @@ import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const RACINE = fileURLToPath(new URL("..", import.meta.url)).replace(/\/$/, "");
-// GITHUB_ACTIONS n'est défini que par GitHub : un CI=true posé ailleurs ne
-// peut pas faire sauter les contrôles propres à l'ordinateur.
+// GITHUB_ACTIONS est posé par GitHub : un CI=true posé ailleurs (par un outil)
+// ne fait pas sauter les contrôles propres à l'ordinateur. Ce n'est pas une
+// protection : ces contrôles, annoncés « non vérifiés ici », restent visibles.
 const EN_CI = process.env.GITHUB_ACTIONS === "true";
 // Dossier de Claude Code pour ce projet : chemin absolu du dépôt, chaque
 // caractère non alphanumérique remplacé par « - ».
@@ -202,7 +205,7 @@ const LIGNE_CONTROLE =
   /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|/u;
 const lignesRegistre = texteRegistre
   .split("\n")
-  .filter((ligne) => /^\s*\|\s*c\d/i.test(ligne));
+  .filter((ligne) => /^\s*\|?\s*[*`_~[<\\]*\s*c\d/i.test(ligne));
 const registre = lignesRegistre
   .map((ligne) => ligne.match(LIGNE_CONTROLE))
   .filter(Boolean);
@@ -214,7 +217,7 @@ verifier(
   !malFormees.length,
   `registre : chaque ligne lue (numéro, PRD, type, état)${suite(malFormees)}`
 );
-// 46 contrôles aujourd'hui : moins de 40 signale un registre tronqué.
+// Moins de 40 contrôles signale un registre tronqué.
 verifier(
   numeros.length === new Set(numeros).size && numeros.length >= 40,
   `registre : ${numeros.length} contrôles, numéros uniques`
@@ -376,6 +379,27 @@ verifier(
   gitignore.includes("/client/") && gitignore.includes(".env*"),
   ".gitignore : client/ et secrets ignorés"
 );
+// C02 : rien de client/ ni aucun fichier .env* (.env.local, .env.example…)
+// n'est suivi, même ajouté de force (git add -f), casse indifférente (le disque
+// du Mac l'ignore) ; git illisible = échec.
+let suivisInterdits = null;
+try {
+  suivisInterdits = execFileSync(
+    "git",
+    ["-C", RACINE, "ls-files", "--", ":(icase)client", ":(glob,icase)**/.env*"],
+    { encoding: "utf8" }
+  )
+    .split("\n")
+    .filter(Boolean);
+} catch {
+  // suivisInterdits reste null : échec ci-dessous
+}
+verifier(
+  suivisInterdits !== null && !suivisInterdits.length,
+  `C02 : aucun fichier de client/ ni .env suivi par git${
+    suivisInterdits === null ? " → git illisible" : suite(suivisInterdits)
+  }`
+);
 
 // 8. Faits identiques partout
 const FAITS = {
@@ -443,7 +467,11 @@ for (const skill of declares) {
     const chemin = join(SKILLS, skill, fichier);
     if (!nomSur(`${skill}/${fichier}`)) {
       ecarts.push(`nom refusé : ${skill}/${fichier}`);
-    } else if (!existsSync(chemin) || empreinte(chemin) !== attendu) {
+    } else if (
+      !existsSync(chemin) ||
+      !lstatSync(chemin).isFile() ||
+      empreinte(chemin) !== attendu
+    ) {
       ecarts.push(`${skill}/${fichier}`);
     }
   }
@@ -465,7 +493,7 @@ function parcourir(dossier, relatif) {
       }
     } else {
       const [skill, ...reste] = chemin.split("/");
-      const fichiers = Object.hasOwn(verrou, skill) ? verrou[skill].files : {};
+      const fichiers = Object.hasOwn(verrou, skill) ? verrou[skill]?.files : {};
       if (!Object.hasOwn(fichiers ?? {}, reste.join("/"))) {
         ecarts.push(`en trop : ${chemin}`);
       }

@@ -2,17 +2,22 @@ import type { NextConfig } from "next";
 
 // Seul tsr66.fr, en production, peut être indexé (PRD 4.2, contrôle C05).
 // Netlify fournit CONTEXT et URL à la compilation ; partout ailleurs (aperçus,
-// adresse de travail Netlify, ordinateur), les moteurs de recherche sont refusés.
+// déploiements de branche dont main, adresse de travail Netlify, ordinateur),
+// les moteurs de recherche sont refusés. Décidé à la compilation, pas selon
+// l'adresse visitée, et suppose que tsr66.fr (sans « www ») est le domaine
+// principal chez Netlify : à revoir au branchement du domaine (C60, Lot 5).
 const indexable =
   process.env.CONTEXT === "production" &&
   process.env.URL === "https://tsr66.fr";
 
 const dev = process.env.NODE_ENV === "development";
 
-// Seul le code de TSR66 s'exécute (PRD 6.3, contrôle C06). Next.js écrit deux
-// petits scripts dans chaque page préparée à l'avance : les scripts de la page
-// sont acceptés, tout script d'un autre site est bloqué (décision de Nicolas,
-// 2026-09-28 : site rapide plutôt que pages fabriquées à chaque visite).
+// Aucun script d'un autre site (PRD 6.3, contrôle C06). Next.js écrit des
+// scripts dans chaque page préparée à l'avance : « 'unsafe-inline' » accepte
+// tout script écrit dans la page, y compris un script injecté par une faille ;
+// la politique bloque les autres sites, pas une injection dans la page
+// (décision de Nicolas, 2026-09-28 : site rapide plutôt que pages fabriquées
+// à chaque visite).
 const politiqueDeContenu = [
   "default-src 'self'",
   // En développement seulement, React a besoin de « eval » pour ses messages d'erreur.

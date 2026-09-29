@@ -50,3 +50,6 @@ next-env.d.ts
 # Python : fichiers compilés (contiennent des chemins locaux)
 __pycache__/
 *.pyc
+
+# Rapports du scan claude-security (chemins locaux, jamais commités : PRD 2.1).
+/CLAUDE-SECURITY-*/
