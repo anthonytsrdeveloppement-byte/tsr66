@@ -23,6 +23,21 @@ const interditAuxMoteurs = (valeur) =>
     .split(",")
     .map((d) => d.trim().toLowerCase())
     .some((d) => d === "noindex" || d === "none");
+// Directives de la politique de contenu (CSP) admises : toute autre est refusée.
+const DIRECTIVES_CONNUES = [
+  "default-src",
+  "script-src",
+  "style-src",
+  "img-src",
+  "font-src",
+  "connect-src",
+  "media-src",
+  "object-src",
+  "base-uri",
+  "form-action",
+  "frame-ancestors",
+  "upgrade-insecure-requests",
+];
 const erreurs = [];
 
 function verifier(condition, message) {
@@ -111,14 +126,14 @@ for (const brute of netlifyToml.split("\n")) {
     continue;
   }
   const [, cle, valeur] = /^([A-Za-z][\w-]*) = "([^"\\]*)"$/.exec(ligne) ?? [];
-  const bloc = blocsLus.at(-1);
-  const dejaLue = [...(bloc?.valeurs.keys() ?? [])].some(
+  const courant = blocsLus.at(-1);
+  const dejaLue = [...(courant?.valeurs.keys() ?? [])].some(
     (k) => k.toLowerCase() === cle?.toLowerCase()
   );
-  if (!cle || !bloc || dejaLue) {
+  if (!cle || !courant || dejaLue) {
     verifier(false, `netlify.toml : ligne refusée : ${ligne}`);
   } else {
-    bloc.valeurs.set(cle, valeur);
+    courant.valeurs.set(cle, valeur);
   }
 }
 verifier(
@@ -214,24 +229,11 @@ function verifierReponse(chemin, reponse) {
     .filter(([nom]) => nom)
     .map(([nom, ...valeurs]) => [nom.toLowerCase(), valeurs]);
   const directives = new Map(liste);
-  const CONNUES = [
-    "default-src",
-    "script-src",
-    "style-src",
-    "img-src",
-    "font-src",
-    "connect-src",
-    "media-src",
-    "object-src",
-    "base-uri",
-    "form-action",
-    "frame-ancestors",
-    "upgrade-insecure-requests",
-  ];
   const inconnues = liste
     .map(([nom]) => nom)
     .filter(
-      (nom, i, noms) => !CONNUES.includes(nom) || noms.indexOf(nom) !== i
+      (nom, i, noms) =>
+        !DIRECTIVES_CONNUES.includes(nom) || noms.indexOf(nom) !== i
     );
   verifier(
     !inconnues.length,

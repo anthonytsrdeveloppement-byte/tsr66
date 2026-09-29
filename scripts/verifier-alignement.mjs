@@ -198,7 +198,8 @@ verifier(
 );
 const texteRegistre = docs[`${DOSSIER_CHECKLIST}/4-controles-du-site.md`];
 // Toute ligne de tableau dont la 1re case commence par « C » et un chiffre
-// (espaces et casse quelconques) doit être lue : une ligne mal formée (numéro,
+// (barre initiale facultative, espaces, casse et mise en forme `**`, `` ` ``,
+// `_`, `~`, `[`, `<` quelconques) doit être lue : une ligne mal formée (numéro,
 // état ou type inconnu), même en double d'une ligne correcte, échapperait
 // sinon à tous les contrôles du registre.
 const LIGNE_CONTROLE =
@@ -399,6 +400,21 @@ verifier(
   `C02 : aucun fichier de client/ ni .env suivi par git${
     suivisInterdits === null ? " → git illisible" : suite(suivisInterdits)
   }`
+);
+
+// Version de gitleaks écrite en trois endroits (crochets, CI, README) : elles
+// doivent rester identiques, sinon une mise à jour partielle passerait inaperçue.
+const versionsGitleaks = [
+  [".githooks/_commun.sh", /^GITLEAKS_VERSION="([\d.]+)"$/m],
+  [".github/workflows/ci.yml", /^ {2}GITLEAKS_VERSION: "([\d.]+)"$/m],
+  ["README.md", /gitleaks\]\([^)]+\) ([\d.]+)/],
+].map(
+  ([fichier, motif]) => lire(fichier).match(motif)?.[1] ?? `? (${fichier})`
+);
+verifier(
+  !versionsGitleaks.some((v) => v.startsWith("?")) &&
+    new Set(versionsGitleaks).size === 1,
+  `version de gitleaks identique (crochets, CI, README) : ${[...new Set(versionsGitleaks)].join(", ")}`
 );
 
 // 8. Faits identiques partout
