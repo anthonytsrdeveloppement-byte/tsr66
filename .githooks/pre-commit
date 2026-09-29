@@ -25,16 +25,28 @@ fi
 [ -x ./node_modules/.bin/lint-staged ] \
   || refuser "Dépendances absentes (lancer « npm ci », puis recommencer)"
 
-# 2. Secrets (D6), sur le contenu exact du commit.
+# 2. Secrets (D6), sur le contenu préparé pour le commit (la mise en forme
+#    automatique qui suit ne change que l'apparence ; pre-push rescanne).
 verifier_gitleaks
 tmp="$(mktemp -d)"
 trap 'rm -rf "$tmp"' EXIT
 preparer_config "$tmp"
-# a. Scan par fichier (garde l'exception étroite de skills-lock.json).
-GIT_ATTR_SOURCE="$ARBRE_VIDE" gitleaks git --pre-commit --staged --redact --no-banner \
-  --config "$tmp/config.toml" --gitleaks-ignore-path "$tmp" --ignore-gitleaks-allow \
-  || refuser "Secret détecté. Retirer le secret du fichier (valeur jamais recopiée ailleurs)"
-# b. Tout le contenu du commit, sans exclusion par nom de fichier.
+# a. Scan par fichier (garde l'exception étroite de skills-lock.json). Un
+#    skills-lock.json « binaire » échapperait à ce scan : refus s'il contient
+#    un octet nul, ou si un réglage git local (.git/info/attributes,
+#    core.attributesFile) le déclare binaire ou le filtre.
+verrou=".claude/skills/skills-lock.json"
+if git cat-file -e ":$verrou" 2>/dev/null; then
+  [ "$(git show ":$verrou" | wc -c)" -eq "$(git show ":$verrou" | tr -d '\000' | wc -c)" ] \
+    || refuser "$verrou contient un octet nul : scan des secrets impossible"
+  attributs="$(GIT_ATTR_SOURCE="$ARBRE_VIDE" git check-attr diff binary text -- "$verrou" \
+    | sed 's/.*: //' | sort -u)"
+  [ "$attributs" = "unspecified" ] \
+    || refuser "$verrou déclaré binaire ou filtré par un réglage git local : scan des secrets impossible"
+fi
+scanner_git "$tmp" 0 --pre-commit --staged
+# b. Tout le contenu du commit, sans exclusion par nom de fichier (sauf
+#    skills-lock.json, scanné en a. avec son exception étroite).
 GIT_ATTR_SOURCE="$ARBRE_VIDE" git diff --cached -U0 --text --no-ext-diff --no-textconv \
   -- . ':(exclude).claude/skills/skills-lock.json' >"$tmp/commit.diff"
 scanner_diff "$tmp/commit.diff" "$tmp"

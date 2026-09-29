@@ -1,6 +1,8 @@
 # Fonctions communes aux crochets git de TSR66 (chargé par pre-commit et
 # pre-push, jamais exécuté seul). Variable attendue : ACTION (« commit »…).
 
+# Même version que la CI (.github/workflows/ci.yml, GITLEAKS_VERSION) : les
+# changer ensemble.
 GITLEAKS_VERSION="8.30.1"
 # Arbre vide de git : aucun .gitattributes ne peut déclarer un fichier
 # « binaire » pour le cacher au scan des secrets.
@@ -23,23 +25,69 @@ verifier_gitleaks() {
   fi
 }
 
-# Configuration de la version principale publiée (jamais une version locale),
-# vérifiée par un témoin : un faux jeton créé à l'instant, jamais écrit ni
-# affiché, doit être détecté. Sinon la configuration est inopérante.
+# Configuration de la version principale publiée, lue par son nom complet
+# (refs/remotes/origin/main) : jamais une version locale, qu'un commit pourrait
+# élargir. Absente (dépôt sans « origin », jamais récupéré) : refus. Vérifiée
+# par un témoin : un faux jeton créé à l'instant, jamais écrit ni affiché, doit
+# être détecté (code 42) ; 0 = configuration inopérante, autre = gitleaks en
+# erreur (configuration illisible), qui ne doit pas passer pour une détection.
+# Limite : le témoin prouve qu'une règle (jetons GitHub) est active, pas que les
+# autres le sont ni que les exceptions sont étroites (revues à la fusion).
 preparer_config() {
   git show refs/remotes/origin/main:.gitleaks.toml >"$1/config.toml" 2>/dev/null \
-    || git show HEAD:.gitleaks.toml >"$1/config.toml" 2>/dev/null \
-    || refuser "Aucune configuration gitleaks de référence"
+    || refuser "Configuration gitleaks de référence introuvable (git fetch origin)"
   temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36)"
-  if printf 'token = "%s"\n' "$temoin" | gitleaks stdin --no-banner --config "$1/config.toml" >/dev/null 2>&1; then
-    refuser "Configuration gitleaks inopérante (le jeton témoin n'est pas détecté)"
+  code=0
+  printf 'token = "%s"\n' "$temoin" \
+    | gitleaks stdin --no-banner --exit-code 42 --config "$1/config.toml" \
+      >/dev/null 2>"$1/temoin.log" \
+    || code=$?
+  [ "$code" -eq 0 ] \
+    && refuser "Configuration gitleaks inopérante (le jeton témoin n'est pas détecté)"
+  if [ "$code" -ne 42 ]; then
+    cat "$1/temoin.log" >&2
+    refuser "gitleaks en erreur (code $code) : configuration illisible ?"
+  fi
+}
+
+# Scan de commits par gitleaks (options passées telles quelles), par fichier :
+# garde l'exception étroite de skills-lock.json. Code 42 = secret, 0 = rien,
+# autre = erreur (journal affiché, valeurs masquées). gitleaks rend 0 quand git
+# échoue en dessous : une ligne « ERR », ou aucun commit scanné alors que $2
+# (nombre attendu) n'est pas nul, est un refus.
+scanner_git() {
+  dossier="$1"
+  attendus="$2"
+  shift 2
+  code=0
+  GIT_ATTR_SOURCE="$ARBRE_VIDE" gitleaks git --redact --no-banner --ignore-gitleaks-allow \
+    --exit-code 42 --config "$dossier/config.toml" --gitleaks-ignore-path "$dossier" \
+    "$@" >"$dossier/scan.log" 2>&1 \
+    || code=$?
+  if [ "$code" -eq 42 ]; then
+    cat "$dossier/scan.log" >&2
+    refuser "Secret détecté. Retirer le secret du fichier (valeur jamais recopiée ailleurs)"
+  fi
+  if [ "$code" -ne 0 ] || grep -q 'ERR' "$dossier/scan.log"; then
+    cat "$dossier/scan.log" >&2
+    refuser "gitleaks en erreur (code $code)"
+  fi
+  scannes="$(grep -Eo '[0-9]+ commits scanned' "$dossier/scan.log" | grep -Eo '^[0-9]+' || true)"
+  if [ "$attendus" -gt 0 ] && [ "${scannes:-0}" -eq 0 ]; then
+    cat "$dossier/scan.log" >&2
+    refuser "gitleaks n'a scanné aucun commit ($attendus attendus)"
   fi
 }
 
 # Scan d'un diff par l'entrée standard : aucune exclusion par nom de fichier
 # (gitleaks ignore par défaut SVG, images, lockfiles, bootstrap*.js…).
 scanner_diff() {
-  gitleaks stdin --redact --no-banner --ignore-gitleaks-allow \
+  code=0
+  gitleaks stdin --redact --no-banner --ignore-gitleaks-allow --exit-code 42 \
     --config "$2/config.toml" --gitleaks-ignore-path "$2" <"$1" \
-    || refuser "Secret détecté. Retirer le secret du fichier (valeur jamais recopiée ailleurs)"
+    || code=$?
+  [ "$code" -eq 0 ] && return 0
+  [ "$code" -eq 42 ] \
+    && refuser "Secret détecté. Retirer le secret du fichier (valeur jamais recopiée ailleurs)"
+  refuser "gitleaks en erreur (code $code)"
 }
