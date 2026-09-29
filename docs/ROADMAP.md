@@ -31,6 +31,7 @@
 - ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire dès le premier code qui en demande (Lot 1)
 - ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; aperçus et adresse de travail **non indexables** (`noindex` sur pages et fichiers), en-têtes de sécurité ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ✅ Contrôle d'alignement des documents automatisé, dans le dépôt (`scripts/verifier-alignement.mjs`) : utilisé en D1 et F6, et rejoué par la CI à chaque envoi avec les empreintes des skills ; testé sur des documents abîmés exprès (2026-09-28, PRD 2.1)
+- ✅ Mise en ligne séparée des fusions (2026-09-29) : chaque mise en ligne coûte 15 crédits Netlify sur 300 par mois (60 déjà consommés par 4 fusions). Branche `production` créée et protégée sur GitHub (4 contrôles de la CI obligatoires, ni suppression ni envoi forcé, même pour l'administrateur) ; 👤 Netlify ne publie plus que `production`, `main` garde ses aperçus gratuits
 - ✅ Contrôles C01 à C09 du registre activés (`docs/checklist/4-controles-du-site.md`, 2026-09-28)
 - ✅ Premier passage complet de la checklist, avec tous les contrôles C01 à C09 actifs : D1 à D7, F1 à F6, rapport et ligne d'historique (2026-09-28, session C07)
 
@@ -71,7 +72,7 @@
 ## Lot 5 — Mise en ligne
 **Objectif** : le site est en ligne sur tsr66.fr.
 **Utilise** : tous les lots précédents.
-- ⬜ tsr66.fr branché sur Netlify, seul domaine indexable, IndexNow actif (PRD 4.2) : voir les points notés au contrôle C60 (règle d'indexation selon l'adresse visitée, `noindex` des fichiers, HSTS `includeSubDomains`)
+- ⬜ tsr66.fr branché sur Netlify (branche `production`), seul domaine indexable, IndexNow actif (PRD 4.2) : voir les points notés au contrôle C60 (règle d'indexation selon l'adresse visitée, `noindex` des fichiers, HSTS `includeSubDomains`)
 - ⬜ Google Search Console, Bing Webmaster Tools
 - ⬜ Audit SEO et GEO final, scan approfondi `claude-security`, **zéro dette ouverte**, aucun contenu provisoire, textes validés
 - ⬜ Mentions légales complètes (décennale et médiateur, s'ils sont fournis)
@@ -80,6 +81,7 @@
 - 👤 Décisions : statistiques de visites, et qui gère la fiche Google et les annuaires (PRD 4.4)
 
 ## À chaque fin de lot
+- Mise en ligne : la branche `production` est avancée jusqu'à la version principale validée par la CI, sur le « oui » de Nicolas (15 crédits Netlify, PRD 6.1)
 - Contrôle C05/C06 sur l'adresse Netlify (projet ouvert 2 minutes avec l'accord de Nicolas)
 - Réévaluer les versions majeures écartées dans `.github/dependabot.yml` (TypeScript, ESLint) : les adopter dès que la configuration de Next.js les prend en charge
 - Checklist de fin de lot L1 à L7 (`docs/checklist/3-fin-de-lot.md`) : objectif démontré, contrôles du lot activés, scan `claude-security`, dettes échues, formules gratuites (PRD 6.1)
