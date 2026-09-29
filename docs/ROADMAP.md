@@ -8,8 +8,7 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ✅ **Lot 0 terminé** (2026-09-29, checklist de fin de lot L1 à L5 au vert)
-- ➡️ **Prochaine étape : Lot 1**. En début de session : brancher Aikido sur l'espace du projet (la clé personnelle a été retirée) ; puis les maquettes ; achat de tsr66.fr toujours attendu (👤)
+- ➡️ **En cours : fin du Lot 0**. Reste L3 (scan `claude-security`) et F2 ② (`pr-review-toolkit`) à refaire avec les vrais plugins (réinstallés au niveau « user » le 2026-09-29). Puis Lot 1 : brancher Aikido sur l'espace du projet, puis les maquettes ; achat de tsr66.fr toujours attendu (👤)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
@@ -35,7 +34,7 @@
 - ✅ Contrôle d'alignement des documents automatisé, dans le dépôt (`scripts/verifier-alignement.mjs`) : utilisé en D1 et F6, et rejoué par la CI à chaque envoi avec les empreintes des skills ; testé sur des documents abîmés exprès (2026-09-28, PRD 2.1)
 - ✅ Mise en ligne séparée des fusions (2026-09-29) : chaque mise en ligne coûte 15 crédits Netlify sur 300 par mois (60 déjà consommés par 4 fusions). Branche `production` créée et protégée sur GitHub (4 contrôles de la CI obligatoires, ni suppression ni envoi forcé, même pour l'administrateur), garde de compilation qui refuse tout commit absent de la version principale (`scripts/garde-production.mjs`, vérifiée par C04) ; 👤 Netlify ne publie plus que `production`, `main` garde ses aperçus gratuits
 - ✅ Contrôles C01 à C09 du registre activés (`docs/checklist/4-controles-du-site.md`, 2026-09-28)
-- ✅ Fin du Lot 0 (2026-09-29) : L1 à L5 au vert, scan approfondi (0 faille au-dessus de faible, 2 faibles corrigées ou consignées), contrôle réel C05/C06, formules gratuites relevées
+- 🔄 Fin du Lot 0 (2026-09-29) : L1, L2, L4, L5 au vert, contrôle réel C05/C06, formules gratuites relevées, mise en ligne `production@4384cda` ; ⬜ L3 et F2 ② à refaire avec les vrais plugins `claude-security` et `pr-review-toolkit`
 - ✅ Premier passage complet de la checklist, avec tous les contrôles C01 à C09 actifs : D1 à D7, F1 à F6, rapport et ligne d'historique (2026-09-28, session C07)
 
 **En parallèle, côté client 👤** : horaires d'ouverture, premières photos et vidéos déposées dans `client/`.
