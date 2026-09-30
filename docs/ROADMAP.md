@@ -44,11 +44,11 @@
 **Objectif** : la direction visuelle est choisie et les 14 effets tournent sans ralentir le site.
 **Utilise** : Next.js (Lot 0), le logo (captures suffisantes).
 - ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
-- ⬜ Solder les 4 dettes 🟡 des tests (`docs/DETTES.md`) avant la fin du lot
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)
+- ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
 
 ## Lot 2 — Espace Anthony (bases)
 **Objectif** : Anthony publie une réalisation depuis son téléphone.
