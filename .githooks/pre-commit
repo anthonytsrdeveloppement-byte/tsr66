@@ -44,7 +44,7 @@ if git cat-file -e ":$verrou" 2>/dev/null; then
   [ "$attributs" = "unspecified" ] \
     || refuser "$verrou déclaré binaire ou filtré par un réglage git local : scan des secrets impossible"
 fi
-scanner_git "$tmp" 0 --pre-commit --staged
+scanner_git "$tmp" --pre-commit --staged
 # b. Tout le contenu du commit, sans exclusion par nom de fichier (sauf
 #    skills-lock.json, scanné en a. avec son exception étroite).
 GIT_ATTR_SOURCE="$ARBRE_VIDE" git diff --cached -U0 --text --no-ext-diff --no-textconv \

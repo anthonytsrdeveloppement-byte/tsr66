@@ -36,11 +36,8 @@ while read -r local_ref local_sha remote_ref remote_sha || [ -n "${local_ref:-}"
   # a. Scan par fichier (garde l'exception étroite de skills-lock.json), en
   #    texte brut (--text, --no-textconv, --no-ext-diff : ni un fichier
   #    « binaire » ni un filtre git local ne masquent le contenu), fusions
-  #    comprises.
-  # Pas de nombre de commits attendu : gitleaks ne compte pas un commit sans
-  # contenu ajouté (suppression, renommage, droits, commit vide) ; une erreur
-  # de git sous gitleaks se voit à ses lignes « ERR ».
-  scanner_git "$tmp" 0 \
+  #    comprises. Une erreur de git sous gitleaks se voit à ses lignes « ERR ».
+  scanner_git "$tmp" \
     --log-opts="--text --no-textconv --no-ext-diff --full-history --diff-merges=first-parent $*" .
   # b. Tout le contenu, sans exclusion par nom de fichier (sauf skills-lock.json,
   #    scanné en a.). Fusions comprises (contenu ajouté en résolvant un conflit) ;

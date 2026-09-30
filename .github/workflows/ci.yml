@@ -2,7 +2,8 @@
 # GitHub tous les contrôles du crochet avant commit, plus CodeQL, l'audit des
 # dépendances, les en-têtes du site (C05, C06), les secrets dans les fichiers
 # publiés (C01), l'alignement des documents et les empreintes des skills (C07,
-# C08). Aucune fusion dans main sans ces contrôles au vert.
+# C08), et les tests des contrôles eux-mêmes (tests/). Aucune fusion dans main
+# sans ces contrôles au vert.
 # Actions figées par empreinte de commit (mises à jour par Dependabot, relues).
 name: CI
 
@@ -135,6 +136,11 @@ jobs:
             echo "::error::package.json ($projet) et netlify.toml ($netlify) diffèrent"
             exit 1
           fi
+      # Les contrôles eux-mêmes (scripts/, crochets, étapes de cette CI), rejoués
+      # sur des copies jetables piégées : chaque contournement connu doit être
+      # refusé, chaque cas normal accepté. Après l'installation de gitleaks.
+      - name: Tests des contrôles
+        run: node --test --disable-warning=MODULE_TYPELESS_PACKAGE_JSON "tests/**/*.test.mjs"
 
   secrets:
     name: Secrets
@@ -172,13 +178,15 @@ jobs:
           # ne peut pas élargir ses propres exceptions. Nom complet : une étiquette
           # ou une branche nommée « origin/main » ne peut pas la remplacer.
           git show "refs/remotes/origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
-          # Témoin : un faux jeton créé à l'instant (jamais écrit ni affiché) doit être
-          # détecté, sinon la configuration est inopérante (vidée, règles désactivées).
+          # Témoin : un faux jeton GitHub créé à l'instant (jamais écrit ni affiché) doit
+          # être détecté, sinon la configuration est inopérante (vidée, règle désactivée).
           # Code 42 = détecté ; 0 = non détecté ; autre = gitleaks en erreur
           # (configuration illisible), qui ne doit pas passer pour une détection.
+          # Jeton seul, sans « token = » : seule la règle des jetons GitHub le reconnaît
+          # (une règle générique le détecterait même si celle-ci était désactivée).
           temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36 || true)"
           code=0
-          printf 'token = "%s"\n' "$temoin" \
+          printf '%s\n' "$temoin" \
             | gitleaks stdin --no-banner --exit-code 42 --config "$cfg/config.toml" >/dev/null 2>&1 \
             || code=$?
           if [ "$code" -eq 0 ]; then
