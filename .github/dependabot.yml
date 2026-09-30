@@ -1,7 +1,8 @@
 # Mises à jour proposées par Dependabot (PRD 2.1, D5) : une demande de fusion
-# par mise à jour, rejouée par la CI, fusionnée seulement sur le « oui » de
-# Nicolas. Délai de 7 jours après publication (prudence contre les versions
-# piégées) ; les correctifs de sécurité, eux, arrivent sans délai.
+# par mise à jour (ou par groupe, ci-dessous), rejouée par la CI, fusionnée
+# seulement sur le « oui » de Nicolas. Délai de 7 jours après publication
+# (prudence contre les versions piégées) ; les correctifs de sécurité, eux,
+# arrivent sans délai.
 version: 2
 updates:
   - package-ecosystem: npm

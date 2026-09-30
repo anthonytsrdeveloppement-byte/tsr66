@@ -11,10 +11,33 @@
 // TypeScript lu directement par Node 24). Code de sortie 1 au moindre écart.
 
 import { spawn } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { createServer } from "node:net";
 
 const DELAI_REQUETE = 10_000;
+// Indexation interdite : une directive exactement « noindex » ou « none » (qui
+// vaut « noindex, nofollow »), casse indifférente, sans nom de robot devant
+// (« max-image-preview:none » ou « unbot: noindex » n'interdisent rien à tous).
+const interditAuxMoteurs = (valeur) =>
+  valeur
+    .split(",")
+    .map((d) => d.trim().toLowerCase())
+    .some((d) => d === "noindex" || d === "none");
+// Directives de la politique de contenu (CSP) admises : toute autre est refusée.
+const DIRECTIVES_CONNUES = [
+  "default-src",
+  "script-src",
+  "style-src",
+  "img-src",
+  "font-src",
+  "connect-src",
+  "media-src",
+  "object-src",
+  "base-uri",
+  "form-action",
+  "frame-ancestors",
+  "upgrade-insecure-requests",
+];
 const erreurs = [];
 
 function verifier(condition, message) {
@@ -65,7 +88,7 @@ const casIndexation = [
 ];
 for (const [i, { env, indexable }] of casIndexation.entries()) {
   const entetes = await entetesDeLaConfiguration(env, i);
-  const interdit = /noindex/.test(entetes.get("x-robots-tag") ?? "");
+  const interdit = interditAuxMoteurs(entetes.get("x-robots-tag") ?? "");
   verifier(
     interdit !== indexable,
     `C05 : CONTEXT=${env.CONTEXT || "(vide)"} URL=${env.URL || "(vide)"} → ${
@@ -75,35 +98,91 @@ for (const [i, { env, indexable }] of casIndexation.entries()) {
 }
 
 // Fichiers servis directement par Netlify : netlify.toml doit donner exactement
-// les mêmes en-têtes que next.config.ts hors tsr66.fr. Lecture stricte : une
-// seule règle [[headers]], pour « /* », et chaque ligne de valeurs comprise.
+// les mêmes en-têtes que next.config.ts hors tsr66.fr, et la compilation de
+// production doit commencer par la garde de mise en ligne (C04). Lecture
+// stricte, en liste blanche : seuls ces blocs, dans cet ordre, avec ces clés,
+// écrits simplement (« clé = "valeur" »), et chaque valeur comparée à celle
+// attendue. Toute autre ligne (bloc en plus, « [[ headers ]] », commentaire en
+// fin de ligne, clé à points, texte sur plusieurs lignes, en-tête en double
+// quelle que soit sa casse) est un écart.
+const BLOCS_NETLIFY = [
+  ["[build]", ["command", "publish"]],
+  ["[context.production]", ["command"]],
+  ["[build.environment]", ["NEXT_TELEMETRY_DISABLED", "NPM_VERSION"]],
+  ["[[plugins]]", ["package"]],
+  ["[[headers]]", ["for"]],
+  ["[headers.values]", null], // null : les en-têtes, comparés à next.config.ts
+];
 const netlifyToml = readFileSync(
   new URL("../netlify.toml", import.meta.url),
   "utf8"
 );
-const reglesNetlify = netlifyToml.split(/^\s*\[\[headers\]\]\s*$/m).slice(1);
+const blocsLus = [];
+for (const brute of netlifyToml.split("\n")) {
+  const ligne = brute.trim();
+  if (!ligne || ligne.startsWith("#")) continue;
+  if (ligne.startsWith("[")) {
+    blocsLus.push({ titre: ligne, valeurs: new Map() });
+    continue;
+  }
+  const [, cle, valeur] = /^([A-Za-z][\w-]*) = "([^"\\]*)"$/.exec(ligne) ?? [];
+  const courant = blocsLus.at(-1);
+  const dejaLue = [...(courant?.valeurs.keys() ?? [])].some(
+    (k) => k.toLowerCase() === cle?.toLowerCase()
+  );
+  if (!cle || !courant || dejaLue) {
+    verifier(false, `netlify.toml : ligne refusée : ${ligne}`);
+  } else {
+    courant.valeurs.set(cle, valeur);
+  }
+}
 verifier(
-  reglesNetlify.length === 1,
-  `C06 : netlify.toml doit avoir une seule règle [[headers]] (${reglesNetlify.length} trouvée(s))`
+  JSON.stringify(blocsLus.map((b) => b.titre)) ===
+    JSON.stringify(BLOCS_NETLIFY.map(([titre]) => titre)),
+  `netlify.toml : blocs attendus ${BLOCS_NETLIFY.map(([t]) => t).join(" ")}, lus ${blocsLus.map((b) => b.titre).join(" ") || "aucun"}`
 );
-const [regleNetlify = ""] = reglesNetlify;
+const bloc = (titre) =>
+  blocsLus.find((b) => b.titre === titre)?.valeurs ?? new Map();
+for (const [titre, cles] of BLOCS_NETLIFY) {
+  if (!cles) continue;
+  const lues = [...bloc(titre).keys()];
+  verifier(
+    JSON.stringify([...lues].sort()) === JSON.stringify([...cles].sort()),
+    `netlify.toml ${titre} : clés attendues ${cles.join(", ")}, lues ${lues.join(", ") || "aucune"}`
+  );
+}
+const compilation = bloc("[build]").get("command") ?? "";
 verifier(
-  /^\s*for\s*=\s*"\/\*"\s*$/m.test(regleNetlify.split(/^\s*\[/m)[0]),
+  compilation === "npm ci && ./node_modules/.bin/next build" &&
+    bloc("[build]").get("publish") === ".next",
+  `netlify.toml [build] : compilation ou dossier publié inattendus (${compilation})`
+);
+const npmDuProjet = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8")
+).packageManager;
+verifier(
+  bloc("[[plugins]]").get("package") === "@netlify/plugin-nextjs" &&
+    bloc("[build.environment]").get("NEXT_TELEMETRY_DISABLED") === "1" &&
+    `npm@${bloc("[build.environment]").get("NPM_VERSION")}` === npmDuProjet,
+  "netlify.toml : module Netlify, télémétrie coupée ou version de npm inattendus"
+);
+// Commande exacte : « garde && x; compilation » ou « garde && false || … »
+// compileraient malgré le refus de la garde.
+verifier(
+  bloc("[context.production]").get("command") ===
+    `node scripts/garde-production.mjs && ${compilation}`,
+  "C04 : la compilation de production doit être exactement « node scripts/garde-production.mjs && » suivi de la compilation"
+);
+verifier(
+  bloc("[[headers]]").get("for") === "/*",
   `C06 : la règle [[headers]] de netlify.toml doit porter sur « /* »`
 );
-const lignesValeurs = (
-  regleNetlify.split(/^\s*\[headers\.values\]\s*$/m)[1] ?? ""
-)
-  .split(/^\s*\[/m)[0]
-  .split("\n")
-  .map((ligne) => ligne.trim())
-  .filter((ligne) => ligne && !ligne.startsWith("#"));
-const entetesNetlify = new Map();
-for (const ligne of lignesValeurs) {
-  const [, cle, valeur] = /^([A-Za-z-]+) = "([^"\\]*)"$/.exec(ligne) ?? [];
-  verifier(cle, `C06 : ligne de netlify.toml non comprise : ${ligne}`);
-  if (cle) entetesNetlify.set(cle.toLowerCase(), valeur);
-}
+const entetesNetlify = new Map(
+  [...bloc("[headers.values]")].map(([cle, valeur]) => [
+    cle.toLowerCase(),
+    valeur,
+  ])
+);
 const entetesPages = await entetesDeLaConfiguration(
   { CONTEXT: "", URL: "" },
   "netlify"
@@ -114,24 +193,21 @@ for (const cle of new Set([...entetesPages.keys(), ...entetesNetlify.keys()])) {
     `C06 : ${cle} différent entre next.config.ts et netlify.toml`
   );
 }
-
-// Mise en ligne (C04) : la compilation de production commence toujours par la
-// garde qui refuse un commit absent de main. Un seul bloc [context.…] autorisé.
-const blocsContexte = netlifyToml.match(/^\s*\[context\b.*$/gm) ?? [];
+// Autres fichiers de réglage Netlify dans le dépôt, qui échapperaient à cette
+// lecture. Les réglages faits dans l'interface Netlify ne sont pas vus ici.
+const autresReglages = [
+  "netlify.yml",
+  "netlify.yaml",
+  "netlify.json",
+  "_headers",
+  "_redirects",
+  "public/_headers",
+  "public/_redirects",
+  "netlify",
+].filter((nom) => existsSync(new URL(`../${nom}`, import.meta.url)));
 verifier(
-  blocsContexte.length === 1 &&
-    blocsContexte[0].trim() === "[context.production]",
-  `C04 : netlify.toml doit avoir un seul bloc de contexte, [context.production] (${blocsContexte.join(", ") || "aucun"})`
-);
-const blocProduction =
-  netlifyToml
-    .split(/^\s*\[context\.production\]\s*$/m)[1]
-    ?.split(/^\s*\[/m)[0] ?? "";
-verifier(
-  /^\s*command = "node scripts\/garde-production\.mjs && [^"]+"\s*$/m.test(
-    blocProduction
-  ),
-  "C04 : la compilation de production doit commencer par node scripts/garde-production.mjs"
+  !autresReglages.length,
+  `C04/C06 : réglages Netlify hors de netlify.toml : ${autresReglages.join(", ")}`
 );
 
 // 2. Les en-têtes réellement envoyés par le serveur.
@@ -143,12 +219,25 @@ function verifierReponse(chemin, reponse) {
       `C06 ${chemin} : ${nom} = ${entete(nom) || "absent"}`
     );
 
-  const directives = new Map(
-    entete("content-security-policy")
-      .split(";")
-      .map((d) => d.trim().split(/\s+/))
-      .filter(([nom]) => nom)
-      .map(([nom, ...valeurs]) => [nom, valeurs])
+  // Noms en minuscules (le navigateur ignore la casse). Une directive en double
+  // est refusée (le navigateur applique la première, la lecture garderait la
+  // dernière), comme toute directive hors de la liste : « script-src-elem »,
+  // par exemple, passerait outre « script-src ».
+  const liste = entete("content-security-policy")
+    .split(";")
+    .map((d) => d.trim().split(/\s+/))
+    .filter(([nom]) => nom)
+    .map(([nom, ...valeurs]) => [nom.toLowerCase(), valeurs]);
+  const directives = new Map(liste);
+  const inconnues = liste
+    .map(([nom]) => nom)
+    .filter(
+      (nom, i, noms) =>
+        !DIRECTIVES_CONNUES.includes(nom) || noms.indexOf(nom) !== i
+    );
+  verifier(
+    !inconnues.length,
+    `C06 ${chemin} : CSP, directive inconnue ou en double : ${inconnues.join(", ")}`
   );
   const attendues = {
     "default-src": ["'self'"],
@@ -198,9 +287,11 @@ function verifierReponse(chemin, reponse) {
     !hsts.includes(",") && Number(dureeHsts) >= 31536000,
     `C06 ${chemin} : strict-transport-security = ${hsts || "absent"}`
   );
-  verifier(
-    entete("permissions-policy").includes("camera=()"),
-    `C06 ${chemin} : permissions-policy = ${entete("permissions-policy") || "absent"}`
+  // Valeur exacte, écrite ici (comparer à next.config.ts ne prouverait rien :
+  // l'en-tête en vient) ; « camera=() » suivi de « camera=* » l'annulerait.
+  verifierEgal(
+    "permissions-policy",
+    "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
   );
   verifier(
     !entete("x-powered-by"),
@@ -208,7 +299,7 @@ function verifierReponse(chemin, reponse) {
   );
   // Hors tsr66.fr, chaque réponse interdit l'indexation ; sur tsr66.fr, aucune
   // ne l'interdit (C60, mise en ligne).
-  const noindex = /noindex/.test(entete("x-robots-tag"));
+  const noindex = interditAuxMoteurs(entete("x-robots-tag"));
   verifier(
     noindex !== siteOfficiel,
     `C05 ${chemin} : x-robots-tag = ${entete("x-robots-tag") || "absent"}`
