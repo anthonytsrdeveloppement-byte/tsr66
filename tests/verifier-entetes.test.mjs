@@ -9,6 +9,7 @@ import { join } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   RACINE,
+  VERSION_NPM,
   accepte,
   copieDuDepot,
   ecrire,
@@ -34,8 +35,10 @@ const CSP = ENTETES_CONFORMES.find(
 const SCRIPT = "/_next/static/chunks/page.js";
 
 // Faux site : accueil, fichier /_next/static et page introuvable. Chaque
-// réponse reçoit les en-têtes conformes, transformés par `pieges` (liste de
-// paires [nom, valeur], doublons possibles).
+// réponse reçoit les en-têtes conformes. `pieges` : statutAccueil, html, et une
+// transformation d'en-têtes par genre de réponse (accueil, fichier,
+// introuvable), sinon `partout`. Une transformation reçoit et rend la liste des
+// en-têtes en paires [nom, valeur], doublons possibles.
 async function fauxSite(t, pieges = {}) {
   const serveur = createServer((requete, reponse) => {
     const [genre, statut, corps] =
@@ -366,8 +369,8 @@ for (const [nom, avant, apres, attendu] of [
   ],
   [
     "autre version de npm",
-    'NPM_VERSION = "11.19.0"',
-    'NPM_VERSION = "10.0.0"',
+    `NPM_VERSION = "${VERSION_NPM}"`,
+    'NPM_VERSION = "0.0.1"',
     "version de npm",
   ],
   [

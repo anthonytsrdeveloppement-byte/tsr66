@@ -1,7 +1,8 @@
 // Outils communs aux tests des contrôles (node:test, sans dépendance) : copies
-// jetables du dépôt, lancement des contrôles, faux secrets créés à la volée.
-// Chaque test place un piège dans une copie jetable, lance le vrai contrôle et
-// vérifie qu'il refuse avec le bon message ; les cas normaux doivent passer.
+// jetables du dépôt, dépôts git de test, lancement des contrôles, faux secrets
+// créés à la volée. La plupart des tests placent un piège dans une copie
+// jetable (ou derrière un faux service), lancent le vrai contrôle et vérifient
+// qu'il refuse avec le bon message ; les cas normaux doivent passer.
 
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
@@ -19,7 +20,7 @@ import {
   symlinkSync,
   writeFileSync,
 } from "node:fs";
-import { tmpdir } from "node:os";
+import { availableParallelism, tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -27,9 +28,26 @@ export const RACINE = fileURLToPath(new URL("..", import.meta.url)).replace(
   /\/$/,
   ""
 );
+export const VERROU = ".claude/skills/skills-lock.json";
+// Versions lues dans le dépôt : une mise à jour ne casse pas les tests.
+export const VERSION_GITLEAKS = /^GITLEAKS_VERSION="([\d.]+)"$/m.exec(
+  readFileSync(join(RACINE, ".githooks/_commun.sh"), "utf8")
+)[1];
+export const VERSION_NPM = JSON.parse(
+  readFileSync(join(RACINE, "package.json"), "utf8")
+).packageManager.replace("npm@", "");
 
-// Variables qui feraient agir git sur un autre dépôt que la copie jetable.
-const VARIABLES_GIT = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"];
+// Tests lourds (dépôts git, crochets) : en parallèle, jamais sans fin.
+export const PARALLELE = {
+  concurrency: Math.max(2, availableParallelism() - 1),
+  timeout: 180_000,
+};
+
+// Variables qui feraient agir git sur un autre dépôt que la copie jetable, et
+// réglages git de l'ordinateur (identité, signature, attributs, dossier des
+// crochets) écartés : seuls comptent ceux du dépôt de test.
+const VARIABLES_GIT_RETIREES = ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE"];
+const GIT_ISOLE = { GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1" };
 
 // Dossier temporaire, supprimé à la fin du test.
 export function dossierJetable(t) {
@@ -43,8 +61,8 @@ export function dossierJetable(t) {
 // sortie, la sortie standard seule et toute la sortie (erreurs comprises).
 // Aucune entrée : la commande lit une entrée vide.
 export function lancer(commande, args, { cwd = RACINE, env = {} } = {}) {
-  const environnement = { ...process.env, ...env };
-  for (const cle of VARIABLES_GIT) delete environnement[cle];
+  const environnement = { ...process.env, ...GIT_ISOLE, ...env };
+  for (const cle of VARIABLES_GIT_RETIREES) delete environnement[cle];
   for (const [cle, valeur] of Object.entries(env)) {
     if (valeur === undefined) delete environnement[cle];
   }
@@ -73,8 +91,10 @@ export async function git(cwd, ...args) {
   return resultat.standard.trim();
 }
 
-// Copie des fichiers suivis par git, dans leur état actuel, sans client/
-// (jamais versionné) : ce que voient les serveurs de la CI.
+// Copie des fichiers suivis par git, tels qu'ils sont sur le disque
+// (modifications non validées comprises, fichiers supprimés du disque ignorés) ;
+// client/ est écarté même s'il était suivi par erreur. En CI, cela équivaut au
+// commit testé.
 export async function copierFichiersSuivis(destination) {
   const { standard } = await lancer("git", ["ls-files", "-z"]);
   const chemins = standard.split("\0").filter(Boolean);
@@ -98,6 +118,50 @@ export async function copieDuDepot(t, { avecGit = true } = {}) {
     await git(copie, "add", "-A");
   }
   return copie;
+}
+
+// Identité de test, sans signature : réglages locaux du dépôt de test.
+export async function configurerGit(depot) {
+  await git(depot, "config", "user.name", "Test TSR66");
+  await git(depot, "config", "user.email", "test@example.invalid");
+  await git(depot, "config", "commit.gpgsign", "false");
+}
+
+// Commit de préparation (fichiers écrits ; null = supprimé). Fait avant
+// l'installation des crochets, il passe sans eux.
+export async function valider(depot, fichiers = {}, message = "Préparation") {
+  for (const [fichier, contenu] of Object.entries(fichiers)) {
+    if (contenu === null) rmSync(join(depot, fichier));
+    else ecrire(depot, fichier, contenu);
+  }
+  await git(depot, "add", "-A");
+  await git(depot, "commit", "-q", "--allow-empty", "-m", message);
+  return git(depot, "rev-parse", "HEAD");
+}
+
+// Dépôt git de test : copie du projet, premier commit, envoyé à un faux
+// « origin » dont la branche main porte la configuration gitleaks de
+// référence (remplaçable par `configurationDeMain`).
+export async function depotDeTest(
+  t,
+  { origine = true, dependances = false, configurationDeMain } = {}
+) {
+  const racine = dossierJetable(t);
+  const travail = join(racine, "travail");
+  mkdirSync(travail);
+  await copierFichiersSuivis(travail);
+  if (dependances) lierDependances(travail);
+  if (configurationDeMain)
+    ecrire(travail, ".gitleaks.toml", configurationDeMain);
+  await git(travail, "init", "-q", "-b", "main");
+  await configurerGit(travail);
+  await valider(travail, {}, "Base");
+  if (origine) {
+    await git(racine, "init", "-q", "--bare", "-b", "main", "origine.git");
+    await git(travail, "remote", "add", "origin", join(racine, "origine.git"));
+    await git(travail, "push", "-q", "origin", "main");
+  }
+  return { racine, travail };
 }
 
 // Dépendances du dépôt réel, partagées par lien (jamais modifiées).
@@ -142,6 +206,63 @@ export function fauxJeton() {
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const corps = Array.from({ length: 36 }, () => lettres[randomInt(62)]);
   return `ghp_${corps.join("")}`;
+}
+export const fichierSecret = () => `export const cle = "${fauxJeton()}";\n`;
+// skills-lock.json avec un faux jeton hors des empreintes (l'exception de
+// .gitleaks.toml ne couvre que les empreintes).
+export const verrouAvecSecret = (depot) =>
+  lire(depot, VERROU).replace(
+    '"skills": {',
+    () => `"note": "${fauxJeton()}",\n  "skills": {`
+  );
+
+// Configurations gitleaks affaiblies, tirées de celle du projet (l'exception
+// des empreintes reste) : ces dépôts ne contiennent aucun secret, seul le
+// témoin peut donc voir l'écart.
+const CONFIGURATION = readFileSync(join(RACINE, ".gitleaks.toml"), "utf8");
+function affaiblir(ajout) {
+  assert.ok(
+    CONFIGURATION.includes("useDefault = true\n"),
+    ".gitleaks.toml : « useDefault = true » introuvable"
+  );
+  return CONFIGURATION.replace(
+    "useDefault = true\n",
+    () => `useDefault = true\n${ajout}`
+  );
+}
+export const CONFIGURATIONS_INOPERANTES = [
+  [
+    "règle des jetons GitHub désactivée",
+    affaiblir('disabledRules = ["github-pat"]\n'),
+  ],
+  [
+    "exception qui écarte toute ligne contenant « = »",
+    `${CONFIGURATION}\n[[allowlists]]\nregexTarget = "line"\nregexes = ['''=''']\n`,
+  ],
+];
+// Configuration qui passe les témoins mais écarte toute ligne contenant
+// « motDePasseEcarte », et secret écrit sur une telle ligne. Une exception par
+// ligne est respectée par les deux scans (par fichier et par l'entrée standard) ;
+// une exception par nom de fichier ne l'est pas par le second, qui rattraperait
+// le secret et rendrait le test vert pour une mauvaise raison.
+export const CONFIGURATION_QUI_ECARTE = `${CONFIGURATION}\n[[allowlists]]\nregexTarget = "line"\nregexes = ['''motDePasseEcarte''']\n`;
+export const secretEcarte = () =>
+  `export const motDePasseEcarte = "${fauxJeton()}";\n`;
+
+// Faux gitleaks : rejoue `reponse` pour « gitleaks git » (code 0, comme quand
+// git échoue en dessous), le vrai gitleaks fait le reste.
+export async function fauxGitleaks(dossier, reponse) {
+  const vrai = (
+    await lancer("sh", ["-c", "command -v gitleaks"])
+  ).standard.trim();
+  assert.ok(vrai, "gitleaks introuvable sur cet ordinateur");
+  ecrire(
+    dossier,
+    "bin/gitleaks",
+    `#!/bin/sh\nif [ "$1" = git ]; then printf '%s\\n' "${reponse}"; exit 0; fi\nexec "${vrai}" "$@"\n`
+  );
+  chmodSync(join(dossier, "bin/gitleaks"), 0o755);
+  return join(dossier, "bin");
 }
 
 // Le contrôle refuse, avec le message attendu (texte ou expression).

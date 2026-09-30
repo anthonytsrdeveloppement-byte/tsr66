@@ -155,3 +155,10 @@ test("refus : réponse de GitHub illisible", async () => {
     "réponse de GitHub illisible"
   );
 });
+
+test("refus : commit inconnu de GitHub (comparaison introuvable)", async () => {
+  refuse(
+    await garde({ COMMIT_REF: ANCIEN }, { reponses: refMain() }),
+    "réponse de GitHub 404"
+  );
+});

@@ -3,7 +3,7 @@
 //   { "injoignable": true }  → erreur réseau
 //   { "reponses": { "<chemin>": { "status", "corps", "texte", "entetes" } } }
 // Une adresse inconnue (autre dépôt, autre chemin) reçoit un 404 : la garde
-// n'est acceptée que si elle interroge exactement les adresses prévues.
+// n'est acceptée que si elle n'interroge que les adresses prévues.
 
 const DEPOT = "https://api.github.com/repos/anthonytsrdeveloppement-byte/tsr66";
 const scenario = JSON.parse(process.env.FAUX_GITHUB ?? "{}");

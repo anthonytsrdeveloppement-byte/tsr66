@@ -8,14 +8,18 @@ import { test } from "node:test";
 import { createHash } from "node:crypto";
 import {
   mkdirSync,
+  readFileSync,
   renameSync,
   rmSync,
   symlinkSync,
   unlinkSync,
   writeFileSync,
 } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 import {
+  RACINE,
+  VERROU,
+  VERSION_GITLEAKS,
   accepte,
   copieDuDepot,
   dossierJetable,
@@ -27,15 +31,17 @@ import {
   remplacer,
 } from "./outils.mjs";
 
-function verifierAlignement(copie, env = { GITHUB_ACTIONS: "true" }) {
+function verifierAlignement(copie, env = {}) {
   return lancer(
     process.execPath,
     [join(copie, "scripts/verifier-alignement.mjs")],
-    { cwd: copie, env: { GITHUB_ACTIONS: undefined, CI: undefined, ...env } }
+    {
+      cwd: copie,
+      env: { GITHUB_ACTIONS: "true", CI: undefined, ...env },
+    }
   );
 }
 
-const VERROU = ".claude/skills/skills-lock.json";
 const modifierVerrou = (copie, modification) => {
   const verrou = JSON.parse(lire(copie, VERROU));
   modification(verrou.skills);
@@ -43,19 +49,33 @@ const modifierVerrou = (copie, modification) => {
 };
 const empreinte = (texte) => createHash("sha256").update(texte).digest("hex");
 
+// Lignes du registre lues dans le document : les pièges ne dépendent ni d'un
+// numéro ni d'un état qui changeront au fil des lots.
+const REGISTRE = "docs/checklist/4-controles-du-site.md";
+const LIGNE_CONTROLE =
+  /^\| (C\d\d) \| .+? \| ([^|]+) \| (🤖|👁) \| (⬜|✅|🔴) \|.*$/gmu;
+const lignesDuRegistre = [
+  ...readFileSync(join(RACINE, REGISTRE), "utf8").matchAll(LIGNE_CONTROLE),
+];
+assert.ok(lignesDuRegistre.length >= 2, `${REGISTRE} : lignes introuvables`);
+const [ligne1, numero1, renvois1, type1, etat1] = lignesDuRegistre[0];
+const [ligneN, numeroN] = lignesDuRegistre.at(-1);
+const AUTRE_VERSION = "0.0.1";
+
 test("copie non abîmée : acceptée (ce qui est hors dépôt annoncé non vérifié)", async (t) => {
   const resultat = await verifierAlignement(await copieDuDepot(t));
   accepte(resultat);
   assert.match(resultat.sortie, /⏭️ {2}client\/LISEZMOI\.md : hors dépôt/);
 });
 
-// 1. Documents (C07). [nom, fichier, avant, après, message attendu]
+// 1. Documents (C07). [nom, fichier, avant, après, message attendu] ; avant =
+// null : « après » est ajouté à la fin du fichier.
 for (const [nom, fichier, avant, apres, attendu] of [
   [
     "terme obsolète dans la roadmap",
     "docs/ROADMAP.md",
-    "## Lot 1",
-    "Astro\n\n## Lot 1",
+    null,
+    "\nAstro\n",
     "docs/ROADMAP.md : aucun terme obsolète → Astro",
   ],
   [
@@ -75,8 +95,8 @@ for (const [nom, fichier, avant, apres, attendu] of [
   [
     "renvoi de la roadmap vers une section absente du PRD",
     "docs/ROADMAP.md",
-    "(PRD 5.1)",
-    "(PRD 9.1)",
+    null,
+    "\n(PRD 9.1)\n",
     /ROADMAP : \d+ renvois au PRD valides → 9\.1/,
   ],
   [
@@ -89,8 +109,8 @@ for (const [nom, fichier, avant, apres, attendu] of [
   [
     "fiche recopiée dans le PRD",
     "docs/PRD.md",
-    "### 2.3 Checklist",
-    "### 2.3 Checklist\n**D1 — Reprendre le contexte**",
+    null,
+    "\n**D1 — Reprendre le contexte**\n",
     "PRD : fiches non dupliquées",
   ],
   [
@@ -109,44 +129,44 @@ for (const [nom, fichier, avant, apres, attendu] of [
   ],
   [
     "ligne du registre mal formée (état inconnu)",
-    "docs/checklist/4-controles-du-site.md",
-    "| 5.1 | 👁 | ⬜ |",
-    "| 5.1 | 👁 | 🟡 |",
-    "registre : chaque ligne lue (numéro, PRD, type, état) → | C17",
+    REGISTRE,
+    ligne1,
+    ligne1.replace(`| ${type1} | ${etat1} |`, `| ${type1} | 🟡 |`),
+    `registre : chaque ligne lue (numéro, PRD, type, état) → | ${numero1}`,
   ],
   [
     "ligne du registre cachée par la mise en forme",
-    "docs/checklist/4-controles-du-site.md",
-    "| C62 |",
-    "| **C62** |",
-    "registre : chaque ligne lue (numéro, PRD, type, état) → | **C62**",
+    REGISTRE,
+    ligneN,
+    ligneN.replace(`| ${numeroN} |`, `| **${numeroN}** |`),
+    `registre : chaque ligne lue (numéro, PRD, type, état) → | **${numeroN}**`,
   ],
   [
     "numéro de contrôle en double",
-    "docs/checklist/4-controles-du-site.md",
-    "| C62 |",
-    "| C61 |",
+    REGISTRE,
+    ligneN,
+    ligneN.replace(`| ${numeroN} |`, `| ${numero1} |`),
     /registre : \d+ contrôles, numéros uniques/,
   ],
   [
     "contrôle sans renvoi valide",
-    "docs/checklist/4-controles-du-site.md",
-    "| 5.1 | 👁 | ⬜ |",
-    "| 9.9 | 👁 | ⬜ |",
-    "registre : chaque contrôle renvoie à une section du PRD ou à une fiche → C17",
+    REGISTRE,
+    ligne1,
+    ligne1.replace(`| ${renvois1} | ${type1} |`, `| 9.9 | ${type1} |`),
+    `registre : chaque contrôle renvoie à une section du PRD ou à une fiche → ${numero1}`,
   ],
   [
     "contrôle cité dans la roadmap mais absent du registre",
     "docs/ROADMAP.md",
-    "## Lot 1",
-    "C99\n\n## Lot 1",
+    null,
+    "\nC99\n",
     "contrôles C cités dans le PRD et la roadmap : existants → C99",
   ],
   [
     "fiche citée inexistante",
     "CLAUDE.md",
-    "(`docs/checklist/1-demarrage.md`, D1 à D7)",
-    "(`docs/checklist/1-demarrage.md`, D1 à D9)",
+    null,
+    "\nD9\n",
     "CLAUDE.md : fiches citées existantes → D9",
   ],
   [
@@ -159,8 +179,8 @@ for (const [nom, fichier, avant, apres, attendu] of [
   [
     "achat du domaine sorti du Lot 0",
     "docs/ROADMAP.md",
-    "**Achat de tsr66.fr au nom du client**",
-    "**Achat du domaine**",
+    "Achat de tsr66.fr",
+    "Achat du domaine",
     "achat du domaine au Lot 0",
   ],
   [
@@ -173,8 +193,8 @@ for (const [nom, fichier, avant, apres, attendu] of [
   [
     "renvoi à l'ancien dossier des rapports",
     "docs/ROADMAP.md",
-    "## Lot 1",
-    "docs/sessions/2026-09-27.md\n\n## Lot 1",
+    null,
+    "\ndocs/sessions/2026-09-27.md\n",
     "plus aucun renvoi à l'ancien dossier docs/sessions",
   ],
   [
@@ -187,28 +207,29 @@ for (const [nom, fichier, avant, apres, attendu] of [
   [
     "version de gitleaks différente dans le README",
     "README.md",
-    "gitleaks) 8.30.1",
-    "gitleaks) 8.31.0",
-    "version de gitleaks identique (crochets, CI, README) : 8.30.1, 8.31.0",
+    `gitleaks) ${VERSION_GITLEAKS}`,
+    `gitleaks) ${AUTRE_VERSION}`,
+    `version de gitleaks identique (crochets, CI, README) : ${VERSION_GITLEAKS}, ${AUTRE_VERSION}`,
   ],
   [
     "seconde version de gitleaks dans les crochets",
     ".githooks/_commun.sh",
-    'GITLEAKS_VERSION="8.30.1"',
-    'GITLEAKS_VERSION="8.30.1"\nGITLEAKS_VERSION="8.31.0"',
-    "version de gitleaks identique (crochets, CI, README) : 8.30.1, 8.31.0",
+    `GITLEAKS_VERSION="${VERSION_GITLEAKS}"`,
+    `GITLEAKS_VERSION="${VERSION_GITLEAKS}"\nGITLEAKS_VERSION="${AUTRE_VERSION}"`,
+    `version de gitleaks identique (crochets, CI, README) : ${VERSION_GITLEAKS}, ${AUTRE_VERSION}`,
   ],
   [
     "version de gitleaks introuvable dans la CI",
     ".github/workflows/ci.yml",
-    'GITLEAKS_VERSION: "8.30.1"',
-    'VERSION_GITLEAKS: "8.30.1"',
-    "version de gitleaks identique (crochets, CI, README) : 8.30.1, ? (.github/workflows/ci.yml)",
+    `GITLEAKS_VERSION: "${VERSION_GITLEAKS}"`,
+    `VERSION_GITLEAKS: "${VERSION_GITLEAKS}"`,
+    `version de gitleaks identique (crochets, CI, README) : ${VERSION_GITLEAKS}, ? (.github/workflows/ci.yml)`,
   ],
 ]) {
   test(`refus : ${nom}`, async (t) => {
     const copie = await copieDuDepot(t);
-    remplacer(copie, fichier, avant, apres);
+    if (avant === null) ecrire(copie, fichier, lire(copie, fichier) + apres);
+    else remplacer(copie, fichier, avant, apres, { partout: true });
     refuse(
       await verifierAlignement(copie),
       typeof attendu === "string"
@@ -218,14 +239,19 @@ for (const [nom, fichier, avant, apres, attendu] of [
   });
 }
 
-test("refus : registre tronqué", async (t) => {
+test("refus : registre tronqué (dix contrôles seulement)", async (t) => {
   const copie = await copieDuDepot(t);
-  const registre = "docs/checklist/4-controles-du-site.md";
-  const texte = lire(copie, registre);
-  ecrire(copie, registre, texte.slice(0, texte.indexOf("## Lot 3")));
+  const texte = lire(copie, REGISTRE);
+  const dixieme = lignesDuRegistre[9];
+  assert.ok(dixieme, `${REGISTRE} : moins de dix contrôles`);
+  ecrire(
+    copie,
+    REGISTRE,
+    texte.slice(0, texte.indexOf(dixieme[0]) + dixieme[0].length)
+  );
   refuse(
     await verifierAlignement(copie),
-    /❌ registre : \d+ contrôles, numéros uniques/
+    /❌ registre : 10 contrôles, numéros uniques/
   );
 });
 
@@ -249,6 +275,7 @@ test("refus : document manquant", async (t) => {
 // 2. client/ et .env jamais suivis (C02).
 for (const fichier of [
   ".env.local",
+  ".ENV.local",
   "src/.env.production",
   "client/photo.txt",
   "Client/photo.txt",
@@ -266,7 +293,13 @@ for (const fichier of [
 
 test("refus : git illisible (C02 jamais vert à vide)", async (t) => {
   const copie = await copieDuDepot(t, { avecGit: false });
-  refuse(await verifierAlignement(copie), "→ git illisible");
+  // git ne cherche pas de dépôt au-dessus de la copie.
+  refuse(
+    await verifierAlignement(copie, {
+      GIT_CEILING_DIRECTORIES: dirname(copie),
+    }),
+    "→ git illisible"
+  );
 });
 
 // 3. Skills identiques à la version relue (C08).
@@ -367,6 +400,7 @@ for (const [nom, env] of [
   test(`refus : mémoire de Claude et client/ absents ${nom}`, async (t) => {
     const copie = await copieDuDepot(t);
     const resultat = await verifierAlignement(copie, {
+      GITHUB_ACTIONS: undefined,
       HOME: dossierJetable(t),
       ...env,
     });
