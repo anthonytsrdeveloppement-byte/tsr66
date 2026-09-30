@@ -2,7 +2,8 @@
 # GitHub tous les contrôles du crochet avant commit, plus CodeQL, l'audit des
 # dépendances, les en-têtes du site (C05, C06), les secrets dans les fichiers
 # publiés (C01), l'alignement des documents et les empreintes des skills (C07,
-# C08). Aucune fusion dans main sans ces contrôles au vert.
+# C08), et les tests des contrôles eux-mêmes (tests/). Aucune fusion dans main
+# sans ces contrôles au vert.
 # Actions figées par empreinte de commit (mises à jour par Dependabot, relues).
 name: CI
 
@@ -135,6 +136,23 @@ jobs:
             echo "::error::package.json ($projet) et netlify.toml ($netlify) diffèrent"
             exit 1
           fi
+      # Les contrôles eux-mêmes (scripts/, crochets, et les étapes de cette CI
+      # rejouées par tests/ci.test.mjs), lancés sur des copies jetables piégées :
+      # chaque contournement prévu par les tests doit être refusé, chaque cas
+      # normal accepté (limites connues : voir chaque contrôle). Après
+      # l'installation de gitleaks, dont ces tests ont besoin. Rien à lire ne
+      # donne jamais un contrôle vert : aucun test lu, ou un test sauté ou laissé
+      # « à faire », est un échec.
+      - name: Tests des contrôles
+        run: |
+          node --test --test-reporter=spec --disable-warning=MODULE_TYPELESS_PACKAGE_JSON \
+            "tests/**/*.test.mjs" | tee "$RUNNER_TEMP/tests.log"
+          if ! grep -Eq '^ℹ tests [1-9]' "$RUNNER_TEMP/tests.log" \
+            || ! grep -qx 'ℹ skipped 0' "$RUNNER_TEMP/tests.log" \
+            || ! grep -qx 'ℹ todo 0' "$RUNNER_TEMP/tests.log"; then
+            echo "::error::Tests des contrôles : aucun test lu, ou des tests sautés ou à faire"
+            exit 1
+          fi
 
   secrets:
     name: Secrets
@@ -161,8 +179,10 @@ jobs:
             echo "::error::Fichier .gitleaksignore interdit (exceptions aux secrets)"
             exit 1
           fi
-          # Tout fichier est lu comme du texte : un .gitattributes (« -diff », « binary »)
-          # ou un octet nul ne peut pas cacher un secret aux scans (prioritaire sur .gitattributes).
+          # Un .gitattributes (« -diff », « binary ») ne peut pas cacher un secret à ce
+          # scan (réglage local prioritaire sur .gitattributes). Un fichier contenant un
+          # octet nul reste ignoré par ce scan : l'étape suivante le lit (--text), testé
+          # par tests/ci.test.mjs.
           attrs="$(git rev-parse --git-path info/attributes)"
           mkdir -p "$(dirname "$attrs")"
           printf '* diff\n' > "$attrs"
@@ -172,25 +192,39 @@ jobs:
           # ne peut pas élargir ses propres exceptions. Nom complet : une étiquette
           # ou une branche nommée « origin/main » ne peut pas la remplacer.
           git show "refs/remotes/origin/${BASE_REF}:.gitleaks.toml" > "$cfg/config.toml"
-          # Témoin : un faux jeton créé à l'instant (jamais écrit ni affiché) doit être
-          # détecté, sinon la configuration est inopérante (vidée, règles désactivées).
-          # Code 42 = détecté ; 0 = non détecté ; autre = gitleaks en erreur
-          # (configuration illisible), qui ne doit pas passer pour une détection.
+          # Deux témoins, faits d'un faux jeton GitHub créé à l'instant (jamais écrit
+          # ni affiché), chacun doit être détecté, sinon la configuration est
+          # inopérante (vidée, règle désactivée, exception trop large). Code 42 =
+          # détecté ; 0 = non détecté ; autre = gitleaks en erreur (configuration
+          # illisible), qui ne doit pas passer pour une détection. Mêmes témoins que
+          # les crochets (.githooks/_commun.sh) :
+          # 1. le jeton seul, que seule la règle des jetons GitHub reconnaît (écrit
+          #    « token = … », une règle générique le détecterait même si celle-ci
+          #    était désactivée) ;
+          # 2. le même jeton dans une ligne de code ordinaire (une exception qui
+          #    écarte toute ligne de code le laisserait passer).
+          # Limite : les témoins ne prouvent ni que les autres règles sont actives, ni
+          # que les exceptions visant un fichier sont étroites (revues à la fusion).
+          # Testé par tests/ci.test.mjs.
           temoin="ghp_$(LC_ALL=C tr -dc 'A-Za-z0-9' </dev/urandom | head -c 36 || true)"
-          code=0
-          printf 'token = "%s"\n' "$temoin" \
-            | gitleaks stdin --no-banner --exit-code 42 --config "$cfg/config.toml" >/dev/null 2>&1 \
-            || code=$?
-          if [ "$code" -eq 0 ]; then
-            echo "::error::Configuration gitleaks inopérante : le jeton témoin n'est pas détecté"
-            exit 1
-          elif [ "$code" -ne 42 ]; then
-            echo "::error::gitleaks en erreur (code $code) : configuration illisible ?"
-            exit 1
-          fi
+          for ligne in "$temoin" "export const cle = \"$temoin\";"; do
+            code=0
+            printf '%s\n' "$ligne" \
+              | gitleaks stdin --no-banner --exit-code 42 --config "$cfg/config.toml" >/dev/null 2>&1 \
+              || code=$?
+            if [ "$code" -eq 0 ]; then
+              echo "::error::Configuration gitleaks inopérante : un jeton témoin n'est pas détecté"
+              exit 1
+            elif [ "$code" -ne 42 ]; then
+              echo "::error::gitleaks en erreur (code $code) : configuration illisible ?"
+              exit 1
+            fi
+          done
           # Fusions comprises : le contenu ajouté en résolvant un conflit est scanné.
           # gitleaks rend 0 quand git échoue en dessous : une ligne « ERR » ou
           # aucun commit scanné est un échec (journal affiché, valeurs masquées).
+          # Ici (--all, tout l'historique), au moins un commit ajoute du contenu ;
+          # les crochets, qui ne scannent que quelques commits, ne l'exigent pas.
           gitleaks git --redact --no-banner --ignore-gitleaks-allow \
             --log-opts="--all --full-history --diff-merges=first-parent" \
             --config "$cfg/config.toml" --gitleaks-ignore-path "$cfg" . 2>&1 \

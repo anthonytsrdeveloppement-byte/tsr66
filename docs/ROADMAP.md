@@ -8,7 +8,8 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **Fin du Lot 0** : L1 à L5 au vert (2026-09-29, vrais plugins) ; reste la fusion de #17 (👤 « oui ») ; pas de seconde mise en ligne (une par lot, PRD 6.1) : la garde renforcée partira à la fin du Lot 1. Puis **Lot 1** : tests automatiques des contrôles en premier, puis les maquettes ; achat de tsr66.fr toujours attendu (👤) ; D5 ③ : scan local Aikido (lecture des alertes devenue payante, décision de Nicolas du 2026-09-30)
+- ✅ **Lot 0 clos** (#17 fusionnée le 2026-09-30, `production` reste à 4384cda : une mise en ligne par lot)
+- ➡️ **Lot 1** : tests automatiques des contrôles faits (#18, en attente du « oui ») ; **prochaine étape : les maquettes** (plus de travail sur les contrôles, décision de Nicolas du 2026-09-30) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
@@ -29,7 +30,7 @@
 - ✅ Rattrapage des contrôles oubliés à la clôture (2026-09-28) : Semgrep, Aikido, relecteurs `pr-review-toolkit`, relecture sécurité avec les grilles du projet. Trous corrigés : secrets cachés derrière certains noms de fichiers, fusions, `cherry-pick`, configuration vidée, adresse e-mail dans les fusions. Délai de 7 jours imposé par npm ; signalement privé des failles activé
 - ⬜ Avant les premiers secrets (Lot 4) : empêcher Claude Code de lire `.env.local` par une commande (bac à sable de Claude Code ou règle dédiée)
 - ⬜ 👤 Avant les premiers secrets (Lot 4) : dans Netlify, aperçus des demandes venant d'un fork désactivés ou soumis à approbation, clés marquées « secret » et limitées à la production (revue sécurité du 2026-09-28)
-- ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire, **premier travail du Lot 1** (décision de Nicolas du 2026-09-30). En priorité, les contrôles eux-mêmes (`scripts/`, crochets) : prouver qu'ils détectent chaque contournement connu (liste de `pr-review-toolkit` du 2026-09-29), avec `node:test`, sans nouvelle dépendance
+- ✅ Tests automatiques des contrôles : fait au Lot 1 (voir ci-dessous)
 - ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; aperçus et adresse de travail **non indexables** (`noindex` sur pages et fichiers), en-têtes de sécurité ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ✅ Contrôle d'alignement des documents automatisé, dans le dépôt (`scripts/verifier-alignement.mjs`) : utilisé en D1 et F6, et rejoué par la CI à chaque envoi avec les empreintes des skills ; testé sur des documents abîmés exprès (2026-09-28, PRD 2.1)
 - ✅ Mise en ligne séparée des fusions (2026-09-29) : chaque mise en ligne coûte 15 crédits Netlify sur 300 par mois (60 déjà consommés par 4 fusions). Branche `production` créée et protégée sur GitHub (4 contrôles de la CI obligatoires, ni suppression ni envoi forcé, même pour l'administrateur), garde de compilation qui refuse tout commit absent de la version principale (`scripts/garde-production.mjs`, vérifiée par C04) ; 👤 Netlify ne publie plus que `production`, `main` garde ses aperçus gratuits
@@ -42,6 +43,8 @@
 ## Lot 1 — Design et animations
 **Objectif** : la direction visuelle est choisie et les 14 effets tournent sans ralentir le site.
 **Utilise** : Next.js (Lot 0), le logo (captures suffisantes).
+- ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
+- ⬜ Solder les 4 dettes 🟡 des tests (`docs/DETTES.md`) avant la fin du lot
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
