@@ -199,7 +199,7 @@ verifier(
 const texteRegistre = docs[`${DOSSIER_CHECKLIST}/4-controles-du-site.md`];
 // Toute ligne de tableau dont la 1re case commence par « C » et un chiffre
 // (barre initiale facultative, espaces, casse et mise en forme `**`, `` ` ``,
-// `_`, `~`, `[`, `<` quelconques) doit être lue : une ligne mal formée (numéro,
+// `_`, `~`, `[`, `<`, `\\` quelconques) doit être lue : une ligne mal formée (numéro,
 // état ou type inconnu), même en double d'une ligne correcte, échapperait
 // sinon à tous les contrôles du registre.
 const LIGNE_CONTROLE =
@@ -405,12 +405,14 @@ verifier(
 // Version de gitleaks écrite en trois endroits (crochets, CI, README) : elles
 // doivent rester identiques, sinon une mise à jour partielle passerait inaperçue.
 const versionsGitleaks = [
-  [".githooks/_commun.sh", /^GITLEAKS_VERSION="([\d.]+)"$/m],
-  [".github/workflows/ci.yml", /^ {2}GITLEAKS_VERSION: "([\d.]+)"$/m],
-  ["README.md", /gitleaks\]\([^)]+\) ([\d.]+)/],
-].map(
-  ([fichier, motif]) => lire(fichier).match(motif)?.[1] ?? `? (${fichier})`
-);
+  [".githooks/_commun.sh", /^\s*GITLEAKS_VERSION="([\d.]+)"$/gm],
+  [".github/workflows/ci.yml", /^\s*GITLEAKS_VERSION: "([\d.]+)"$/gm],
+  ["README.md", /gitleaks\]\([^)]+\) ([\d.]+)/g],
+].flatMap(([fichier, motif]) => {
+  // Toutes les occurrences : une seconde définition plus bas l'emporterait.
+  const trouvees = [...lire(fichier).matchAll(motif)].map(([, v]) => v);
+  return trouvees.length ? trouvees : [`? (${fichier})`];
+});
 verifier(
   !versionsGitleaks.some((v) => v.startsWith("?")) &&
     new Set(versionsGitleaks).size === 1,

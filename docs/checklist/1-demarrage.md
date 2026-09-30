@@ -43,7 +43,7 @@
 | Rubrique | Contenu |
 |---|---|
 | Règle | Zéro vulnérabilité et zéro alerte ouverte, tous niveaux confondus |
-| Contrôle | ① `npm audit` ② alertes GitHub (Dependabot, CodeQL, secrets) ③ alertes Aikido (`aikido:issues`) et Semgrep ④ si les dépendances ont changé depuis la dernière session : `supply-chain-risk-auditor` |
+| Contrôle | ① `npm audit` ② alertes GitHub (Dependabot, CodeQL, secrets) ③ scan local Aikido (`aikido:scan`, la lecture des alertes du compte étant réservée aux abonnés : décision de Nicolas du 2026-09-30) et Semgrep ④ si les dépendances ont changé depuis la dernière session : `supply-chain-risk-auditor` |
 | Résultat attendu | 0 partout |
 | Si c'est rouge | La correction devient l'objectif de la session. Correctif réel uniquement (mise à jour, remplacement), jamais de faille « acceptée et documentée » |
 | Preuve | Résultats des quatre contrôles dans le rapport |

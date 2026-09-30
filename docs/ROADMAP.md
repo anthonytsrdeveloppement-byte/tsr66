@@ -8,14 +8,14 @@
 - ✅ PRD complet et validé (2026-09-27)
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
-- ➡️ **Fin du Lot 0** : L1 à L5 au vert (2026-09-29, vrais plugins) ; reste la fusion de #17 et la mise en ligne de fin de lot (👤 « oui »). Puis **Lot 1** : tests automatiques des contrôles en premier, puis les maquettes ; achat de tsr66.fr toujours attendu (👤) ; lecture des alertes Aikido devenue payante (sous-point D5 à trancher)
+- ➡️ **Fin du Lot 0** : L1 à L5 au vert (2026-09-29, vrais plugins) ; reste la fusion de #17 (👤 « oui ») ; pas de seconde mise en ligne (une par lot, PRD 6.1) : la garde renforcée partira à la fin du Lot 1. Puis **Lot 1** : tests automatiques des contrôles en premier, puis les maquettes ; achat de tsr66.fr toujours attendu (👤) ; D5 ③ : scan local Aikido (lecture des alertes devenue payante, décision de Nicolas du 2026-09-30)
 
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
 **Actions 👤, à faire en premier, car tout en dépend :**
 - 👤 **Achat de tsr66.fr au nom du client** (urgent, PRD 7.2). Il faut le domaine pour Resend (Lot 4) et pour la mise en ligne (Lot 5), et plus il existe tôt, mieux c'est pour Google.
 - ✅ 👤 Adresse dédiée, puis comptes GitHub, Netlify, Resend et Sanity créés (2026-09-27, projet Sanity « tsr66 ») · sans double authentification, décision de Nicolas (PRD 7.1)
-- ✅ 👤 Connexion de GitHub sur l'ordinateur (`gh auth login`, compte du projet) et installation des plugins `pr-review-toolkit` et `claude-security` pour le projet (2026-09-27)
+- ✅ 👤 Connexion de GitHub sur l'ordinateur (`gh auth login`, compte du projet) et installation des plugins `pr-review-toolkit` et `claude-security` (2026-09-27, au niveau du projet ; réinstallés au niveau « user » le 2026-09-29, seul moyen de les charger dans VS Code)
 
 **Travail de Claude :**
 - ✅ Installation des skills retenus : 17 dossiers, 125 fichiers lus en entier par Claude et par deux agents indépendants, aucun rejet, figés et vérifiés par empreintes (2026-09-27, PRD 2.1)
@@ -29,7 +29,7 @@
 - ✅ Rattrapage des contrôles oubliés à la clôture (2026-09-28) : Semgrep, Aikido, relecteurs `pr-review-toolkit`, relecture sécurité avec les grilles du projet. Trous corrigés : secrets cachés derrière certains noms de fichiers, fusions, `cherry-pick`, configuration vidée, adresse e-mail dans les fusions. Délai de 7 jours imposé par npm ; signalement privé des failles activé
 - ⬜ Avant les premiers secrets (Lot 4) : empêcher Claude Code de lire `.env.local` par une commande (bac à sable de Claude Code ou règle dédiée)
 - ⬜ 👤 Avant les premiers secrets (Lot 4) : dans Netlify, aperçus des demandes venant d'un fork désactivés ou soumis à approbation, clés marquées « secret » et limitées à la production (revue sécurité du 2026-09-28)
-- ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire, **premier travail du Lot 1**. En priorité, les contrôles eux-mêmes (`scripts/`, crochets) : prouver qu'ils détectent chaque contournement connu (liste de `pr-review-toolkit` du 2026-09-29), avec `node:test`, sans nouvelle dépendance
+- ⬜ Tests automatiques : à ajouter à la CI comme contrôle obligatoire, **premier travail du Lot 1** (décision de Nicolas du 2026-09-30). En priorité, les contrôles eux-mêmes (`scripts/`, crochets) : prouver qu'ils détectent chaque contournement connu (liste de `pr-review-toolkit` du 2026-09-29), avec `node:test`, sans nouvelle dépendance
 - ✅ 👤 Liaison Netlify faite par Nicolas (projet `tsr66`, accès limité au dépôt `tsr66`, projet privé) ; `netlify.toml` (`npm ci`, Node 24.21.0, npm 11.19.0, télémétrie coupée, module Netlify figé en 5.16.0) ; aperçus et adresse de travail **non indexables** (`noindex` sur pages et fichiers), en-têtes de sécurité ; C05, C06 actifs ; secrets des fichiers publiés scannés en CI (2026-09-28)
 - ✅ Contrôle d'alignement des documents automatisé, dans le dépôt (`scripts/verifier-alignement.mjs`) : utilisé en D1 et F6, et rejoué par la CI à chaque envoi avec les empreintes des skills ; testé sur des documents abîmés exprès (2026-09-28, PRD 2.1)
 - ✅ Mise en ligne séparée des fusions (2026-09-29) : chaque mise en ligne coûte 15 crédits Netlify sur 300 par mois (60 déjà consommés par 4 fusions). Branche `production` créée et protégée sur GitHub (4 contrôles de la CI obligatoires, ni suppression ni envoi forcé, même pour l'administrateur), garde de compilation qui refuse tout commit absent de la version principale (`scripts/garde-production.mjs`, vérifiée par C04) ; 👤 Netlify ne publie plus que `production`, `main` garde ses aperçus gratuits
