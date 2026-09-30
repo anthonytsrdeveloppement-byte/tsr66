@@ -56,22 +56,49 @@ export function dossierJetable(t) {
   return dossier;
 }
 
-// Lance une commande sans bloquer (un faux serveur peut tourner dans le test).
-// Une variable d'environnement à undefined est retirée. Renvoie le code de
-// sortie, la sortie standard seule et toute la sortie (erreurs comprises).
-// Aucune entrée : la commande lit une entrée vide.
-export function lancer(commande, args, { cwd = RACINE, env = {} } = {}) {
+// Environnement d'une commande : une variable à undefined est retirée.
+function environnementDe(env) {
   const environnement = { ...process.env, ...GIT_ISOLE, ...env };
   for (const cle of VARIABLES_GIT_RETIREES) delete environnement[cle];
   for (const [cle, valeur] of Object.entries(env)) {
     if (valeur === undefined) delete environnement[cle];
   }
-  return new Promise((resolve, reject) => {
-    const processus = spawn(commande, args, {
+  return environnement;
+}
+
+// Lance une commande sans bloquer (un faux serveur peut tourner dans le test),
+// jamais un shell : ses arguments ne sont jamais interprétés comme des
+// commandes. Renvoie le code de sortie, la sortie standard seule et toute la
+// sortie (erreurs comprises). Aucune entrée : la commande lit une entrée vide.
+export function lancer(commande, args, { cwd = RACINE, env = {} } = {}) {
+  return resultatDe(
+    spawn(commande, args, {
       cwd,
-      env: environnement,
+      env: environnementDe(env),
       stdio: ["ignore", "pipe", "pipe"],
-    });
+    })
+  );
+}
+
+// Exécute un script bash avec les options de GitHub Actions (--noprofile
+// --norc -eo pipefail). Arguments fixes : le chemin du script passe par une
+// variable d'environnement, jamais par la ligne de commande.
+export function lancerScriptBash(script, { cwd, env = {} }) {
+  return resultatDe(
+    spawn(
+      "bash",
+      ["--noprofile", "--norc", "-eo", "pipefail", "-c", '. "$TSR66_SCRIPT"'],
+      {
+        cwd,
+        env: environnementDe({ ...env, TSR66_SCRIPT: script }),
+        stdio: ["ignore", "pipe", "pipe"],
+      }
+    )
+  );
+}
+
+function resultatDe(processus) {
+  return new Promise((resolve, reject) => {
     let standard = "";
     let sortie = "";
     processus.stdout.on("data", (d) => {
@@ -252,9 +279,10 @@ export const secretEcarte = () =>
 // Faux gitleaks : rejoue `reponse` pour « gitleaks git » (code 0, comme quand
 // git échoue en dessous), le vrai gitleaks fait le reste.
 export async function fauxGitleaks(dossier, reponse) {
-  const vrai = (
-    await lancer("sh", ["-c", "command -v gitleaks"])
-  ).standard.trim();
+  const vrai = (process.env.PATH ?? "")
+    .split(":")
+    .map((dossierDuPath) => join(dossierDuPath, "gitleaks"))
+    .find((chemin) => existsSync(chemin));
   assert.ok(vrai, "gitleaks introuvable sur cet ordinateur");
   ecrire(
     dossier,

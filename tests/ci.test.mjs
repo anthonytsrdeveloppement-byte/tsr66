@@ -29,6 +29,7 @@ import {
   fichierSecret,
   git,
   lancer,
+  lancerScriptBash,
   refuse,
   remplacer,
   valider,
@@ -78,22 +79,18 @@ async function rejouer(t, dossier, noms, env = {}, preparer) {
   let resultat;
   for (const nom of noms) {
     writeFileSync(join(runner, "etape.sh"), etape(nom));
-    resultat = await lancer(
-      "bash",
-      ["--noprofile", "--norc", "-eo", "pipefail", join(runner, "etape.sh")],
-      {
-        cwd: dossier,
-        env: {
-          RUNNER_TEMP: runner,
-          GITHUB_PATH: join(runner, "github_path"),
-          BASE_REF: "main",
-          // Posé par le lanceur de tests : un « node --test » rejoué depuis ce
-          // test sauterait sinon tous ses fichiers.
-          NODE_TEST_CONTEXT: undefined,
-          ...env,
-        },
-      }
-    );
+    resultat = await lancerScriptBash(join(runner, "etape.sh"), {
+      cwd: dossier,
+      env: {
+        RUNNER_TEMP: runner,
+        GITHUB_PATH: join(runner, "github_path"),
+        BASE_REF: "main",
+        // Posé par le lanceur de tests : un « node --test » rejoué depuis ce
+        // test sauterait sinon tous ses fichiers.
+        NODE_TEST_CONTEXT: undefined,
+        ...env,
+      },
+    });
     if (resultat.code !== 0) break;
   }
   return resultat;
