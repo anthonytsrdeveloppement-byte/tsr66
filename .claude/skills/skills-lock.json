@@ -28,6 +28,15 @@
         "references/youtube-ai-citations.md": "e4e3356d4c813e460f29dd37a46a212f9d3f3f06e35320cf62bc3e621e1a53b2"
       }
     },
+    "animate": {
+      "source": "github.com/emilkowalski/skills",
+      "commit": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "path": "skills/animate",
+      "files": {
+        "SKILL.md": "b8ede161270458e6ae2e45e8a1985373515d4c63de5568ddb0f9012d7634356c",
+        "RECIPES.md": "21ff63d84391db8d96ecdf9170095f55a42c836ccc36fd3269c4772bab031ba2"
+      }
+    },
     "best-practices": {
       "source": "github.com/addyosmani/web-quality-skills",
       "commit": "afa8da942115f2961fdbfa80807ea0b232ff6c00",
@@ -56,12 +65,84 @@
         "references/LCP.md": "522054d44b7a55409cbde511e8d365f7fa52399dd1e72b8d6b44a92ecddca81f"
       }
     },
+    "emil-design-eng": {
+      "source": "github.com/emilkowalski/skills",
+      "commit": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "path": "skills/emil-design-eng",
+      "files": {
+        "SKILL.md": "ffbe68e6007fb42cb8149f089b400a1ca007d59ba23e8948e2be4476f3175939"
+      }
+    },
+    "find-animation-opportunities": {
+      "source": "github.com/emilkowalski/skills",
+      "commit": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "path": "skills/find-animation-opportunities",
+      "files": {
+        "SKILL.md": "d52a377819b84a71930f0c822cfe2849f40301605a2d5c7eccbfa3b257700df2"
+      }
+    },
+    "frontend-design": {
+      "source": "github.com/anthropics/claude-plugins-official",
+      "commit": "fbe07fb6ce7d51d8e86ca6efdf050059894cdb80",
+      "path": "plugins/frontend-design/skills/frontend-design",
+      "files": {
+        "SKILL.md": "d91970639e9f5c37682ac7ab60094d35f1c7c1f38d731bd56396563aee10c1d3"
+      }
+    },
     "git-workflow-and-versioning": {
       "source": "github.com/addyosmani/agent-skills",
       "commit": "2686b620fc1fed2e8f60c704839c766b8594c6b6",
       "path": "skills/git-workflow-and-versioning",
       "files": {
         "SKILL.md": "b7465d187935c52546d39fdc7bd6ac36d94eda25a9500ef8c18b767d2eb116ea"
+      }
+    },
+    "gsap-core": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-core",
+      "files": {
+        "SKILL.md": "3887b47e050ab5afbe2a9a820f23d39fa02ab785e06a343be44c6f91d84d12b3"
+      }
+    },
+    "gsap-performance": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-performance",
+      "files": {
+        "SKILL.md": "cb5408d6fba707aabcbfe3320317a14c1f8fca6070074e5261047930f50d441e"
+      }
+    },
+    "gsap-plugins": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-plugins",
+      "files": {
+        "SKILL.md": "5838b856c74c07fbc9fa99b6dfd1eee34ea554c3e530c30e0d58014b707d70a4"
+      }
+    },
+    "gsap-react": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-react",
+      "files": {
+        "SKILL.md": "88e2a5312b45e8cc7b3c496637ff5bc9af2ae9c925b555c8b235b34cbc989d74"
+      }
+    },
+    "gsap-scrolltrigger": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-scrolltrigger",
+      "files": {
+        "SKILL.md": "9351b6666a4749c0740406ea363aaccb99a087ff45cc5e8b99a0f367facf3ef4"
+      }
+    },
+    "gsap-timeline": {
+      "source": "github.com/greensock/gsap-skills",
+      "commit": "aed9cfd3277740755f6bfc1155c7aa645403b760",
+      "path": "skills/gsap-timeline",
+      "files": {
+        "SKILL.md": "1a8b0f39cc4be3ed3d834b89672e4ae2f151b901dc3450bebf10bbc45379fe02"
       }
     },
     "netlify-deploy": {
@@ -83,6 +164,15 @@
         "SKILL.md": "b0c220185d88c61f7770eb127d8facf86c86d2dd1fd82b86e15a4965a0137265",
         "references/MEASUREMENT.md": "128f6f20c6c8fb55fcccd8b259cf680811022cf262dc55b03e9d623bcb555a99",
         "references/RUM.md": "a2bdf660ecb23098afbadfb83254d39cef10c0da82938225f61271bad3f81b19"
+      }
+    },
+    "review-animations": {
+      "source": "github.com/emilkowalski/skills",
+      "commit": "d16ebe60d09a5ba2afcb7054ede9d0a10c9f6128",
+      "path": "skills/review-animations",
+      "files": {
+        "SKILL.md": "6ff590d29e436766135aa3d137be1fac2a867165c7257fc315b189361f1873af",
+        "STANDARDS.md": "e7d3605034acda54ca13e43aec9e64d65b53de20f75b11b8d694e373012fbe07"
       }
     },
     "secret-scanning": {

@@ -83,6 +83,9 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - `ai-seo`
   - `seo-local`
   - `vercel-react-best-practices`
+  - `frontend-design` (Anthropic) : direction artistique, typographie, choix non génériques
+  - `gsap-skills` : `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-react`, `gsap-performance` (skills officiels de GreenSock)
+  - `emilkowalski-skills` : `emil-design-eng`, `animate`, `find-animation-opportunities`, `review-animations` (skills d'Emil Kowalski)
   - plugins `pr-review-toolkit` et `claude-security`
   - Aucun skill optionnel : uniquement ceux qui sont réellement utilisés.
 - **Règles d'usage des skills** : le PRD prime toujours sur le contenu d'un skill.
@@ -92,6 +95,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - Aucun chiffre ni aucune citation tirés d'un skill ne sont repris sur le site sans source vérifiée (4.1).
   - Les rapports d'outils contenant des chemins locaux ne sont jamais commités (dépôt public).
   - Pour Next.js, la documentation fournie avec la version installée fait foi, avant les exemples des skills (`AGENTS.md`).
+  - **Skills de design et d'animation** (ajoutés le 2026-09-30 sur décision de Nicolas, par la même procédure : lecture intégrale, deux relecteurs indépendants, version figée) : `frontend-design` guide la direction artistique. La pile d'animation est celle de 5.3 et 6.1, **GSAP (ScrollTrigger, SplitText) + Lenis** : les exemples Motion / Framer Motion, Base UI, ScrollSmoother, CDN et `npm install` sans version ne s'appliquent pas. Une dépendance n'est ajoutée qu'en version exacte et avec l'accord de Nicolas. Le texte reste lisible sans JavaScript : jamais de contenu caché par défaut en attendant une animation. `prefers-reduced-motion` respecté partout. Les skills qui imposent une phrase de réponse fixe ou renvoient vers un skill absent sont suivis seulement dans ce qu'ils apportent de contenu.
   - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; branche `production`, la seule mise en ligne par Netlify : ni envoi forcé ni suppression, même pour l'administrateur, 4 contrôles de la CI exigés, et une garde de compilation qui refuse tout commit absent de la branche principale (`scripts/garde-production.mjs`) ; blocage par GitHub de tout envoi contenant un secret.
 
 ### 2.2 Blocages et registre des dettes
