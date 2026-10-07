@@ -45,6 +45,12 @@
 **Utilise** : Next.js (Lot 0), le logo (captures suffisantes).
 - ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
+  - ✅ **Accueil** : maquette animée v66 (`client/maquettes/accueil-v16`), validée par Nicolas le 2026-10-07 ; restent à confirmer avec le client : vrais chiffres, vraies photos et vidéos, communes, licences, identifiant de la fiche Google
+  - ⬜ **Page service** (une maquette, modèle des 7 pages) : à faire en premier, propositions comparées avant de construire
+  - ⬜ **Page devis** (`/devis`, même formulaire en 3 étapes que l'accueil, petite page)
+  - ⬜ **Page réalisations**, puis **page L'entreprise**
+  - ⬜ **Espace Anthony** (portail privé pour téléphone), maquette à part
+  - Éléments communs déjà faits et à reprendre tels quels : en-tête, barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)

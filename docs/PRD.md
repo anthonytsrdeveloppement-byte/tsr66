@@ -154,7 +154,7 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 - **7 pages service**, chacune avec sa propre URL (`/services/terrassement`, `/services/assainissement`…) et construite comme une mini-landing page : titre, bouton devis en haut, réalisations du service, questions fréquentes.
 - **Réalisations** : alimentées par Anthony depuis son Espace.
 - **L'entreprise** : Anthony Moreau, son parcours, ses engins.
-- **Devis gratuit** : le formulaire complet.
+- **Devis gratuit** : page `/devis` qui affiche directement le même formulaire en 3 étapes que l'accueil (3.3), avec les trois façons de joindre l'entreprise ; pour les visiteurs qui n'arrivent pas par l'accueil (annonce, SMS).
 - **Conseils** : plus tard.
 - **Pages ville**, discrètes et hors menu : une page Perpignan, publiée seulement avec de vrais chantiers sur place.
 - En bas de page : Mentions légales · Confidentialité · Plan du site.
