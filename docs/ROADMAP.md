@@ -9,8 +9,9 @@
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
 - ✅ **Lot 0 clos** (#17 fusionnée le 2026-09-30, `production` reste à 4384cda : une mise en ligne par lot)
-- ➡️ **Lot 1** : tests automatiques des contrôles faits (#18, en attente du « oui ») ; **prochaine étape : les maquettes** (plus de travail sur les contrôles, décision de Nicolas du 2026-09-30) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
-
+- ➡️ **Lot 1** : tests automatiques des contrôles faits et fusionnés (#18, #19) ; **maquette d'accueil validée par Nicolas le 2026-10-07** (v67, `client/maquettes/accueil-v16`) ; **prochaines étapes : les autres maquettes** (page service, page devis, réalisations, L'entreprise, Espace Anthony) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
+- 🔴 **Avant tout envoi sur GitHub (F4)** : `npm audit` signale 2 paquets en défaut (6 alertes hautes) : `source-map-js` 1.2.1 (livré en production via Next, correctif 1.2.2 disponible sans changement majeur) et `braces` 3.0.3 (outils de développement seulement, aucune version corrigée publiée). Décision de Nicolas attendue : appliquer le correctif de `source-map-js`, puis arbitrer `braces`
+- ⏸ Branche `session/2026-09-30-maquettes` : 3 commits locaux, rien envoyé (F5 attend le « oui » de Nicolas et la CI)
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
 **Actions 👤, à faire en premier, car tout en dépend :**
@@ -55,6 +56,22 @@
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)
 - ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
+
+### Décisions attendues de Nicolas (écarts entre le PRD et la maquette d'accueil validée, 2026-10-07)
+- 5.1 : le premier écran est un ciel bleu avec engin détouré (le PRD dit « sections noires : premier écran ») et le rouge sert aussi à des accents d'interface (mot sélectionnable, pastilles) ; adapter le PRD ou la maquette (contrôle C17).
+- 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
+- 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
+- 5.4 : « réduire les animations » : la maquette coupe tout (page statique) au lieu de « simples fondus » ; le choix par l'onglet Accessibilité est conservé en plus (contrôle C13).
+- Textes de la maquette à confirmer avec le client : « sans mauvaise surprise » (méthode), « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…), sigle VRD à développer une fois.
+
+### Reprise en production de l'accueil (retours de relecture F2/F3 du 2026-10-07, non corrigés dans la maquette)
+- Hébergement local obligatoire : polices Plus Jakarta Sans et GSAP, ScrollTrigger, SplitText, Lenis installés en versions exactes (npm), plus aucun appel à Google Fonts ni jsDelivr (PRD 6.2, C15).
+- Menu mobile (bouton burger) sans panneau : à concevoir (proposition avant construction).
+- Formulaire de devis centré : vraie boîte de dialogue (`<dialog>`, focus piégé et rendu), liste des services au bon motif ARIA (combobox), mot qui change avec bouton pause.
+- Contenu lisible sans JavaScript : écran d'entrée masqué par défaut, avis écrits dans le HTML, `<noscript>`.
+- Écran d'entrée réduit à moins d'une seconde ; détourage du premier écran précalculé en image ; images avec dimensions et chargement différé ; lien d'évitement et landmark `<nav>`.
+- Retirer le code de test (`#dbg`, `#sim`, `#probe`, `#ui`, `#layer`) et le bandeau « Maquette version N ».
+- Barres d'avis sur les cinq niveaux ; boutons d'avis inactifs sans identifiant de fiche Google.
 
 ## Lot 2 — Espace Anthony (bases)
 **Objectif** : Anthony publie une réalisation depuis son téléphone.

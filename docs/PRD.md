@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section.
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -169,11 +169,11 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 Le sitemap se met à jour automatiquement à chaque publication, et Bing est prévenu par IndexNow.
 
 ### 3.3 L'accueil en landing page
-- **Premier écran** : l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), la note et les avis Google (3.6) et le **formulaire de devis en 3 étapes** :
-  1. quel projet ?
-  2. où, et quelques détails ;
-  3. vos coordonnées.
-- **Au scroll** : services, réalisations, avant/après, **carte animée du 66** (Saint-Jean-Lasseille au centre, rayon et communes qui apparaissent, « à 15 minutes de Perpignan »), avis, FAQ, puis devis.
+- **Premier écran** : le titre (« Terrassement, assainissement et VRD à Saint-Jean-Lasseille et Perpignan »), l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), le bouton de rappel et le **formulaire de devis en 3 étapes** (la note et les avis Google, 3.6, figurent dans leur propre section) :
+  1. quel projet ? (texte libre) ;
+  2. où ? (la commune) ;
+  3. nom, téléphone et e-mail.
+- **Au scroll** : services (phrase « Je veux un devis gratuit pour… » dont le mot change, qui ouvre le devis déjà rempli), pelleteuse, méthode, repères chiffrés, vidéo de chantier, avis, bandeaux défilants, **carte animée du 66** (Saint-Jean-Lasseille au centre, rayon, « à 15 minutes de Perpignan »), FAQ, puis devis. Les réalisations et l'avant/après arrivent avec les vraies photos (Lot 3). Un onglet « Accessibilité » permet de couper les animations.
 
 ### 3.4 Les trois portes d'entrée de la conversion
 | Porte | Ce que fait le prospect | Ce qui se passe |
@@ -284,16 +284,16 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **Logo** : fichier d'origine vectoriel à demander au client. À défaut, il est redessiné avec son accord.
 
 ### 5.2 Concept
-L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo, services, méthode, réalisations, avant/après, zone d'intervention, chiffres, avis, FAQ, puis devis. Les animations s'inspirent de moto-card.com (GSAP, ScrollTrigger, SplitText, Lenis), transposées à l'univers du terrassement.
+L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d'engin, services, pelleteuse, méthode, repères, vidéo de chantier, avis, zone d'intervention, FAQ, puis devis (réalisations et avant/après avec les vraies photos). Les animations s'inspirent de moto-card.com (GSAP, ScrollTrigger, SplitText, Lenis), transposées à l'univers du terrassement.
 
 ### 5.3 Les 14 effets retenus
 1. Écran d'entrée : logo révélé en moins d'une seconde, à la première visite seulement.
-2. Vidéo de chantier en boucle dans le premier écran, légère parallaxe.
-3. Mot au-dessus du titre qui fait défiler les 7 services.
+2. Vidéo de chantier dans une section dédiée (« Sur le terrain ») : une fenêtre qui s'ouvre jusqu'au plein écran au scroll, lue seulement quand elle est visible.
+3. Grand mot qui fait défiler les 7 services derrière la pelle du premier écran.
 4. Titres révélés ligne par ligne.
 5. Parallaxe des photos de chantier.
-6. Section épinglée « la méthode » : Étude → Terrassement → Réseaux → Finition.
-7. Chiffres clés disposés en arc (2D).
+6. Section épinglée « Comment se déroule votre chantier » : Votre demande → Visite et devis → Réalisation → Remise du chantier, une photo par étape, texte écrit au fil du scroll.
+7. Repères chiffrés : trois chiffres à compteur sur photo en parallaxe (valeurs confirmées par le client, 7.2).
 8. Carte animée du 66 autour de Saint-Jean-Lasseille.
 9. Pelleteuse de la carte de visite animée en 2D : le bras plonge au fil du scroll.
 10. Bandeaux défilants : services, communes.
