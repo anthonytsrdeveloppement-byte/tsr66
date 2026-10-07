@@ -9,8 +9,9 @@
 - ✅ Arborescence, documents et roadmap alignés sur le PRD (2026-09-27)
 - ✅ Dossier `docs/checklist/` : fiches, registre des contrôles du site, historique (2026-09-27)
 - ✅ **Lot 0 clos** (#17 fusionnée le 2026-09-30, `production` reste à 4384cda : une mise en ligne par lot)
-- ➡️ **Lot 1** : tests automatiques des contrôles faits (#18, en attente du « oui ») ; **prochaine étape : les maquettes** (plus de travail sur les contrôles, décision de Nicolas du 2026-09-30) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
-
+- ➡️ **Lot 1** : tests automatiques des contrôles faits et fusionnés (#18, #19) ; **maquette d'accueil validée par Nicolas le 2026-10-07** (v67, `client/maquettes/accueil-v16`) ; **prochaines étapes : les autres maquettes** (page service, page devis, réalisations, L'entreprise, Espace Anthony) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
+- 🟡 **Suivi des dépendances (décision de Nicolas du 2026-10-07)** : le contrôle bloquant de la CI porte sur ce qui est livré aux visiteurs (`npm audit --omit=dev`). `braces` 3.0.3, utilisé seulement par les outils de développement (chaîne `eslint-config-next`), n'a aucune version corrigée publiée : à revérifier à chaque session (`npm audit`) et à mettre à jour dès qu'un correctif sort, puis remettre le contrôle strict. `source-map-js` corrigé le 2026-10-07 (1.2.2)
+- ⏸ Branche `session/2026-09-30-maquettes` : 3 commits locaux, rien envoyé (F5 attend le « oui » de Nicolas et la CI)
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
 **Actions 👤, à faire en premier, car tout en dépend :**
@@ -45,10 +46,31 @@
 **Utilise** : Next.js (Lot 0), le logo (captures suffisantes).
 - ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
+  - ✅ **Accueil** : maquette animée v66 (`client/maquettes/accueil-v16`), validée par Nicolas le 2026-10-07 ; restent à confirmer avec le client : vrais chiffres, vraies photos et vidéos, communes, licences, identifiant de la fiche Google
+  - ⬜ **Page service** (une maquette, modèle des 7 pages) : à faire en premier, propositions comparées avant de construire
+  - ⬜ **Page devis** (`/devis`, même formulaire en 3 étapes que l'accueil, petite page)
+  - ⬜ **Page réalisations**, puis **page L'entreprise**
+  - ⬜ **Espace Anthony** (portail privé pour téléphone), maquette à part
+  - Éléments communs déjà faits et à reprendre tels quels : en-tête, barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)
 - ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
+
+### Décisions attendues de Nicolas (écarts entre le PRD et la maquette d'accueil validée, 2026-10-07)
+- 5.1 : le premier écran est un ciel bleu avec engin détouré (le PRD dit « sections noires : premier écran ») et le rouge sert aussi à des accents d'interface (mot sélectionnable, pastilles) ; adapter le PRD ou la maquette (contrôle C17).
+- 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
+- 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
+- 5.4 : « réduire les animations » : la maquette coupe tout (page statique) au lieu de « simples fondus » ; le choix par l'onglet Accessibilité est conservé en plus (contrôle C13).
+- Textes de la maquette à confirmer avec le client : « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…).
+
+### Reprise en production de l'accueil (retours de relecture F2/F3 du 2026-10-07)
+Corrigés dans la maquette v68 : menu mobile, boîte de dialogue du devis, pause du mot qui change, texte lisible sans JavaScript, textes lus par les lecteurs d'écran, cinq niveaux d'avis, lien d'évitement, typographie, vocabulaire. Reste à faire au moment de construire le vrai site :
+- Hébergement local obligatoire : polices Plus Jakarta Sans et GSAP, ScrollTrigger, SplitText, Lenis installés en versions exactes (npm), plus aucun appel à Google Fonts ni jsDelivr (PRD 6.2, C15).
+- Écran d'entrée : durée à décider par Nicolas (4 s dans la maquette, moins d'une seconde dans le PRD).
+- Détourage du premier écran et de la pelleteuse précalculé en image (aujourd'hui calculé au chargement).
+- Retirer le code de test (`#dbg`, `#sim`, `#probe`, `#ui`, `#layer`) et le bandeau « Maquette version N ».
+- Boutons d'avis inactifs sans identifiant de fiche Google ; ouvrir les liens vers la vraie fiche.
 
 ## Lot 2 — Espace Anthony (bases)
 **Objectif** : Anthony publie une réalisation depuis son téléphone.
@@ -56,11 +78,13 @@
 - ⬜ Sanity : hébergement en Europe vérifié (PRD 6.2)
 - ⬜ Portail `tsr66.fr/espace` aux couleurs de TSR66, connexion Google, adresses autorisées (PRD 3.2) ; vérifier que `Cross-Origin-Opener-Policy: same-origin` ne gêne pas la connexion Google, et un `noindex` propre à `/espace`
 - ⬜ Réalisations et photos (GPS supprimé, format et taille contrôlés), horaires, interrupteur « indisponible »
+- ⬜ Note Google et avis affichés, modifiables par le client : saisie de la note, du nombre d'avis, de la répartition par étoiles et des avis choisis, avec refus des valeurs incohérentes (PRD 3.6)
 
 ## Lot 3 — Pages publiques, SEO et GEO
 **Objectif** : le site complet est consultable en aperçu privé.
 **Utilise** : charte et effets (Lot 1), réalisations et horaires (Lot 2).
 - ⬜ Accueil en landing page, 7 pages service, Réalisations, L'entreprise, Mentions légales, Confidentialité, Plan du site. La page Devis est mise en place, et son formulaire arrive au Lot 4. (PRD 3.2 et 3.3)
+- ⬜ Section avis de l'accueil : étoiles et barres calculées à partir de la note saisie, boutons « Laisser un avis » et « Voir tous les avis sur Google », rien affiché s'il n'y a aucun avis (PRD 3.6) → 👤 identifiant de la fiche Google du client
 - ⬜ Rédaction de tous les textes, faits non confirmés marqués « à confirmer » (PRD 4.1) → 👤 relecture
 - ⬜ Données structurées, sitemap automatique (mis à jour à chaque publication depuis l'Espace), robots des IA autorisés, `llms.txt` (PRD 4.2)
 - ⬜ Audit SEO et GEO du site entier : `seo-audit`, `ai-seo`, `seo-local` (PRD 4.2)

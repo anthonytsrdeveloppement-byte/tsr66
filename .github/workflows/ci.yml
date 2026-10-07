@@ -259,7 +259,10 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Aucune vulnérabilité, tous niveaux confondus
+      - name: Aucune vulnérabilité dans ce qui est livré aux visiteurs
+        run: npm audit --omit=dev --audit-level=low
+      - name: Alertes des outils de développement (information, sans bloquer)
+        continue-on-error: true
         run: npm audit --audit-level=low
       - name: Signatures du registre npm
         run: npm audit signatures

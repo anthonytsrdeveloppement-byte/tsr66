@@ -35,7 +35,7 @@
 | Rubrique | Contenu |
 |---|---|
 | Règle | Rien n'est envoyé sur GitHub ni en production sans ce dernier contrôle sur l'état final |
-| Contrôle | ① tous les contrôles de D6, plus un scan des fichiers produits pour le site ② chaque variable nécessaire en production est déclarée dans Netlify (`netlify-deploy`, noms vérifiés, jamais les valeurs) ③ `npm audit` à 0, et chaque nouvelle dépendance passe par `supply-chain-risk-auditor` avec une justification écrite |
+| Contrôle | ① tous les contrôles de D6, plus un scan des fichiers produits pour le site ② chaque variable nécessaire en production est déclarée dans Netlify (`netlify-deploy`, noms vérifiés, jamais les valeurs) ③ `npm audit --omit=dev` à 0 (dépendances livrées aux visiteurs ; les alertes des seuls outils de développement sans correctif publié sont suivies dans la ROADMAP, décision de Nicolas du 2026-10-07), et chaque nouvelle dépendance passe par `supply-chain-risk-auditor` avec une justification écrite |
 | Résultat attendu | 0 trouvaille, 0 vulnérabilité, chaque nouvelle dépendance justifiée |
 | Si c'est rouge | Bloquant : rien n'est envoyé |
 | Preuve | Résultats dans le rapport, noms des variables uniquement |

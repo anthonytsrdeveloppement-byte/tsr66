@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section.
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -12,7 +12,7 @@
 - **Statut** : entrepreneur individuel, Anthony Moreau. Créée le 22 janvier 2019.
 - **Siège** : 11 rue des Macabeus, 66300 Saint-Jean-Lasseille (Pyrénées-Orientales).
 - **SIRET** 847 691 672 00012 · **TVA** FR32847691672 · **NAF** 43.12A.
-- **Contact** : 06 26 57 15 21 · t.s.r.66moreau@gmail.com.
+- **Contact** : 06 26 57 15 21 · adresse e-mail professionnelle du dirigeant, fournie par le client et non reproduite dans ce dépôt public (7.2).
 - **Organisation** : artisan seul, interlocuteur unique qui réalise lui-même les travaux, avec des renforts ponctuels (sous-traitants, intérimaires) selon la taille du chantier.
 - **Identité visuelle** : logo TSR66 existant, couleurs noir, rouge et blanc.
 
@@ -83,6 +83,9 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - `ai-seo`
   - `seo-local`
   - `vercel-react-best-practices`
+  - `frontend-design` (Anthropic) : direction artistique, typographie, choix non génériques
+  - `gsap-skills` : `gsap-core`, `gsap-timeline`, `gsap-scrolltrigger`, `gsap-plugins`, `gsap-react`, `gsap-performance` (skills officiels de GreenSock)
+  - `emilkowalski-skills` : `emil-design-eng`, `animate`, `find-animation-opportunities`, `review-animations` (skills d'Emil Kowalski)
   - plugins `pr-review-toolkit` et `claude-security`
   - Aucun skill optionnel : uniquement ceux qui sont réellement utilisés.
 - **Règles d'usage des skills** : le PRD prime toujours sur le contenu d'un skill.
@@ -92,6 +95,7 @@ Le siège est le domicile du dirigeant, et la fiche Google est référencée à 
   - Aucun chiffre ni aucune citation tirés d'un skill ne sont repris sur le site sans source vérifiée (4.1).
   - Les rapports d'outils contenant des chemins locaux ne sont jamais commités (dépôt public).
   - Pour Next.js, la documentation fournie avec la version installée fait foi, avant les exemples des skills (`AGENTS.md`).
+  - **Skills de design et d'animation** (ajoutés le 2026-09-30 sur décision de Nicolas, par la même procédure : lecture intégrale, deux relecteurs indépendants, version figée) : `frontend-design` guide la direction artistique. La pile d'animation est celle de 5.3 et 6.1, **GSAP (ScrollTrigger, SplitText) + Lenis** : les exemples Motion / Framer Motion, Base UI, ScrollSmoother, CDN et `npm install` sans version ne s'appliquent pas. Une dépendance n'est ajoutée qu'en version exacte et avec l'accord de Nicolas. Le texte reste lisible sans JavaScript : jamais de contenu caché par défaut en attendant une animation. `prefers-reduced-motion` respecté partout. Les skills qui imposent une phrase de réponse fixe ou renvoient vers un skill absent sont suivis seulement dans ce qu'ils apportent de contenu.
   - Ces règles sont doublées de **verrous techniques** : commandes dangereuses refusées par Claude Code (`.claude/settings.json`) ; branche principale protégée chez GitHub (demande de fusion obligatoire, ni envoi forcé ni suppression, même pour l'administrateur) ; branche `production`, la seule mise en ligne par Netlify : ni envoi forcé ni suppression, même pour l'administrateur, 4 contrôles de la CI exigés, et une garde de compilation qui refuse tout commit absent de la branche principale (`scripts/garde-production.mjs`) ; blocage par GitHub de tout envoi contenant un secret.
 
 ### 2.2 Blocages et registre des dettes
@@ -150,7 +154,7 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 - **7 pages service**, chacune avec sa propre URL (`/services/terrassement`, `/services/assainissement`…) et construite comme une mini-landing page : titre, bouton devis en haut, réalisations du service, questions fréquentes.
 - **Réalisations** : alimentées par Anthony depuis son Espace.
 - **L'entreprise** : Anthony Moreau, son parcours, ses engins.
-- **Devis gratuit** : le formulaire complet.
+- **Devis gratuit** : page `/devis` qui affiche directement le même formulaire en 3 étapes que l'accueil (3.3), avec les trois façons de joindre l'entreprise ; pour les visiteurs qui n'arrivent pas par l'accueil (annonce, SMS).
 - **Conseils** : plus tard.
 - **Pages ville**, discrètes et hors menu : une page Perpignan, publiée seulement avec de vrais chantiers sur place.
 - En bas de page : Mentions légales · Confidentialité · Plan du site.
@@ -158,17 +162,18 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 **Partie privée : l'Espace Anthony**, portail personnel aux couleurs de TSR66 à l'adresse **tsr66.fr/espace**. Il est invisible pour Google, sans lien depuis le site public, pensé pour le téléphone (icône sur l'écran d'accueil), et appuyé sur un outil de gestion éprouvé (Sanity, invisible pour Anthony). Aucune connexion n'est codée par nous. **Connexion avec son compte Google**, double authentification, adresses autorisées uniquement. Fonctions :
 - ajouter, modifier et retirer des réalisations et des photos depuis le téléphone ;
 - envoyer une demande d'avis Google ;
+- **mettre à jour la note Google et les avis affichés sur le site**, avec des contrôles de cohérence (3.6) ;
 - interrupteur « Je suis indisponible » ;
 - modifier ses horaires.
 
 Le sitemap se met à jour automatiquement à chaque publication, et Bing est prévenu par IndexNow.
 
 ### 3.3 L'accueil en landing page
-- **Premier écran** : l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), les avis Google et le **formulaire de devis en 3 étapes** :
-  1. quel projet ?
-  2. où, et quelques détails ;
-  3. vos coordonnées.
-- **Au scroll** : services, réalisations, avant/après, **carte animée du 66** (Saint-Jean-Lasseille au centre, rayon et communes qui apparaissent, « à 15 minutes de Perpignan »), avis, FAQ, puis devis.
+- **Premier écran** : le titre (« Terrassement, assainissement et VRD à Saint-Jean-Lasseille et Perpignan »), l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), le bouton de rappel et le **formulaire de devis en 3 étapes** (la note et les avis Google, 3.6, figurent dans leur propre section) :
+  1. quel projet ? (texte libre) ;
+  2. où ? (la commune) ;
+  3. nom, téléphone et e-mail.
+- **Au scroll** : services (phrase « Je veux un devis gratuit pour… » dont le mot change, qui ouvre le devis déjà rempli), pelleteuse, méthode, repères chiffrés, vidéo de chantier, avis, bandeaux défilants, **carte animée du 66** (Saint-Jean-Lasseille au centre, rayon, « à 15 minutes de Perpignan »), FAQ, puis devis. Les réalisations et l'avant/après arrivent avec les vraies photos (Lot 3). Un onglet « Accessibilité » permet de couper les animations.
 
 ### 3.4 Les trois portes d'entrée de la conversion
 | Porte | Ce que fait le prospect | Ce qui se passe |
@@ -193,6 +198,40 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
 
 Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et sans contrepartie (règle Google).
 
+### 3.6 La note et les avis Google affichés sur le site
+*Décidé par Nicolas le 2026-10-06.*
+
+**Principe** : la note et le nombre d'avis du site sont **ceux de la fiche Google Business Profile**, sans seuil minimum. Le client les met à jour lui-même depuis l'Espace Anthony. Le site affiche toujours le nombre d'avis à côté de la note (« 4,9 sur 5 · 12 avis »), pour que le visiteur juge la valeur de la note.
+
+**Ce que le client saisit dans l'Espace Anthony**
+- la **note Google** (de 1,0 à 5,0, une décimale) et le **nombre total d'avis**, tels qu'ils apparaissent sur sa fiche ;
+- le **nombre d'avis par niveau d'étoiles** (5, 4, 3, 2 et 1 étoile) ;
+- les **avis à afficher** : prénom et initiale du nom, commune, texte, nombre d'étoiles de l'avis (de 1 à 5) et date ;
+- le **lien d'avis** de sa fiche Google (identifiant de la fiche, fourni par le client).
+
+**Ce que le site calcule lui-même, pour qu'aucune valeur incohérente ne s'affiche**
+- les **étoiles de la note** sont dessinées à partir du chiffre : 4,9 donne quatre étoiles pleines et une cinquième remplie à 90 % ;
+- les **pourcentages des barres** viennent des nombres par niveau et font toujours 100 % ;
+- les **étoiles de chaque avis** viennent du nombre saisi pour cet avis ;
+- la date « données Google au JJ/MM/AAAA » est affichée sous la note.
+- « Dernier avis il y a N jours » est calculé à partir de la date du dernier avis saisi, et affiché seulement s'il date de moins de 60 jours (au-delà, la date seule est donnée).
+
+**Contrôles à l'enregistrement** : l'Espace refuse d'enregistrer, avec un message en français simple, si
+- la note n'est pas comprise entre 1 et 5 ;
+- le total des avis par niveau ne correspond pas au nombre total d'avis ;
+- la note saisie s'écarte de plus de 0,1 de la moyenne calculée à partir des nombres par niveau ;
+- le nombre d'avis affichés dépasse le nombre total d'avis ;
+- un avis a un nombre d'étoiles hors de 1 à 5 ou un texte vide.
+
+**Cas particulier : aucun avis.** Il n'y a alors aucune note à suivre : la section n'affiche que le bouton « Laisser un avis » (et jamais de note inventée).
+
+**Boutons** : « Laisser un avis », qui ouvre la fenêtre de rédaction d'un avis sur la fiche Google, et « Voir tous les avis sur Google ». Ils restent absents ou inactifs tant que l'identifiant de la fiche n'est pas fourni.
+
+**Règles de fond**
+- Les avis affichés sont **de vrais avis de la fiche Google**, recopiés tels quels : TSR66 et Claude ne les écrivent ni ne les modifient. La source « Avis Google » est indiquée.
+- Aucun avis, aucune note et aucun chiffre d'exemple n'est mis en ligne : ceux de la maquette sont des exemples signalés comme tels.
+- Aucune mise à jour automatique depuis Google dans la première version (une récupération automatique de la note par l'interface de Google reste possible plus tard, à décider : coût, conditions de conservation, et aucune ressource extérieure sur les pages publiques, 6.2).
+
 ## 4. SEO local et GEO
 *Validée le 2026-09-27.*
 
@@ -202,6 +241,12 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **Robots des IA autorisés**, le GEO étant une priorité : ChatGPT, Perplexity, Claude, Google IA, Bing…
 - **Rédaction** : Claude rédige tous les textes, avec une optimisation SEO/GEO subtile et un ton professionnel, sans répéter les mots-clés à outrance. Relecture et corrections ensuite. **Aucun fait inventé** : ce qui n'est pas confirmé est marqué « à confirmer ».
 - **Mesure** : Google Search Console, Bing Webmaster Tools, statistiques de la fiche Google, compteur interne des conversions : demandes de devis, demandes de rappel et clics sur « Appeler », côté serveur, sans cookie ni donnée personnelle.
+- **Règles de rédaction** (décidées avec Nicolas le 2026-10-07, après l'audit des textes de la maquette) :
+  - **Voix** : l'entreprise parle toujours au pluriel (« nous », « notre », « nos », « TSR66 »), jamais en « on » ni à la troisième personne ; le visiteur est vouvoyé. Le prénom du dirigeant n'apparaît que dans la mention légale « Anthony Moreau EI – TSR66 ». Dans le menu des services, la situation est écrite à la première personne côté visiteur (« Je dois démolir ») : c'est voulu.
+  - **Vocabulaire** : les sept services s'écrivent toujours « Terrassement », « Assainissement », « Viabilisation / VRD », « Travaux forestiers », « Aménagement extérieur », « Démolition » et « Enrochement / murs ». Le visiteur a un « projet », l'entreprise réalise des « chantiers » et des « travaux ». On écrit « devis gratuit », « être rappelé », « en moins de 30 min » (jamais « sous 30 min »), « professionnels » (jamais « pros »), « à 15 minutes de Perpignan ». Le sigle VRD est développé une fois par page (« voirie et réseaux divers »).
+  - **Typographie française** : espace insécable avant « : ; ? ! % » et à l'intérieur des guillemets « », apostrophe typographique ’ partout, numéros de téléphone insécables (06 26 57 15 21), heures écrites « 9 h 30 ».
+  - **Promesses prudentes** : pas de promesse absolue (« toujours », « aucune surprise », « aux normes », « tiennent dans le temps »). La conformité d'un assainissement individuel est un avis du SPANC ; le raccordement au réseau public relève des concessionnaires ; la constructibilité d'un terrain relève de l'urbanisme, pas de la viabilisation.
+  - **Un texte d'exemple n'est jamais publié** : chiffres, avis, communes et crédits d'exemple sont remplacés ou retirés avant la mise en ligne.
 
 ### 4.2 Fondations techniques (mises en place par Claude)
 - **Tout le texte est lisible sans JavaScript** : les animations ne cachent jamais rien à Google ni aux IA.
@@ -224,6 +269,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - Qui gère les actions hors site : fiche Google, Bing Places, Pages Jaunes, annuaires. La liste des actions et les textes à copier-coller seront fournis.
 - Statistiques de visites : à trancher à la mise en ligne.
 - Achat de tsr66.fr, et éventuellement tsr66.com, par le client.
+- Avis en ligne : obligations d'information envers les consommateurs (origine des avis, date, traitement) à vérifier avant la mise en ligne.
 
 ## 5. Design et animations
 *Validée le 2026-09-27.*
@@ -238,16 +284,16 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **Logo** : fichier d'origine vectoriel à demander au client. À défaut, il est redessiné avec son accord.
 
 ### 5.2 Concept
-L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo, services, méthode, réalisations, avant/après, zone d'intervention, chiffres, avis, FAQ, puis devis. Les animations s'inspirent de moto-card.com (GSAP, ScrollTrigger, SplitText, Lenis), transposées à l'univers du terrassement.
+L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d'engin, services, pelleteuse, méthode, repères, vidéo de chantier, avis, zone d'intervention, FAQ, puis devis (réalisations et avant/après avec les vraies photos). Les animations s'inspirent de moto-card.com (GSAP, ScrollTrigger, SplitText, Lenis), transposées à l'univers du terrassement.
 
 ### 5.3 Les 14 effets retenus
 1. Écran d'entrée : logo révélé en moins d'une seconde, à la première visite seulement.
-2. Vidéo de chantier en boucle dans le premier écran, légère parallaxe.
-3. Mot au-dessus du titre qui fait défiler les 7 services.
+2. Vidéo de chantier dans une section dédiée (« Sur le terrain ») : une fenêtre qui s'ouvre jusqu'au plein écran au scroll, lue seulement quand elle est visible.
+3. Grand mot qui fait défiler les 7 services derrière la pelle du premier écran.
 4. Titres révélés ligne par ligne.
 5. Parallaxe des photos de chantier.
-6. Section épinglée « la méthode » : Étude → Terrassement → Réseaux → Finition.
-7. Chiffres clés disposés en arc (2D).
+6. Section épinglée « Comment se déroule votre chantier » : Votre demande → Visite et devis → Réalisation → Remise du chantier, une photo par étape, texte écrit au fil du scroll.
+7. Repères chiffrés : trois chiffres à compteur sur photo en parallaxe (valeurs confirmées par le client, 7.2).
 8. Carte animée du 66 autour de Saint-Jean-Lasseille.
 9. Pelleteuse de la carte de visite animée en 2D : le bras plonge au fil du scroll.
 10. Bandeaux défilants : services, communes.
@@ -286,6 +332,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo,
   - Resend efface son historique au bout de 30 jours.
   - Seul un compteur anonyme est conservé : nombre de devis, de rappels et de clics sur « Appeler ».
   - L'e-mail d'un client à qui on demande un avis est envoyé directement par le site et n'est jamais enregistré, ni sur le site ni dans Sanity.
+- **Avis affichés** : seul le prénom et l'initiale du nom, la commune et le texte d'avis déjà publics sur Google sont enregistrés dans Sanity. Un avis retiré par son auteur ou par Google est retiré du site sur demande.
 - **Durée de conservation annoncée** : 3 ans après le dernier contact (règle CNIL pour les prospects).
 - **Télémétrie de Next.js désactivée** (statistiques d'usage envoyées par défaut à Vercel) : sur l'ordinateur, dans la CI et sur Netlify.
 - **Aucun cookie, aucun traceur, aucune ressource chargée depuis un autre site sur les pages publiques**, donc aucune bannière cookies. Seul le portail privé d'Anthony utilise la connexion Google et Sanity.
@@ -338,11 +385,12 @@ Obligation légale dès que l'entreprise travaille pour des particuliers. **Ce n
 | Liste de ses engins | Pages service, page L'entreprise | 🟠 Important |
 | Assurance décennale : assureur, numéro de contrat, zone couverte | Mentions et signal de confiance | 🟠 Au moment voulu |
 | Médiateur de la consommation (s'il souscrit) | Obligation légale envers les particuliers | 🟡 Sa décision |
+| Identifiant de sa fiche Google (pour le bouton « Laisser un avis »), puis sa note et ses avis | Section avis (3.6) | 🟠 Avant la mise en ligne |
 | Chiffres clés (nombre de chantiers, m³ déplacés…) | Section « chiffres ». Un chiffre non confirmé n'est pas affiché | 🟡 Optionnel |
 | Photo d'Anthony et quelques mots sur son parcours | Page L'entreprise | 🟡 Optionnel |
 | Communes où il a déjà travaillé | Carte du 66, future page Perpignan | 🟡 Plus tard |
 | Relecture des textes rédigés par Claude | Exactitude des informations | Au fil de l'eau |
 
 ### 7.3 Documents remis au client
-- **Fiche « Mon espace TSR66 »** : se connecter, ajouter une réalisation, demander un avis, que faire en cas de problème, qui contacter.
+- **Fiche « Mon espace TSR66 »** : se connecter, ajouter une réalisation, demander un avis, mettre à jour la note et les avis affichés, que faire en cas de problème, qui contacter.
 - **Plan d'action du référencement hors site** : fiche Google, Bing Places, annuaires, avec les textes à copier-coller. Qui le met en œuvre reste à décider.
