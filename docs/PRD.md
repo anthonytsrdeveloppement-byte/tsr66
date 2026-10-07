@@ -12,7 +12,7 @@
 - **Statut** : entrepreneur individuel, Anthony Moreau. Créée le 22 janvier 2019.
 - **Siège** : 11 rue des Macabeus, 66300 Saint-Jean-Lasseille (Pyrénées-Orientales).
 - **SIRET** 847 691 672 00012 · **TVA** FR32847691672 · **NAF** 43.12A.
-- **Contact** : 06 26 57 15 21 · t.s.r.66moreau@gmail.com.
+- **Contact** : 06 26 57 15 21 · adresse e-mail professionnelle du dirigeant, fournie par le client et non reproduite dans ce dépôt public (7.2).
 - **Organisation** : artisan seul, interlocuteur unique qui réalise lui-même les travaux, avec des renforts ponctuels (sous-traitants, intérimaires) selon la taille du chantier.
 - **Identité visuelle** : logo TSR66 existant, couleurs noir, rouge et blanc.
 

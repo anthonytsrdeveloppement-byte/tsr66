@@ -62,16 +62,15 @@
 - 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
 - 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
 - 5.4 : « réduire les animations » : la maquette coupe tout (page statique) au lieu de « simples fondus » ; le choix par l'onglet Accessibilité est conservé en plus (contrôle C13).
-- Textes de la maquette à confirmer avec le client : « sans mauvaise surprise » (méthode), « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…), sigle VRD à développer une fois.
+- Textes de la maquette à confirmer avec le client : « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…).
 
-### Reprise en production de l'accueil (retours de relecture F2/F3 du 2026-10-07, non corrigés dans la maquette)
+### Reprise en production de l'accueil (retours de relecture F2/F3 du 2026-10-07)
+Corrigés dans la maquette v68 : menu mobile, boîte de dialogue du devis, pause du mot qui change, texte lisible sans JavaScript, textes lus par les lecteurs d'écran, cinq niveaux d'avis, lien d'évitement, typographie, vocabulaire. Reste à faire au moment de construire le vrai site :
 - Hébergement local obligatoire : polices Plus Jakarta Sans et GSAP, ScrollTrigger, SplitText, Lenis installés en versions exactes (npm), plus aucun appel à Google Fonts ni jsDelivr (PRD 6.2, C15).
-- Menu mobile (bouton burger) sans panneau : à concevoir (proposition avant construction).
-- Formulaire de devis centré : vraie boîte de dialogue (`<dialog>`, focus piégé et rendu), liste des services au bon motif ARIA (combobox), mot qui change avec bouton pause.
-- Contenu lisible sans JavaScript : écran d'entrée masqué par défaut, avis écrits dans le HTML, `<noscript>`.
-- Écran d'entrée réduit à moins d'une seconde ; détourage du premier écran précalculé en image ; images avec dimensions et chargement différé ; lien d'évitement et landmark `<nav>`.
+- Écran d'entrée : durée à décider par Nicolas (4 s dans la maquette, moins d'une seconde dans le PRD).
+- Détourage du premier écran et de la pelleteuse précalculé en image (aujourd'hui calculé au chargement).
 - Retirer le code de test (`#dbg`, `#sim`, `#probe`, `#ui`, `#layer`) et le bandeau « Maquette version N ».
-- Barres d'avis sur les cinq niveaux ; boutons d'avis inactifs sans identifiant de fiche Google.
+- Boutons d'avis inactifs sans identifiant de fiche Google ; ouvrir les liens vers la vraie fiche.
 
 ## Lot 2 — Espace Anthony (bases)
 **Objectif** : Anthony publie une réalisation depuis son téléphone.
