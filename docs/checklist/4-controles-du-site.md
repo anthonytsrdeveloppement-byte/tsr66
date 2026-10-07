@@ -38,6 +38,7 @@
 | C22 | Espace réservé aux adresses autorisées : une adresse non autorisée est refusée | 3.2, 6.3 | 👁 | ⬜ | — |
 | C23 | Photos envoyées : données GPS supprimées, format et taille contrôlés | 6.2 | 🤖 | ⬜ | — |
 | C24 | Sanity ne reçoit que des photos et des textes publics, jamais de donnée de prospect | 6.2 | 👁 | ⬜ | — |
+| C25 | Saisie de la note et des avis : l'Espace refuse une note hors de 1 à 5, un total par niveau différent du nombre d'avis, une note qui s'écarte de plus de 0,1 de la moyenne calculée, plus d'avis affichés que d'avis au total, ou un avis sans texte ou hors de 1 à 5 étoiles | 3.6 | 🤖 | ⬜ | — |
 
 ## Lot 3 — Pages publiques, SEO et GEO
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |
@@ -53,6 +54,7 @@
 | C38 | Pages ville publiées seulement avec de vrais chantiers dans la commune | 4.3 | 👁 | ⬜ | — |
 | C39 | Aucun fait inventé : tout fait non confirmé est marqué « à confirmer », et plus aucun « à confirmer » à la mise en ligne | 4.1 | 🤖 | ⬜ | — |
 | C40 | Mentions légales (« Anthony Moreau EI – TSR66 », adresse, SIRET, TVA, directeur de la publication, hébergeur, médiateur s'il est fourni) et politique de confidentialité complètes | 6.4, 6.5 | 👁 | ⬜ | — |
+| C41 | Section avis : étoiles de la note et barres calculées à partir des chiffres saisis (jamais écrites à la main), nombre d'avis affiché à côté de la note, date de mise à jour, aucun avis ni chiffre d'exemple en production, aucune note affichée s'il n'y a aucun avis | 3.6 | 🤖 | ⬜ | — |
 
 ## Lot 4 — Conversion et e-mails
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |

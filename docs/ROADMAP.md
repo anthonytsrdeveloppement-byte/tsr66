@@ -56,11 +56,13 @@
 - ⬜ Sanity : hébergement en Europe vérifié (PRD 6.2)
 - ⬜ Portail `tsr66.fr/espace` aux couleurs de TSR66, connexion Google, adresses autorisées (PRD 3.2) ; vérifier que `Cross-Origin-Opener-Policy: same-origin` ne gêne pas la connexion Google, et un `noindex` propre à `/espace`
 - ⬜ Réalisations et photos (GPS supprimé, format et taille contrôlés), horaires, interrupteur « indisponible »
+- ⬜ Note Google et avis affichés, modifiables par le client : saisie de la note, du nombre d'avis, de la répartition par étoiles et des avis choisis, avec refus des valeurs incohérentes (PRD 3.6)
 
 ## Lot 3 — Pages publiques, SEO et GEO
 **Objectif** : le site complet est consultable en aperçu privé.
 **Utilise** : charte et effets (Lot 1), réalisations et horaires (Lot 2).
 - ⬜ Accueil en landing page, 7 pages service, Réalisations, L'entreprise, Mentions légales, Confidentialité, Plan du site. La page Devis est mise en place, et son formulaire arrive au Lot 4. (PRD 3.2 et 3.3)
+- ⬜ Section avis de l'accueil : étoiles et barres calculées à partir de la note saisie, boutons « Laisser un avis » et « Voir tous les avis sur Google », rien affiché s'il n'y a aucun avis (PRD 3.6) → 👤 identifiant de la fiche Google du client
 - ⬜ Rédaction de tous les textes, faits non confirmés marqués « à confirmer » (PRD 4.1) → 👤 relecture
 - ⬜ Données structurées, sitemap automatique (mis à jour à chaque publication depuis l'Espace), robots des IA autorisés, `llms.txt` (PRD 4.2)
 - ⬜ Audit SEO et GEO du site entier : `seo-audit`, `ai-seo`, `seo-local` (PRD 4.2)

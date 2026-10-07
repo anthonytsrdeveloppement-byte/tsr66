@@ -162,13 +162,14 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 **Partie privée : l'Espace Anthony**, portail personnel aux couleurs de TSR66 à l'adresse **tsr66.fr/espace**. Il est invisible pour Google, sans lien depuis le site public, pensé pour le téléphone (icône sur l'écran d'accueil), et appuyé sur un outil de gestion éprouvé (Sanity, invisible pour Anthony). Aucune connexion n'est codée par nous. **Connexion avec son compte Google**, double authentification, adresses autorisées uniquement. Fonctions :
 - ajouter, modifier et retirer des réalisations et des photos depuis le téléphone ;
 - envoyer une demande d'avis Google ;
+- **mettre à jour la note Google et les avis affichés sur le site**, avec des contrôles de cohérence (3.6) ;
 - interrupteur « Je suis indisponible » ;
 - modifier ses horaires.
 
 Le sitemap se met à jour automatiquement à chaque publication, et Bing est prévenu par IndexNow.
 
 ### 3.3 L'accueil en landing page
-- **Premier écran** : l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), les avis Google et le **formulaire de devis en 3 étapes** :
+- **Premier écran** : l'accroche (« Un seul interlocuteur, du premier coup de pelle à la finition »), la note et les avis Google (3.6) et le **formulaire de devis en 3 étapes** :
   1. quel projet ?
   2. où, et quelques détails ;
   3. vos coordonnées.
@@ -197,6 +198,40 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
 
 Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et sans contrepartie (règle Google).
 
+### 3.6 La note et les avis Google affichés sur le site
+*Décidé par Nicolas le 2026-10-06.*
+
+**Principe** : la note et le nombre d'avis du site sont **ceux de la fiche Google Business Profile**, sans seuil minimum. Le client les met à jour lui-même depuis l'Espace Anthony. Le site affiche toujours le nombre d'avis à côté de la note (« 4,9 sur 5 · 12 avis »), pour que le visiteur juge la valeur de la note.
+
+**Ce que le client saisit dans l'Espace Anthony**
+- la **note Google** (de 1,0 à 5,0, une décimale) et le **nombre total d'avis**, tels qu'ils apparaissent sur sa fiche ;
+- le **nombre d'avis par niveau d'étoiles** (5, 4, 3, 2 et 1 étoile) ;
+- les **avis à afficher** : prénom et initiale du nom, commune, texte, nombre d'étoiles de l'avis (de 1 à 5) et date ;
+- le **lien d'avis** de sa fiche Google (identifiant de la fiche, fourni par le client).
+
+**Ce que le site calcule lui-même, pour qu'aucune valeur incohérente ne s'affiche**
+- les **étoiles de la note** sont dessinées à partir du chiffre : 4,9 donne quatre étoiles pleines et une cinquième remplie à 90 % ;
+- les **pourcentages des barres** viennent des nombres par niveau et font toujours 100 % ;
+- les **étoiles de chaque avis** viennent du nombre saisi pour cet avis ;
+- la date « données Google au JJ/MM/AAAA » est affichée sous la note.
+- « Dernier avis il y a N jours » est calculé à partir de la date du dernier avis saisi, et affiché seulement s'il date de moins de 60 jours (au-delà, la date seule est donnée).
+
+**Contrôles à l'enregistrement** : l'Espace refuse d'enregistrer, avec un message en français simple, si
+- la note n'est pas comprise entre 1 et 5 ;
+- le total des avis par niveau ne correspond pas au nombre total d'avis ;
+- la note saisie s'écarte de plus de 0,1 de la moyenne calculée à partir des nombres par niveau ;
+- le nombre d'avis affichés dépasse le nombre total d'avis ;
+- un avis a un nombre d'étoiles hors de 1 à 5 ou un texte vide.
+
+**Cas particulier : aucun avis.** Il n'y a alors aucune note à suivre : la section n'affiche que le bouton « Laisser un avis » (et jamais de note inventée).
+
+**Boutons** : « Laisser un avis », qui ouvre la fenêtre de rédaction d'un avis sur la fiche Google, et « Voir tous les avis sur Google ». Ils restent absents ou inactifs tant que l'identifiant de la fiche n'est pas fourni.
+
+**Règles de fond**
+- Les avis affichés sont **de vrais avis de la fiche Google**, recopiés tels quels : TSR66 et Claude ne les écrivent ni ne les modifient. La source « Avis Google » est indiquée.
+- Aucun avis, aucune note et aucun chiffre d'exemple n'est mis en ligne : ceux de la maquette sont des exemples signalés comme tels.
+- Aucune mise à jour automatique depuis Google dans la première version (une récupération automatique de la note par l'interface de Google reste possible plus tard, à décider : coût, conditions de conservation, et aucune ressource extérieure sur les pages publiques, 6.2).
+
 ## 4. SEO local et GEO
 *Validée le 2026-09-27.*
 
@@ -206,6 +241,12 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **Robots des IA autorisés**, le GEO étant une priorité : ChatGPT, Perplexity, Claude, Google IA, Bing…
 - **Rédaction** : Claude rédige tous les textes, avec une optimisation SEO/GEO subtile et un ton professionnel, sans répéter les mots-clés à outrance. Relecture et corrections ensuite. **Aucun fait inventé** : ce qui n'est pas confirmé est marqué « à confirmer ».
 - **Mesure** : Google Search Console, Bing Webmaster Tools, statistiques de la fiche Google, compteur interne des conversions : demandes de devis, demandes de rappel et clics sur « Appeler », côté serveur, sans cookie ni donnée personnelle.
+- **Règles de rédaction** (décidées avec Nicolas le 2026-10-07, après l'audit des textes de la maquette) :
+  - **Voix** : l'entreprise parle toujours au pluriel (« nous », « notre », « nos », « TSR66 »), jamais en « on » ni à la troisième personne ; le visiteur est vouvoyé. Le prénom du dirigeant n'apparaît que dans la mention légale « Anthony Moreau EI – TSR66 ». Dans le menu des services, la situation est écrite à la première personne côté visiteur (« Je dois démolir ») : c'est voulu.
+  - **Vocabulaire** : les sept services s'écrivent toujours « Terrassement », « Assainissement », « Viabilisation / VRD », « Travaux forestiers », « Aménagement extérieur », « Démolition » et « Enrochement / murs ». Le visiteur a un « projet », l'entreprise réalise des « chantiers » et des « travaux ». On écrit « devis gratuit », « être rappelé », « en moins de 30 min » (jamais « sous 30 min »), « professionnels » (jamais « pros »), « à 15 minutes de Perpignan ». Le sigle VRD est développé une fois par page (« voirie et réseaux divers »).
+  - **Typographie française** : espace insécable avant « : ; ? ! % » et à l'intérieur des guillemets « », apostrophe typographique ’ partout, numéros de téléphone insécables (06 26 57 15 21), heures écrites « 9 h 30 ».
+  - **Promesses prudentes** : pas de promesse absolue (« toujours », « aucune surprise », « aux normes », « tiennent dans le temps »). La conformité d'un assainissement individuel est un avis du SPANC ; le raccordement au réseau public relève des concessionnaires ; la constructibilité d'un terrain relève de l'urbanisme, pas de la viabilisation.
+  - **Un texte d'exemple n'est jamais publié** : chiffres, avis, communes et crédits d'exemple sont remplacés ou retirés avant la mise en ligne.
 
 ### 4.2 Fondations techniques (mises en place par Claude)
 - **Tout le texte est lisible sans JavaScript** : les animations ne cachent jamais rien à Google ni aux IA.
@@ -228,6 +269,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - Qui gère les actions hors site : fiche Google, Bing Places, Pages Jaunes, annuaires. La liste des actions et les textes à copier-coller seront fournis.
 - Statistiques de visites : à trancher à la mise en ligne.
 - Achat de tsr66.fr, et éventuellement tsr66.com, par le client.
+- Avis en ligne : obligations d'information envers les consommateurs (origine des avis, date, traitement) à vérifier avant la mise en ligne.
 
 ## 5. Design et animations
 *Validée le 2026-09-27.*
@@ -290,6 +332,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec vidéo,
   - Resend efface son historique au bout de 30 jours.
   - Seul un compteur anonyme est conservé : nombre de devis, de rappels et de clics sur « Appeler ».
   - L'e-mail d'un client à qui on demande un avis est envoyé directement par le site et n'est jamais enregistré, ni sur le site ni dans Sanity.
+- **Avis affichés** : seul le prénom et l'initiale du nom, la commune et le texte d'avis déjà publics sur Google sont enregistrés dans Sanity. Un avis retiré par son auteur ou par Google est retiré du site sur demande.
 - **Durée de conservation annoncée** : 3 ans après le dernier contact (règle CNIL pour les prospects).
 - **Télémétrie de Next.js désactivée** (statistiques d'usage envoyées par défaut à Vercel) : sur l'ordinateur, dans la CI et sur Netlify.
 - **Aucun cookie, aucun traceur, aucune ressource chargée depuis un autre site sur les pages publiques**, donc aucune bannière cookies. Seul le portail privé d'Anthony utilise la connexion Google et Sanity.
@@ -342,11 +385,12 @@ Obligation légale dès que l'entreprise travaille pour des particuliers. **Ce n
 | Liste de ses engins | Pages service, page L'entreprise | 🟠 Important |
 | Assurance décennale : assureur, numéro de contrat, zone couverte | Mentions et signal de confiance | 🟠 Au moment voulu |
 | Médiateur de la consommation (s'il souscrit) | Obligation légale envers les particuliers | 🟡 Sa décision |
+| Identifiant de sa fiche Google (pour le bouton « Laisser un avis »), puis sa note et ses avis | Section avis (3.6) | 🟠 Avant la mise en ligne |
 | Chiffres clés (nombre de chantiers, m³ déplacés…) | Section « chiffres ». Un chiffre non confirmé n'est pas affiché | 🟡 Optionnel |
 | Photo d'Anthony et quelques mots sur son parcours | Page L'entreprise | 🟡 Optionnel |
 | Communes où il a déjà travaillé | Carte du 66, future page Perpignan | 🟡 Plus tard |
 | Relecture des textes rédigés par Claude | Exactitude des informations | Au fil de l'eau |
 
 ### 7.3 Documents remis au client
-- **Fiche « Mon espace TSR66 »** : se connecter, ajouter une réalisation, demander un avis, que faire en cas de problème, qui contacter.
+- **Fiche « Mon espace TSR66 »** : se connecter, ajouter une réalisation, demander un avis, mettre à jour la note et les avis affichés, que faire en cas de problème, qui contacter.
 - **Plan d'action du référencement hors site** : fiche Google, Bing Places, annuaires, avec les textes à copier-coller. Qui le met en œuvre reste à décider.
