@@ -11,7 +11,9 @@
 - ✅ **Lot 0 clos** (#17 fusionnée le 2026-09-30, `production` reste à 4384cda : une mise en ligne par lot)
 - ➡️ **Lot 1** : tests automatiques des contrôles faits et fusionnés (#18, #19) ; **maquette d'accueil validée par Nicolas le 2026-10-07** (v67, `client/maquettes/accueil-v16`) ; **prochaines étapes : les autres maquettes** (page service, page devis, réalisations, L'entreprise, Espace Anthony) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
 - 🟡 **Suivi des dépendances (décision de Nicolas du 2026-10-07)** : le contrôle bloquant de la CI porte sur ce qui est livré aux visiteurs (`npm audit --omit=dev`). `braces` 3.0.3, utilisé seulement par les outils de développement (chaîne `eslint-config-next`), n'a aucune version corrigée publiée : à revérifier à chaque session (`npm audit`) et à mettre à jour dès qu'un correctif sort, puis remettre le contrôle strict. `source-map-js` corrigé le 2026-10-07 (1.2.2)
-- ⏸ Branche `session/2026-09-30-maquettes` : 3 commits locaux, rien envoyé (F5 attend le « oui » de Nicolas et la CI)
+- ✅ **Next.js 16.3.8 (2026-10-08)** : corrige 7 avis de sécurité de la 16.3.6 ; la 16.4.0 est écartée pour l'instant (publiée le 2026-10-06, changements incompatibles) ; à réévaluer avec les versions majeures en fin de lot
+- ⬜ Avant la mise en ligne (Lot 5) : `netlify.toml` déclare `.next` comme dossier de publication ; vérifier ce que Netlify en publie (gitleaks y repère des identifiants fabriqués par Next.js à chaque compilation, non secrets)
+- ⏸ Branche `session/2026-10-08-next-16-3-8` : 1 commit local (`e9ea568`) + documents de session, rien envoyé (F5 attend le « oui » de Nicolas et la CI)
 ## Lot 0 — Fondations et contrôle
 **Objectif** : la checklist D1 à D7 et F1 à F6 fonctionne entièrement, sur un site encore vide.
 **Actions 👤, à faire en premier, car tout en dépend :**
