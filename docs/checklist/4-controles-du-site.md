@@ -56,6 +56,7 @@
 | C40 | Mentions légales (« Anthony Moreau EI – TSR66 », adresse, SIRET, TVA, directeur de la publication, hébergeur, médiateur s'il est fourni) et politique de confidentialité complètes | 6.4, 6.5 | 👁 | ⬜ | — |
 | C41 | Section avis : étoiles de la note et barres calculées à partir des chiffres saisis (jamais écrites à la main), nombre d'avis affiché à côté de la note, date de mise à jour, aucun avis ni chiffre d'exemple en production, aucune note affichée s'il n'y a aucun avis, pourcentages des barres toujours égaux à 100 %, « Dernier avis il y a N jours » seulement sous 60 jours, source « Avis Google » indiquée, boutons « Laisser un avis » et « Voir tous les avis » absents ou inactifs sans identifiant de fiche | 3.6 | 🤖 | ⬜ | — |
 | C42 | Règles de rédaction : aucun « on » ni « pros », « en moins de 30 min » (jamais « sous 30 »), prénom du dirigeant absent des textes publics (sauf « Anthony Moreau EI – TSR66 »), espaces insécables avant « : ; ? ! % », sigle VRD développé une fois par page, aucune promesse absolue | 4.1 | 🤖 | ⬜ | — |
+| C43 | Page Contact (`/contact`) : formulaire simple (nom, téléphone ou e-mail, message), numéro, adresse complète identique à la fiche Google, horaires, zone d'intervention, bouton de rappel, lien vers la page Devis ; présente dans le menu | 3.2, 1.6 | 👁 | ⬜ | — |
 
 ## Lot 4 — Conversion et e-mails
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |
@@ -64,12 +65,13 @@
 | C51 | Bouton de rappel : texte juste selon l'heure de Paris, les horaires, les jours fériés et l'interrupteur « indisponible », jamais de promesse intenable | 3.4 | 🤖 | ⬜ | — |
 | C52 | Rappel : échéance recalculée par le serveur, même heure à l'écran et dans l'e-mail d'Anthony | 3.4 | 🤖 | ⬜ | — |
 | C53 | Sans JavaScript, le bouton affiche « Être rappelé rapidement » | 3.4 | 🤖 | ⬜ | — |
-| C54 | Anti-spam invisible : champ piège, délai minimum, limite d'envois, vérification du téléphone, sans captcha | 6.3 | 🤖 | ⬜ | — |
+| C54 | Anti-spam invisible sur les formulaires de devis, de rappel et de contact : champ piège, délai minimum, limite d'envois, vérification du téléphone, sans captcha | 6.3 | 🤖 | ⬜ | — |
 | C55 | Le site ne garde aucune donnée personnelle : seul le compteur anonyme est stocké | 6.2 | 🤖 | ⬜ | — |
-| C56 | Compteur anonyme : devis, rappels et clics sur « Appeler », côté serveur, sans cookie | 4.1, 6.2 | 🤖 | ⬜ | — |
+| C56 | Compteur anonyme : devis, rappels, messages de contact et clics sur « Appeler », côté serveur, sans cookie | 4.1, 6.2 | 🤖 | ⬜ | — |
 | C57 | E-mails envoyés depuis `…@tsr66.fr`, « répondre à » vers le Gmail d'Anthony, modèles aux couleurs de TSR66 | 3.5, 4.1 | 👁 | ⬜ | — |
 | C58 | Demande d'avis : envoyée à tous les clients, sans tri ni contrepartie, e-mail du client jamais enregistré | 3.5, 6.2 | 👁 | ⬜ | — |
 | C59 | Clés Resend et Sanity uniquement dans les réglages de Netlify | 6.3 | 🤖 | ⬜ | — |
+| C63 | Contact : e-mail de confirmation à l'expéditeur et e-mail « nouveau message » à Anthony, bien reçus, sans aucune donnée gardée sur le site | 3.4, 3.5, 6.2 | 🤖 | ⬜ | — |
 
 ## Lot 5 — Mise en ligne
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |

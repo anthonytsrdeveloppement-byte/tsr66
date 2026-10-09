@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact, décidée par Nicolas le 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -155,6 +155,7 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 - **Réalisations** : alimentées par Anthony depuis son Espace.
 - **L'entreprise** : Anthony Moreau, son parcours, ses engins.
 - **Devis gratuit** : page `/devis` qui affiche directement le même formulaire en 3 étapes que l'accueil (3.3), avec les trois façons de joindre l'entreprise ; pour les visiteurs qui n'arrivent pas par l'accueil (annonce, SMS).
+- **Contact** : page `/contact` pour les visiteurs qui ont une question sans vouloir de devis. Elle réunit un formulaire simple (nom, téléphone ou e-mail, message), le numéro de téléphone, l'adresse complète (1.6), les horaires, la zone d'intervention, le bouton de rappel et un lien vers la page Devis pour un chantier.
 - **Conseils** : plus tard.
 - **Pages ville**, discrètes et hors menu : une page Perpignan, publiée seulement avec de vrais chantiers sur place.
 - En bas de page : Mentions légales · Confidentialité · Plan du site.
@@ -182,6 +183,8 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
 | **Devis gratuit** | Remplit le formulaire en 3 étapes | E-mail de confirmation au prospect + e-mail « nouvelle demande » à Anthony |
 | **Rappel en moins de 30 min** | Saisit son nom et son téléphone | Message à l'écran avec l'heure limite + e-mail d'alerte distinct à Anthony, numéro cliquable |
 
+**Le message de contact** (page Contact, 3.2) est une quatrième voie, pour une simple question. Il n'entre pas dans les trois portes de conversion ci-dessus, mais suit les mêmes règles : e-mail de confirmation à l'expéditeur et e-mail « nouveau message » à Anthony (3.5), protections invisibles (6.3), aucune donnée gardée sur le site (6.2).
+
 **Règles du bouton de rappel** :
 - Le texte s'adapte à l'heure de Paris, aux horaires d'Anthony, aux jours fériés français et à l'interrupteur « indisponible » : « en moins de 30 min », « demain dès 8h », « lundi dès 8h »…
 - L'échéance est recalculée par le serveur au moment de l'envoi. L'écran du prospect et l'e-mail d'Anthony affichent la même heure.
@@ -194,6 +197,8 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
 | Confirmation de demande de devis | Prospect |
 | Nouvelle demande de devis | Anthony |
 | Alerte « à rappeler avant HH:MM » | Anthony |
+| Confirmation de message de contact | Expéditeur |
+| Nouveau message de contact | Anthony |
 | Demande d'avis Google | Client, déclenchée depuis l'Espace Anthony |
 
 Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et sans contrepartie (règle Google).
@@ -240,7 +245,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **E-mails** : envoyés depuis `…@tsr66.fr` (domaine confirmé dans Resend). La réception, le « répondre à » et l'adresse affichée sont le Gmail d'Anthony (t.s.r.66moreau@gmail.com).
 - **Robots des IA autorisés**, le GEO étant une priorité : ChatGPT, Perplexity, Claude, Google IA, Bing…
 - **Rédaction** : Claude rédige tous les textes, avec une optimisation SEO/GEO subtile et un ton professionnel, sans répéter les mots-clés à outrance. Relecture et corrections ensuite. **Aucun fait inventé** : ce qui n'est pas confirmé est marqué « à confirmer ».
-- **Mesure** : Google Search Console, Bing Webmaster Tools, statistiques de la fiche Google, compteur interne des conversions : demandes de devis, demandes de rappel et clics sur « Appeler », côté serveur, sans cookie ni donnée personnelle.
+- **Mesure** : Google Search Console, Bing Webmaster Tools, statistiques de la fiche Google, compteur interne des conversions : demandes de devis, demandes de rappel, messages de contact et clics sur « Appeler », côté serveur, sans cookie ni donnée personnelle.
 - **Règles de rédaction** (décidées avec Nicolas le 2026-10-07, après l'audit des textes de la maquette) :
   - **Voix** : l'entreprise parle toujours au pluriel (« nous », « notre », « nos », « TSR66 »), jamais en « on » ni à la troisième personne ; le visiteur est vouvoyé. Le prénom du dirigeant n'apparaît que dans la mention légale « Anthony Moreau EI – TSR66 ». Dans le menu des services, la situation est écrite à la première personne côté visiteur (« Je dois démolir ») : c'est voulu.
   - **Vocabulaire** : les sept services s'écrivent toujours « Terrassement », « Assainissement », « Viabilisation / VRD », « Travaux forestiers », « Aménagement extérieur », « Démolition » et « Enrochement / murs ». Le visiteur a un « projet », l'entreprise réalise des « chantiers » et des « travaux ». On écrit « devis gratuit », « être rappelé », « en moins de 30 min » (jamais « sous 30 min »), « professionnels » (jamais « pros »), « à 15 minutes de Perpignan ». Le sigle VRD est développé une fois par page (« voirie et réseaux divers »).
@@ -328,9 +333,9 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d
 
 ### 6.2 Données personnelles (RGPD)
 - **Le site ne garde aucune donnée personnelle.**
-  - Les demandes partent par e-mail dans le Gmail d'Anthony.
+  - Les demandes et les messages de contact partent par e-mail dans le Gmail d'Anthony.
   - Resend efface son historique au bout de 30 jours.
-  - Seul un compteur anonyme est conservé : nombre de devis, de rappels et de clics sur « Appeler ».
+  - Seul un compteur anonyme est conservé : nombre de devis, de rappels, de messages de contact et de clics sur « Appeler ».
   - L'e-mail d'un client à qui on demande un avis est envoyé directement par le site et n'est jamais enregistré, ni sur le site ni dans Sanity.
 - **Avis affichés** : seul le prénom et l'initiale du nom, la commune et le texte d'avis déjà publics sur Google sont enregistrés dans Sanity. Un avis retiré par son auteur ou par Google est retiré du site sur demande.
 - **Durée de conservation annoncée** : 3 ans après le dernier contact (règle CNIL pour les prospects).
@@ -342,7 +347,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d
 
 ### 6.3 Sécurité
 - Checklist D1 à D7, F1 à F6, fin de lot et registre des contrôles du site (section 2.3, dossier `docs/checklist/`).
-- **Formulaires** : protections invisibles (champ piège, délai minimum, limite d'envois, vérification du téléphone), sans captcha.
+- **Formulaires** (devis, rappel et contact) : protections invisibles (champ piège, délai minimum, limite d'envois, vérification du téléphone), sans captcha.
 - **En-têtes de sécurité** : le navigateur n'exécute que le code de TSR66, le site ne peut pas être intégré dans une autre page, et la connexion est toujours chiffrée (HTTPS).
 - **Connexion à l'Espace Anthony** avec son compte Google et la double authentification, réservée aux adresses autorisées. En cas de perte, de vol ou de panne, Nicolas coupe ou réactive l'accès.
 - **Clés secrètes** (Resend, Sanity) uniquement dans les réglages de Netlify.
