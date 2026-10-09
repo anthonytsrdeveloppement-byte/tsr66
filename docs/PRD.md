@@ -276,7 +276,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 - **Réponse d'abord** : chaque section commence par une réponse claire en une ou deux phrases, puis détaille.
 - **Structure d'une page service** : réponse d'abord, introduction qui situe le projet et la zone, prestations détaillées, un bloc propre au service (par exemple « Avant le premier coup de pelle » pour le terrassement, « Quelle solution pour votre terrain ? » pour l'assainissement, « Les réseaux de votre terrain » pour la viabilisation), les cas fréquents, les chantiers réalisés, les questions fréquentes, des liens vers les sources officielles. La méthode reste sur l'accueil seulement.
 - **Questions fréquentes réelles** sur chaque page service.
-- **Accueil** : titres de sections qui disent leur sujet, courte introduction, les 7 services présentés avec un lien vers leur page et une phrase chacun. L'accueil sert à se classer sur le nom de l'entreprise et sur les recherches larges, et à renvoyer vers les pages service, qui se classent sur les recherches précises.
+- **Accueil** : titres de sections qui disent leur sujet et courte introduction dans le paragraphe de la zone ; pas de section dédiée aux 7 services (Nicolas la trouvait trop chargée, 2026-10-09) : les 7 pages sont reliées par le menu Services. L'accueil sert à se classer sur le nom de l'entreprise et sur les recherches larges, et à renvoyer vers les pages service, qui se classent sur les recherches précises.
 - **Réalisations = preuves** : lieu, type de travaux, photos avant/après.
 - **Pages ville uniquement avec de vrais chantiers dans la commune**, jamais de pages copiées-collées.
 - **Nom, adresse et téléphone strictement identiques** sur le site, la fiche Google et partout ailleurs.
