@@ -57,6 +57,7 @@
 | C41 | Section avis : étoiles de la note et barres calculées à partir des chiffres saisis (jamais écrites à la main), nombre d'avis affiché à côté de la note, date de mise à jour, aucun avis ni chiffre d'exemple en production, aucune note affichée s'il n'y a aucun avis, pourcentages des barres toujours égaux à 100 %, « Dernier avis il y a N jours » seulement sous 60 jours, source « Avis Google » indiquée, boutons « Laisser un avis » et « Voir tous les avis » absents ou inactifs sans identifiant de fiche | 3.6 | 🤖 | ⬜ | — |
 | C42 | Règles de rédaction : aucun « on » ni « pros », « en moins de 30 min » (jamais « sous 30 »), prénom du dirigeant absent des textes publics (sauf « Anthony Moreau EI – TSR66 »), espaces insécables avant « : ; ? ! % », sigle VRD développé une fois par page, aucune promesse absolue | 4.1 | 🤖 | ⬜ | — |
 | C43 | Page Contact (`/contact`) : formulaire simple (nom, téléphone ou e-mail, message), numéro, adresse complète identique à la fiche Google, horaires, zone d'intervention, bouton de rappel, lien vers la page Devis ; présente dans le menu | 3.2, 1.6 | 👁 | ⬜ | — |
+| C44 | Menu identique sur toutes les pages : Services (liste des 7), Réalisations, L'entreprise, Contact, puis « Urgence chantier » et « Devis gratuit » ; aucun raccourci de section ; page en cours repérée ; menu téléphone identique | 3.1, 3.2 | 🤖 | ⬜ | — |
 
 ## Lot 4 — Conversion et e-mails
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |

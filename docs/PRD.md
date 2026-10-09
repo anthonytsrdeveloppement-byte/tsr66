@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact, décidée par Nicolas le 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -147,6 +147,8 @@ Les fiches D, F et L ne changent que sur décision de Nicolas. Le registre des c
 
 ### 3.1 Principe
 Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au devis ou à l'appel. Les boutons « Appeler » et « Devis gratuit » sont toujours visibles, dans l'en-tête sur ordinateur et dans une barre fixée en bas de l'écran sur mobile, avec le même style et le même texte partout.
+
+**Menu** (décidé par Nicolas le 2026-10-09) : le même sur toutes les pages. Il contient **Services** (liste déroulante des 7 services, chacun avec sa phrase côté visiteur, « Je construis ma maison »…), **Réalisations**, **L'entreprise** et **Contact** ; à droite, « Urgence chantier » avec le numéro et « Devis gratuit ». Il ne contient aucun raccourci vers une section d'une page : sur l'accueil, les sections se parcourent en défilant. La page en cours est repérée dans la liste des services, et le menu téléphone reprend la même liste.
 
 ### 3.2 Plan du site
 **Partie publique**

@@ -54,14 +54,14 @@
   - ⬜ **Page Contact** (`/contact`, décidée par Nicolas le 2026-10-09 : une question sans devis ; formulaire simple, numéro, adresse complète, horaires, zone, rappel, lien vers le devis) avec **le logo en arrière-plan** (demande de Nicolas du 2026-10-09, confirmée)
   - ⬜ **Page réalisations**, puis **page L'entreprise**
   - ⬜ **Espace Anthony** (portail privé pour téléphone), maquette à part
-  - Éléments communs déjà faits et à reprendre tels quels : en-tête, barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
+  - Éléments communs déjà faits et à reprendre tels quels : en-tête avec le menu commun (v69), barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)
 - ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
 
 ### Décisions attendues de Nicolas (écarts entre le PRD et la maquette d'accueil validée, 2026-10-07)
-- Menu commun à toutes les pages (proposé le 2026-10-09, `client/maquettes/service-v3`) : Services (liste des 7 services) · Réalisations · L'entreprise · Contact, avec « Urgence chantier » et « Devis gratuit ». Les raccourcis Méthode, Avis et Zone quittent le menu ; option : garder un lien « Avis ». À valider, puis à appliquer à la maquette d'accueil ; le PRD ne décrit pas encore le menu.
+- ✅ Menu commun à toutes les pages : **validé par Nicolas le 2026-10-09**, appliqué à la maquette d'accueil (v69) et à la page service, écrit dans le PRD 3.1 (pas de lien « Avis », choix de Nicolas). Reste le libellé « Urgence chantier » (point suivant).
 - 5.1 : le premier écran est un ciel bleu avec engin détouré (le PRD dit « sections noires : premier écran ») et le rouge sert aussi à des accents d'interface (mot sélectionnable, pastilles) ; adapter le PRD ou la maquette (contrôle C17).
 - 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
 - 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
