@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -37,7 +37,7 @@
 ### 1.5 Indicateurs de réussite à 12 mois
 | Indicateur | Cible |
 |---|---|
-| Contacts (devis + appels) | ≥ 10 par mois |
+| Contacts (devis, appels et messages de contact) | ≥ 10 par mois |
 | Carte Google, secteur Saint-Jean-Lasseille / Aspres | Top 3 |
 | « terrassement Perpignan » | Top 10 |
 | Recherches précises (service + commune) | Top 3 |
@@ -185,7 +185,7 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
 | **Devis gratuit** | Remplit le formulaire en 3 étapes | E-mail de confirmation au prospect + e-mail « nouvelle demande » à Anthony |
 | **Rappel en moins de 30 min** | Saisit son nom et son téléphone | Message à l'écran avec l'heure limite + e-mail d'alerte distinct à Anthony, numéro cliquable |
 
-**Le message de contact** (page Contact, 3.2) est une quatrième voie, pour une simple question. Il n'entre pas dans les trois portes de conversion ci-dessus, mais suit les mêmes règles : e-mail de confirmation à l'expéditeur et e-mail « nouveau message » à Anthony (3.5), protections invisibles (6.3), aucune donnée gardée sur le site (6.2).
+**Le message de contact** (page Contact, 3.2) est une quatrième voie, pour une simple question. Il n'entre pas dans les trois portes de conversion ci-dessus, mais il compte dans l'indicateur « contacts » (1.5) et suit les mêmes règles : e-mail de confirmation à l'expéditeur et e-mail « nouveau message » à Anthony (3.5), protections invisibles (6.3), aucune donnée gardée sur le site (6.2).
 
 **Règles du bouton de rappel** :
 - Le texte s'adapte à l'heure de Paris, aux horaires d'Anthony, aux jours fériés français et à l'interrupteur « indisponible » : « en moins de 30 min », « demain dès 8h », « lundi dès 8h »…
