@@ -58,6 +58,7 @@
 | C42 | Règles de rédaction : aucun « on » ni « pros », « en moins de 30 min » (jamais « sous 30 »), prénom du dirigeant absent des textes publics (sauf « Anthony Moreau EI – TSR66 »), espaces insécables avant « : ; ? ! % », sigle VRD développé une fois par page, aucune promesse absolue | 4.1 | 🤖 | ⬜ | — |
 | C43 | Page Contact (`/contact`) : formulaire simple (nom, téléphone ou e-mail, message), numéro, adresse complète identique à la fiche Google, horaires, zone d'intervention, bouton de rappel, lien vers la page Devis ; présente dans le menu | 3.2, 1.6 | 👁 | ⬜ | — |
 | C44 | Menu identique sur toutes les pages : Services (liste des 7), Réalisations, L'entreprise, Contact, puis « Appeler » avec le numéro et « Devis gratuit » ; aucun raccourci de section ; page en cours repérée ; menu téléphone identique | 3.1, 3.2 | 🤖 | ⬜ | — |
+| C45 | Textes développés des pages service et de l'accueil : une page par service (aucune page par commune), communes écrites en phrases et non en listes, aucun prix, délai, matériel ni certification inventé (tout est « à confirmer » ou absent), faits réglementaires (étude de sol, DT et DICT, terres évacuées, SPANC, urbanisme, débroussaillement, amiante) conformes aux sources officielles et relus, liens vers les sources officielles, titre et description uniques par page | 4.1, 4.3 | 👁 | ⬜ | — |
 
 ## Lot 4 — Conversion et e-mails
 | N° | Ce qu'on contrôle | PRD | Type | État | Dernière vérification |

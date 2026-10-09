@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -253,6 +253,13 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
   - **Vocabulaire** : les sept services s'écrivent toujours « Terrassement », « Assainissement », « Viabilisation / VRD », « Travaux forestiers », « Aménagement extérieur », « Démolition » et « Enrochement / murs ». Le visiteur a un « projet », l'entreprise réalise des « chantiers » et des « travaux ». On écrit « devis gratuit », « être rappelé », « en moins de 30 min » (jamais « sous 30 min »), « professionnels » (jamais « pros »), « à 15 minutes de Perpignan ». Le sigle VRD est développé une fois par page (« voirie et réseaux divers »).
   - **Typographie française** : espace insécable avant « : ; ? ! % » et à l'intérieur des guillemets « », apostrophe typographique ’ partout, numéros de téléphone insécables (06 26 57 15 21), heures écrites « 9 h 30 ».
   - **Promesses prudentes** : pas de promesse absolue (« toujours », « aucune surprise », « aux normes », « tiennent dans le temps »). La conformité d'un assainissement individuel est un avis du SPANC ; le raccordement au réseau public relève des concessionnaires ; la constructibilité d'un terrain relève de l'urbanisme, pas de la viabilisation.
+  - **Règles de fond du référencement des textes** (décidées avec Nicolas le 2026-10-09, après lecture de la documentation officielle de Google) :
+    - **Pas de longueur cible** : Google n'en fixe aucune. Chaque page est aussi développée que nécessaire pour répondre vraiment aux questions de la personne qui cherche, avec des textes utiles et propres au service, jamais du remplissage.
+    - **Une seule page par service**, pas de page par commune. Les communes (Perpignan, Thuir, Le Boulou, les Aspres, le Roussillon, le Vallespir) apparaissent dans des phrases naturelles, jamais en liste ni répétées pour le mot-clé : Google sanctionne les pages locales quasi identiques et le bourrage de villes.
+    - **Expérience réelle et auteur identifié** : les textes s'appuient sur les vrais chantiers et les mots d'Anthony, l'entreprise est clairement identifiée (nom, SIRET, adresse, téléphone).
+    - **Faits réglementaires exacts, sourcés et relus** : étude de sol, déclaration des réseaux (DT et DICT), sort des terres évacuées, SPANC, urbanisme, débroussaillement, diagnostic amiante. Seules des sources officielles font foi ; chaque affirmation est relue avant la mise en ligne et la page renvoie vers les sites officiels (Géorisques, guichet unique des réseaux, service-public).
+    - **Jamais de prix, de délai, de matériel ou de certification inventés** : tout ce que seul Anthony peut dire est marqué « à confirmer ». Le devis détaille les postes ; les textes expliquent ce qui fait varier le prix et la durée, sans chiffre.
+    - **Les questions fréquentes** (accordéons) sont acceptées par Google, à condition que le texte soit lisible sans JavaScript (4.2).
   - **Un texte d'exemple n'est jamais publié** : chiffres, avis, communes et crédits d'exemple sont remplacés ou retirés avant la mise en ligne.
 
 ### 4.2 Fondations techniques (mises en place par Claude)
@@ -267,7 +274,9 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 
 ### 4.3 Règles de contenu
 - **Réponse d'abord** : chaque section commence par une réponse claire en une ou deux phrases, puis détaille.
+- **Structure d'une page service** : réponse d'abord, introduction qui situe le projet et la zone, prestations détaillées, un bloc propre au service (par exemple « Avant le premier coup de pelle » pour le terrassement, « Quelle solution pour votre terrain ? » pour l'assainissement, « Les réseaux de votre terrain » pour la viabilisation), les cas fréquents, les chantiers réalisés, les questions fréquentes, des liens vers les sources officielles. La méthode reste sur l'accueil seulement.
 - **Questions fréquentes réelles** sur chaque page service.
+- **Accueil** : titres de sections qui disent leur sujet, courte introduction, les 7 services présentés avec un lien vers leur page et une phrase chacun. L'accueil sert à se classer sur le nom de l'entreprise et sur les recherches larges, et à renvoyer vers les pages service, qui se classent sur les recherches précises.
 - **Réalisations = preuves** : lieu, type de travaux, photos avant/après.
 - **Pages ville uniquement avec de vrais chantiers dans la commune**, jamais de pages copiées-collées.
 - **Nom, adresse et téléphone strictement identiques** sur le site, la fiche Google et partout ailleurs.
