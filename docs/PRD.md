@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -296,6 +296,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
   - **fond clair dominant**, lisible sur un téléphone en plein soleil ;
   - **sections noires** aux moments forts : premier écran, méthode, chiffres ;
   - **rouge TSR66 réservé aux boutons de conversion**.
+- **Pictogrammes** (validés par Nicolas le 2026-10-09) : dessinés pour TSR66, pleins et anguleux, aux angles coupés comme les lettres du logo, jamais d'icônes génériques en cercle ; blancs sur fond sombre, noirs sur fond clair. Premiers dessins : personne casquée (un seul interlocuteur), devis validé, repère de lieu.
 - **Choix final sur maquettes** : 2 ou 3 maquettes visuelles avec le vrai logo, regardées sur téléphone et sur ordinateur.
 - **Logo** : fichier d'origine vectoriel à demander au client. À défaut, il est redessiné avec son accord.
 
