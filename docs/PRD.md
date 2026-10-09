@@ -148,7 +148,7 @@ Les fiches D, F et L ne changent que sur décision de Nicolas. Le registre des c
 ### 3.1 Principe
 Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au devis ou à l'appel. Les boutons « Appeler » et « Devis gratuit » sont toujours visibles, dans l'en-tête sur ordinateur et dans une barre fixée en bas de l'écran sur mobile, avec le même style et le même texte partout.
 
-**Menu** (décidé par Nicolas le 2026-10-09) : le même sur toutes les pages. Il contient **Services** (liste déroulante des 7 services, chacun avec sa phrase côté visiteur, « Je construis ma maison »…), **Réalisations**, **L'entreprise** et **Contact** ; à droite, « Urgence chantier » avec le numéro et « Devis gratuit ». Il ne contient aucun raccourci vers une section d'une page : sur l'accueil, les sections se parcourent en défilant. La page en cours est repérée dans la liste des services, et le menu téléphone reprend la même liste.
+**Menu** (décidé par Nicolas le 2026-10-09) : le même sur toutes les pages. Il contient **Services** (liste déroulante des 7 services, chacun avec sa phrase côté visiteur, « Je construis ma maison »…), **Réalisations**, **L'entreprise** et **Contact** ; à droite, « Appeler » avec le numéro et « Devis gratuit » (le mot « Urgence » est abandonné : il pouvait laisser croire à une disponibilité 24 h/24). Il ne contient aucun raccourci vers une section d'une page : sur l'accueil, les sections se parcourent en défilant. La page en cours est repérée dans la liste des services, et le menu téléphone reprend la même liste.
 
 ### 3.2 Plan du site
 **Partie publique**

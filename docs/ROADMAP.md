@@ -61,9 +61,9 @@
 - ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
 
 ### Décisions attendues de Nicolas (écarts entre le PRD et la maquette d'accueil validée, 2026-10-07)
-- ✅ Menu commun à toutes les pages : **validé par Nicolas le 2026-10-09**, appliqué à la maquette d'accueil (v69) et à la page service, écrit dans le PRD 3.1 (pas de lien « Avis », choix de Nicolas). Reste le libellé « Urgence chantier » (point suivant).
+- ✅ Menu commun à toutes les pages : **validé par Nicolas le 2026-10-09**, appliqué à la maquette d'accueil (v69) et à la page service, écrit dans le PRD 3.1 (pas de lien « Avis », choix de Nicolas). Le bouton d'en-tête dit « Appeler » avec le numéro (décision de Nicolas du 2026-10-09).
 - 5.1 : le premier écran est un ciel bleu avec engin détouré (le PRD dit « sections noires : premier écran ») et le rouge sert aussi à des accents d'interface (mot sélectionnable, pastilles) ; adapter le PRD ou la maquette (contrôle C17).
-- 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
+- ✅ 3.1 et 3.4 : réglé le 2026-10-09 : le bouton d'en-tête dit « Appeler » + numéro, comme la barre mobile et la section finale (contrôle C34).
 - 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
 - 5.4 : « réduire les animations » : la maquette coupe tout (page statique) au lieu de « simples fondus » ; le choix par l'onglet Accessibilité est conservé en plus (contrôle C13).
 - Textes de la maquette à confirmer avec le client : « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…).
