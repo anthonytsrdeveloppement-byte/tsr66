@@ -51,7 +51,7 @@
   - ✅ **Accueil** : maquette animée v66 (`client/maquettes/accueil-v16`), validée par Nicolas le 2026-10-07 ; restent à confirmer avec le client : vrais chiffres, vraies photos et vidéos, communes, licences, identifiant de la fiche Google
   - 🔄 **Page service** (une maquette, modèle des 7 pages) : version 3 en relecture par Nicolas (`client/maquettes/service-v3`) ; premier écran clair, prestations, méthode, chantiers avant/après, « Pourquoi nous », autres services, questions, devis. Reste à valider, puis alignement du PRD 3.2 sur la maquette
   - ⬜ **Page devis** (`/devis`, même formulaire en 3 étapes que l'accueil, petite page)
-  - ⬜ **Page Contact** (`/contact`, décidée par Nicolas le 2026-10-09 : une question sans devis ; formulaire simple, numéro, adresse complète, horaires, zone, rappel, lien vers le devis) avec **le logo en arrière-plan** (demande de Nicolas du 2026-10-09 ; à confirmer : « stockage » entendu comme « contact »)
+  - ⬜ **Page Contact** (`/contact`, décidée par Nicolas le 2026-10-09 : une question sans devis ; formulaire simple, numéro, adresse complète, horaires, zone, rappel, lien vers le devis) avec **le logo en arrière-plan** (demande de Nicolas du 2026-10-09, confirmée)
   - ⬜ **Page réalisations**, puis **page L'entreprise**
   - ⬜ **Espace Anthony** (portail privé pour téléphone), maquette à part
   - Éléments communs déjà faits et à reprendre tels quels : en-tête, barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
