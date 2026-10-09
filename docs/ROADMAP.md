@@ -49,7 +49,7 @@
 - ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
   - ✅ **Accueil** : maquette animée v66 (`client/maquettes/accueil-v16`), validée par Nicolas le 2026-10-07 ; restent à confirmer avec le client : vrais chiffres, vraies photos et vidéos, communes, licences, identifiant de la fiche Google
-  - 🔄 **Page service** (une maquette, modèle des 7 pages) : version 3 en relecture par Nicolas (`client/maquettes/service-v3`) ; premier écran clair, prestations, méthode, chantiers avant/après, « Pourquoi nous », autres services, questions, devis. Reste à valider, puis alignement du PRD 3.2 sur la maquette
+  - 🔄 **Page service** (une maquette, modèle des 7 pages) : version 3 en relecture par Nicolas (`client/maquettes/service-v3`) ; premier écran clair, prestations, chantiers avant/après, « Pourquoi nous », autres services, questions, devis (la méthode reste sur l'accueil seulement : décision de Nicolas du 2026-10-09). Reste à valider, puis alignement du PRD 3.2 sur la maquette
   - ⬜ **Page devis** (`/devis`, même formulaire en 3 étapes que l'accueil, petite page)
   - ⬜ **Page Contact** (`/contact`, décidée par Nicolas le 2026-10-09 : une question sans devis ; formulaire simple, numéro, adresse complète, horaires, zone, rappel, lien vers le devis) avec **le logo en arrière-plan** (demande de Nicolas du 2026-10-09, confirmée)
   - ⬜ **Page réalisations**, puis **page L'entreprise**
