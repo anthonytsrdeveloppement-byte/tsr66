@@ -11,6 +11,7 @@
 - ✅ **Lot 0 clos** (#17 fusionnée le 2026-09-30, `production` reste à 4384cda : une mise en ligne par lot)
 - ➡️ **Lot 1** : tests automatiques des contrôles faits et fusionnés (#18, #19) ; **maquette d'accueil validée par Nicolas le 2026-10-07** (v67, `client/maquettes/accueil-v16`) ; **prochaines étapes : les autres maquettes** (page service, page devis, réalisations, L'entreprise, Espace Anthony) ; 4 dettes 🟡 de tests à solder avant la fin du lot (`docs/DETTES.md`) ; achat de tsr66.fr toujours attendu (👤)
 - 🟡 **Suivi des dépendances (décision de Nicolas du 2026-10-07)** : le contrôle bloquant de la CI porte sur ce qui est livré aux visiteurs (`npm audit --omit=dev`). `braces` 3.0.3, utilisé seulement par les outils de développement (chaîne `eslint-config-next`), n'a aucune version corrigée publiée : à revérifier à chaque session (`npm audit`) et à mettre à jour dès qu'un correctif sort, puis remettre le contrôle strict. `source-map-js` corrigé le 2026-10-07 (1.2.2)
+- 🔴 **Adresse e-mail d'Anthony hors du dépôt (décision de Nicolas du 2026-10-10)** : retirée de l'arbre (PRD 4.1, 6.3 ; contrôle C59 qui refuse toute adresse `@gmail.com` dans un fichier suivi, 4 tests) ; **reste à faire par Nicolas** (Claude n'a pas le droit de réécrire l'historique ni de pousser de force, `.claude/settings.json`) : ① 👤 créer dans Netlify la variable protégée `CONTACT_EMAIL` (secrète, portée construction et serveur) ② 👤 lancer `1-preparer.sh` puis `2-envoyer.sh` (dossier privé `Documents/Sauvegardes-TSR66/purge-adresse-email`, hors dépôt) pour réécrire l'historique GitHub (4 commits concernés, 11 branches) après désactivation temporaire de la protection de `main` et `production` ③ 👤 demander au support GitHub la purge des anciennes versions encore visibles (demandes de fusion, accès par empreinte) ④ Claude : resynchroniser la branche locale sur le nouvel historique, puis F5. **F5 de la session du 2026-10-09 attend cette purge** (un envoi avant afficherait l'adresse dans la demande de fusion). Décision de Nicolas du 2026-10-10 : on laisse en l'état pour le moment ; **échéance : avant le premier envoi sur GitHub et au plus tard avant la mise en ligne du Lot 5** (zéro point ouvert, PRD 2.2).
 - ✅ **Next.js 16.3.8 (2026-10-08)** : corrige 7 avis de sécurité de la 16.3.6 ; la 16.4.0 est écartée pour l'instant (publiée le 2026-10-06, changements incompatibles) ; à réévaluer avec les versions majeures en fin de lot
 - ⬜ Avant la mise en ligne (Lot 5) : `netlify.toml` déclare `.next` comme dossier de publication ; vérifier ce que Netlify en publie (gitleaks y repère des identifiants fabriqués par Next.js à chaque compilation, non secrets)
 - ⏸ Branche `session/2026-10-08-next-16-3-8` : 1 commit local (`e9ea568`) + documents de session, rien envoyé (F5 attend le « oui » de Nicolas et la CI)
@@ -49,19 +50,24 @@
 - ✅ Tests automatiques des contrôles (2026-09-30, #18) : 220 tests `node:test` sans dépendance (garde, en-têtes et `netlify.toml`, alignement, crochets, étapes de la CI), exigés par la CI (travail « Qualité ») ; faille du témoin gitleaks trouvée et corrigée ; 18 affaiblissements volontaires des contrôles pour vérifier les tests
 - ⬜ 2 ou 3 maquettes avec le vrai logo TSR66 → 👤 choix de Nicolas (PRD 5.1)
   - ✅ **Accueil** : maquette animée v66 (`client/maquettes/accueil-v16`), validée par Nicolas le 2026-10-07 ; restent à confirmer avec le client : vrais chiffres, vraies photos et vidéos, communes, licences, identifiant de la fiche Google
-  - ⬜ **Page service** (une maquette, modèle des 7 pages) : à faire en premier, propositions comparées avant de construire
+  - ✅ **Page service** (une maquette, modèle des 7 pages) : **validée par Nicolas le 2026-10-10**, sous réserve de la relecture du client (rectifications et ajouts à prévoir) ; version 5 (`client/maquettes/service-v4`, la version 3 est conservée) : premier écran, introduction, prestations, bloc propre au service, chantiers avant/après, cas fréquents, « Pourquoi nous », autres services, questions, devis (la méthode reste sur l'accueil seulement : décision de Nicolas du 2026-10-09) ; alignée dans le PRD 3.2
+  - ✅ **Référencement des textes** (2026-10-09) : recherche dans la documentation de Google et les règles du métier, règles écrites dans le PRD 4.1 et 4.3 ; page Terrassement développée (introduction, prestations, « Avant le premier coup de pelle », chantiers types, 9 questions) ; **accueil v71** : titre et description, titres de sections descriptifs, introduction dans le paragraphe de la zone ; la section des 7 services testée en v70 est retirée (trop chargée, décision de Nicolas) ; les 7 pages restent reliées par le menu. À faire : relire chaque fait réglementaire avec le client et compléter avec les mots d'Anthony avant la mise en ligne
+  - ✅ **Les sept pages service maquettées** (2026-10-10, version 5) : Terrassement (`service-v4`), Assainissement, Viabilisation / VRD, Travaux forestiers, Aménagement extérieur, Démolition, Enrochement / murs (`client/maquettes/service-*`), avec textes développés, bloc propre à chaque service, cas fréquents, questions et liens vers les sources officielles ; menu et tuiles reliés. **Modèle validé par Nicolas le 2026-10-10**, écrit dans le PRD 3.2. Reste, avec le client : relecture des faits réglementaires, rectifications et ajouts, vrais chantiers et photos
+  - ✅ **Pictogrammes des cartes « Pourquoi nous »** : **validés par Nicolas le 2026-10-09**, jeu « pleins et anguleux » (personne casquée, devis validé, repère de lieu, dessinés pour TSR66), appliqué aux sept pages service, écrit dans le PRD 5.1
   - ⬜ **Page devis** (`/devis`, même formulaire en 3 étapes que l'accueil, petite page)
+  - ⬜ **Page Contact** (`/contact`, décidée par Nicolas le 2026-10-09 : une question sans devis ; formulaire simple, numéro, adresse complète, horaires, zone, rappel, lien vers le devis) avec **le logo en arrière-plan** (demande de Nicolas du 2026-10-09, confirmée)
   - ⬜ **Page réalisations**, puis **page L'entreprise**
   - ⬜ **Espace Anthony** (portail privé pour téléphone), maquette à part
-  - Éléments communs déjà faits et à reprendre tels quels : en-tête, barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
+  - Éléments communs déjà faits et à reprendre tels quels : en-tête avec le menu commun (v69), barre « Appeler / Devis gratuit » du bas, formulaire de devis centré avec logo, mode sans animations, règles de rédaction (PRD 4.1), images 16/9 sans zoom
 - ⬜ Charte appliquée : clair dominant, sections noires, rouge réservé aux boutons
 - ⬜ Les 14 effets sur une page de démonstration (PRD 5.3)
 - ⬜ Seuils de performance respectés sur mobile (PRD 5.4)
 - ⬜ Après les maquettes, avant la fin du lot : solder les 4 dettes 🟡 des tests (`docs/DETTES.md`)
 
 ### Décisions attendues de Nicolas (écarts entre le PRD et la maquette d'accueil validée, 2026-10-07)
+- ✅ Menu commun à toutes les pages : **validé par Nicolas le 2026-10-09**, appliqué à la maquette d'accueil (v69) et à la page service, écrit dans le PRD 3.1 (pas de lien « Avis », choix de Nicolas). Le bouton d'en-tête dit « Appeler » avec le numéro (décision de Nicolas du 2026-10-09).
 - 5.1 : le premier écran est un ciel bleu avec engin détouré (le PRD dit « sections noires : premier écran ») et le rouge sert aussi à des accents d'interface (mot sélectionnable, pastilles) ; adapter le PRD ou la maquette (contrôle C17).
-- 3.1 et 3.4 : le bouton d'en-tête dit « Urgence chantier » + numéro, la barre mobile « Appeler », la section finale « Appeler le 06… » ; le PRD veut le même texte partout (contrôle C34). Le mot « Urgence » promet-il une disponibilité 24 h/24 ?
+- ✅ 3.1 et 3.4 : réglé le 2026-10-09 : le bouton d'en-tête dit « Appeler » + numéro, comme la barre mobile et la section finale (contrôle C34).
 - 5.3 effet 1 et 5.4 : l'écran d'entrée de la maquette dure au moins 4 s, une fois par session ; le PRD dit moins d'une seconde et « le premier écran n'attend jamais les animations ».
 - 5.4 : « réduire les animations » : la maquette coupe tout (page statique) au lieu de « simples fondus » ; le choix par l'onglet Accessibilité est conservé en plus (contrôle C13).
 - Textes de la maquette à confirmer avec le client : « avec nos propres engins », « nous restons joignables », visite sur place avant devis, mots du grand défilant (noms abrégés « Forestier »…).
@@ -85,19 +91,20 @@ Corrigés dans la maquette v68 : menu mobile, boîte de dialogue du devis, pause
 ## Lot 3 — Pages publiques, SEO et GEO
 **Objectif** : le site complet est consultable en aperçu privé.
 **Utilise** : charte et effets (Lot 1), réalisations et horaires (Lot 2).
-- ⬜ Accueil en landing page, 7 pages service, Réalisations, L'entreprise, Mentions légales, Confidentialité, Plan du site. La page Devis est mise en place, et son formulaire arrive au Lot 4. (PRD 3.2 et 3.3)
+- ⬜ Accueil en landing page, 7 pages service, Réalisations, L'entreprise, Contact, Mentions légales, Confidentialité, Plan du site. Les pages Devis et Contact sont mises en place, et leurs formulaires arrivent au Lot 4. (PRD 3.2 et 3.3)
 - ⬜ Section avis de l'accueil : étoiles et barres calculées à partir de la note saisie, boutons « Laisser un avis » et « Voir tous les avis sur Google », rien affiché s'il n'y a aucun avis (PRD 3.6) → 👤 identifiant de la fiche Google du client
 - ⬜ Rédaction de tous les textes, faits non confirmés marqués « à confirmer » (PRD 4.1) → 👤 relecture
 - ⬜ Données structurées, sitemap automatique (mis à jour à chaque publication depuis l'Espace), robots des IA autorisés, `llms.txt` (PRD 4.2)
 - ⬜ Audit SEO et GEO du site entier : `seo-audit`, `ai-seo`, `seo-local` (PRD 4.2)
 
 ## Lot 4 — Conversion et e-mails
-**Objectif** : les trois portes de conversion et la demande d'avis fonctionnent de bout en bout.
+**Objectif** : les trois portes de conversion, le message de contact et la demande d'avis fonctionnent de bout en bout.
 **Utilise** : domaine tsr66.fr (Lot 0), pages (Lot 3), horaires et indisponibilité (Lot 2).
 - ⬜ tsr66.fr confirmé dans Resend (enregistrements DNS)
 - ⬜ Formulaire de devis en 3 étapes, bouton « Rappel en moins de 30 min » (horaires, jours fériés, indisponibilité) (PRD 3.3 et 3.4)
-- ⬜ Les 4 modèles d'e-mails aux couleurs de TSR66, dont la demande d'avis depuis l'Espace (PRD 3.5)
-- ⬜ Protections anti-spam invisibles, compteur anonyme : devis, rappels, clics sur « Appeler » (PRD 6.3 et 4.1)
+- ⬜ Formulaire de la page Contact (nom, téléphone ou e-mail, message) et ses deux e-mails (PRD 3.2, 3.4 et 3.5)
+- ⬜ Les 6 modèles d'e-mails aux couleurs de TSR66, dont la demande d'avis depuis l'Espace et les deux e-mails de la page Contact (PRD 3.5)
+- ⬜ Protections anti-spam invisibles (devis, rappel, contact), compteur anonyme : devis, rappels, messages de contact, clics sur « Appeler » (PRD 6.3 et 4.1)
 - ⬜ Fiche « Mon espace TSR66 » remise au client, toutes fonctions du portail en place (PRD 7.3)
 
 ## Lot 5 — Mise en ligne

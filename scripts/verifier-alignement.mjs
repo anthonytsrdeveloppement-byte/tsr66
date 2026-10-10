@@ -14,7 +14,15 @@
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
+import {
+  closeSync,
+  constants,
+  existsSync,
+  lstatSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -419,10 +427,50 @@ verifier(
   `version de gitleaks identique (crochets, CI, README) : ${[...new Set(versionsGitleaks)].join(", ")}`
 );
 
+// C59 : aucune adresse e-mail privée (@gmail.com) dans un fichier suivi par git.
+// L'adresse d'Anthony vit uniquement dans la variable protégée CONTACT_EMAIL de
+// Netlify (PRD 4.1 et 6.3). Seuls les noms de fichiers sont affichés, jamais
+// l'adresse trouvée.
+let fichiersAvecAdresse = null;
+try {
+  const suivis = execFileSync("git", ["-C", RACINE, "ls-files", "-z"], {
+    encoding: "utf8",
+  })
+    .split("\0")
+    .filter(Boolean);
+  fichiersAvecAdresse = suivis.filter((f) => {
+    // Un seul accès au fichier : ouverture sans suivre les liens, puis lecture
+    // sur ce descripteur (pas de « vérifier puis lire », donc pas de course).
+    let descripteur;
+    try {
+      descripteur = openSync(
+        join(RACINE, f),
+        constants.O_RDONLY | constants.O_NOFOLLOW
+      );
+      return /[A-Za-z0-9._%+-]+@gmail\.com/i.test(
+        readFileSync(descripteur).toString("latin1")
+      );
+    } catch {
+      return false;
+    } finally {
+      if (descripteur !== undefined) closeSync(descripteur);
+    }
+  });
+} catch {
+  // fichiersAvecAdresse reste null : échec ci-dessous
+}
+verifier(
+  fichiersAvecAdresse !== null && !fichiersAvecAdresse.length,
+  `C59 : aucune adresse @gmail.com dans les fichiers suivis par git${
+    fichiersAvecAdresse === null
+      ? " → git illisible"
+      : suite(fichiersAvecAdresse)
+  }`
+);
+
 // 8. Faits identiques partout
 const FAITS = {
   téléphone: "06 26 57 15 21",
-  "e-mail": "t.s.r.66moreau@gmail.com",
   SIRET: "847 691 672 00012",
   domaine: "tsr66.fr",
   adresse: "11 rue des Macabeus",
