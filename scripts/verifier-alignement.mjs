@@ -14,7 +14,15 @@
 
 import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
-import { existsSync, lstatSync, readFileSync, readdirSync } from "node:fs";
+import {
+  closeSync,
+  constants,
+  existsSync,
+  lstatSync,
+  openSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -431,15 +439,21 @@ try {
     .split("\0")
     .filter(Boolean);
   fichiersAvecAdresse = suivis.filter((f) => {
+    // Un seul accès au fichier : ouverture sans suivre les liens, puis lecture
+    // sur ce descripteur (pas de « vérifier puis lire », donc pas de course).
+    let descripteur;
     try {
-      const chemin = join(RACINE, f);
-      if (!existsSync(chemin) || lstatSync(chemin).isSymbolicLink())
-        return false;
+      descripteur = openSync(
+        join(RACINE, f),
+        constants.O_RDONLY | constants.O_NOFOLLOW
+      );
       return /[A-Za-z0-9._%+-]+@gmail\.com/i.test(
-        readFileSync(chemin).toString("latin1")
+        readFileSync(descripteur).toString("latin1")
       );
     } catch {
       return false;
+    } finally {
+      if (descripteur !== undefined) closeSync(descripteur);
     }
   });
 } catch {
