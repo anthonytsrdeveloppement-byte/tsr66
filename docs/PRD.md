@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 3.2 (page service, 2026-10-10), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 3.2 (page service, 2026-10-10), 6.3 et 4.1 (adresse e-mail en variable protégée, 2026-10-10), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -244,7 +244,7 @@ Une demande d'avis est envoyée à **tous** les clients, sans tri préalable et 
 
 ### 4.1 Décisions
 - **Domaine : tsr66.fr.** Achat en attente de l'accord du client, idéalement au nom de l'entreprise. Protection par tsr66.com : à voir avec le client.
-- **E-mails** : envoyés depuis `…@tsr66.fr` (domaine confirmé dans Resend). La réception, le « répondre à » et l'adresse affichée sont le Gmail d'Anthony (t.s.r.66moreau@gmail.com).
+- **E-mails** : envoyés depuis `…@tsr66.fr` (domaine confirmé dans Resend). La réception, le « répondre à » et l'adresse affichée sont le Gmail d'Anthony, **jamais écrit dans le dépôt** : il est lu dans la variable protégée `CONTACT_EMAIL` de Netlify (6.3), au moment de la fabrication du site et côté serveur.
 - **Robots des IA autorisés**, le GEO étant une priorité : ChatGPT, Perplexity, Claude, Google IA, Bing…
 - **Rédaction** : Claude rédige tous les textes, avec une optimisation SEO/GEO subtile et un ton professionnel, sans répéter les mots-clés à outrance. Relecture et corrections ensuite. **Aucun fait inventé** : ce qui n'est pas confirmé est marqué « à confirmer ».
 - **Mesure** : Google Search Console, Bing Webmaster Tools, statistiques de la fiche Google, compteur interne des conversions : demandes de devis, demandes de rappel, messages de contact et clics sur « Appeler », côté serveur, sans cookie ni donnée personnelle.
@@ -362,7 +362,7 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d
 - **Formulaires** (devis, rappel et contact) : protections invisibles (champ piège, délai minimum, limite d'envois, vérification du téléphone), sans captcha.
 - **En-têtes de sécurité** : le navigateur n'exécute que le code de TSR66, le site ne peut pas être intégré dans une autre page, et la connexion est toujours chiffrée (HTTPS).
 - **Connexion à l'Espace Anthony** avec son compte Google et la double authentification, réservée aux adresses autorisées. En cas de perte, de vol ou de panne, Nicolas coupe ou réactive l'accès.
-- **Clés secrètes** (Resend, Sanity) uniquement dans les réglages de Netlify.
+- **Clés secrètes** (Resend, Sanity) et **adresse e-mail d'Anthony** (variable protégée `CONTACT_EMAIL`, décision de Nicolas du 2026-10-10) uniquement dans les réglages de Netlify : aucune adresse e-mail privée n'est écrite dans le dépôt public, ni dans ses documents, ses tests ou son historique. Le contrôle d'alignement refuse toute adresse `@gmail.com` dans un fichier suivi par git.
 
 ### 6.4 Mentions légales et pages obligatoires
 - **Mentions légales** :

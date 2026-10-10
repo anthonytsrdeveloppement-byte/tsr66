@@ -291,6 +291,47 @@ for (const fichier of [
   });
 }
 
+// 2 bis. Aucune adresse e-mail privée dans les fichiers suivis (C59).
+// Fausse adresse reconstituée à l'exécution : ce fichier, suivi par git, ne doit
+// lui-même contenir aucune adresse @gmail.com complète.
+const FAUX = ["prenom.nom", "gmail.com"].join("@");
+for (const [nom, fichier, contenu] of [
+  ["dans un document existant", "docs/ROADMAP.md", `\nContact : ${FAUX}\n`],
+  ["en majuscules", "docs/ROADMAP.md", `\nContact : ${FAUX.toUpperCase()}\n`],
+  [
+    "dans un nouveau fichier suivi",
+    "scripts/essai.mjs",
+    `export const a = "${FAUX}";\n`,
+  ],
+]) {
+  test(`refus : adresse @gmail.com ${nom} (C59)`, async (t) => {
+    const copie = await copieDuDepot(t);
+    if (fichier === "docs/ROADMAP.md") {
+      writeFileSync(join(copie, fichier), contenu, { flag: "a" });
+    } else {
+      ecrire(copie, fichier, contenu);
+      await git(copie, "add", "-f", fichier);
+    }
+    const resultat = await verifierAlignement(copie);
+    refuse(
+      resultat,
+      `C59 : aucune adresse @gmail.com dans les fichiers suivis par git → ${fichier}`
+    );
+    // L'adresse trouvée n'est jamais recopiée dans la sortie.
+    assert.ok(!/prenom\.nom/i.test(resultat.sortie));
+  });
+}
+
+test("accepte : adresses @tsr66.fr et noreply (C59)", async (t) => {
+  const copie = await copieDuDepot(t);
+  writeFileSync(
+    join(copie, "docs/ROADMAP.md"),
+    "\nenvoyé depuis nom@tsr66.fr, 123+nom@users.noreply.github.com\n",
+    { flag: "a" }
+  );
+  accepte(await verifierAlignement(copie));
+});
+
 test("refus : git illisible (C02 jamais vert à vide)", async (t) => {
   const copie = await copieDuDepot(t, { avecGit: false });
   // git ne cherche pas de dépôt au-dessus de la copie.

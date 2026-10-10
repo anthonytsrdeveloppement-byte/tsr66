@@ -419,10 +419,44 @@ verifier(
   `version de gitleaks identique (crochets, CI, README) : ${[...new Set(versionsGitleaks)].join(", ")}`
 );
 
+// C59 : aucune adresse e-mail privée (@gmail.com) dans un fichier suivi par git.
+// L'adresse d'Anthony vit uniquement dans la variable protégée CONTACT_EMAIL de
+// Netlify (PRD 4.1 et 6.3). Seuls les noms de fichiers sont affichés, jamais
+// l'adresse trouvée.
+let fichiersAvecAdresse = null;
+try {
+  const suivis = execFileSync("git", ["-C", RACINE, "ls-files", "-z"], {
+    encoding: "utf8",
+  })
+    .split("\0")
+    .filter(Boolean);
+  fichiersAvecAdresse = suivis.filter((f) => {
+    try {
+      const chemin = join(RACINE, f);
+      if (!existsSync(chemin) || lstatSync(chemin).isSymbolicLink())
+        return false;
+      return /[A-Za-z0-9._%+-]+@gmail\.com/i.test(
+        readFileSync(chemin).toString("latin1")
+      );
+    } catch {
+      return false;
+    }
+  });
+} catch {
+  // fichiersAvecAdresse reste null : échec ci-dessous
+}
+verifier(
+  fichiersAvecAdresse !== null && !fichiersAvecAdresse.length,
+  `C59 : aucune adresse @gmail.com dans les fichiers suivis par git${
+    fichiersAvecAdresse === null
+      ? " → git illisible"
+      : suite(fichiersAvecAdresse)
+  }`
+);
+
 // 8. Faits identiques partout
 const FAITS = {
   téléphone: "06 26 57 15 21",
-  "e-mail": "t.s.r.66moreau@gmail.com",
   SIRET: "847 691 672 00012",
   domaine: "tsr66.fr",
   adresse: "11 rue des Macabeus",

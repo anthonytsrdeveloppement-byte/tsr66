@@ -72,7 +72,7 @@
 | C56 | Compteur anonyme : devis, rappels, messages de contact et clics sur « Appeler », côté serveur, sans cookie | 4.1, 6.2 | 🤖 | ⬜ | — |
 | C57 | E-mails envoyés depuis `…@tsr66.fr`, « répondre à » vers le Gmail d'Anthony, modèles aux couleurs de TSR66 | 3.5, 4.1 | 👁 | ⬜ | — |
 | C58 | Demande d'avis : envoyée à tous les clients, sans tri ni contrepartie, e-mail du client jamais enregistré | 3.5, 6.2 | 👁 | ⬜ | — |
-| C59 | Clés Resend et Sanity uniquement dans les réglages de Netlify | 6.3 | 🤖 | ⬜ | — |
+| C59 | Clés Resend et Sanity, et adresse e-mail d'Anthony (`CONTACT_EMAIL`), uniquement dans les réglages de Netlify : aucune adresse `@gmail.com` dans un fichier suivi par git (contrôle d'alignement), ni dans l'historique | 6.3, 4.1 | 🤖 | ⬜ | — |
 | C63 | Contact : e-mail de confirmation à l'expéditeur et e-mail « nouveau message » à Anthony, bien reçus, sans aucune donnée gardée sur le site | 3.4, 3.5, 6.2 | 🤖 | ⬜ | — |
 
 ## Lot 5 — Mise en ligne
