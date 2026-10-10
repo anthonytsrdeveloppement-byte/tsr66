@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 3.2 (page service, 2026-10-10), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -153,7 +153,7 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 ### 3.2 Plan du site
 **Partie publique**
 - **Accueil** : landing page, avec le récit animé d'un chantier au scroll.
-- **7 pages service**, chacune avec sa propre URL (`/services/terrassement`, `/services/assainissement`…) et construite comme une mini-landing page : titre, bouton devis en haut, réalisations du service, questions fréquentes.
+- **7 pages service**, chacune avec sa propre URL (`/services/terrassement`, `/services/assainissement`…) et construite comme une mini-landing page, selon la maquette validée par Nicolas le 2026-10-10 (sous réserve de la relecture du client) : premier écran (titre, réponse, boutons « Devis gratuit » et « Appeler »), introduction, prestations détaillées, bloc propre au service, réalisations avant/après, cas fréquents, « Pourquoi nous » (trois cartes aux pictogrammes de 5.1), liens vers les six autres services, questions fréquentes avec liens vers les sources officielles, appel final au devis. La méthode reste sur l'accueil seulement (4.3 pour la rédaction).
 - **Réalisations** : alimentées par Anthony depuis son Espace.
 - **L'entreprise** : Anthony Moreau, son parcours, ses engins.
 - **Devis gratuit** : page `/devis` qui affiche directement le même formulaire en 3 étapes que l'accueil (3.3), avec les trois façons de joindre l'entreprise ; pour les visiteurs qui n'arrivent pas par l'accueil (annonce, SMS).
