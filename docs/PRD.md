@@ -1,6 +1,6 @@
 # PRD — Site vitrine TSR 66
 
-> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 3.2 (page service, 2026-10-10), 6.3 et 4.1 (adresse e-mail en variable protégée, 2026-10-10), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09).
+> **Statut : complet et validé le 2026-09-27** (sections 1 à 7), construit ensemble section par section. Modifié depuis : 2.1 (skills, 2026-09-30), 3.6 (avis Google, 2026-10-06), 4.1 (règles de rédaction, 2026-10-07), 3.2, 3.3, 5.2 et 5.3 (alignées sur la maquette d'accueil validée par Nicolas le 2026-10-07), 3.1, 3.2, 3.4, 3.5, 4.1, 6.2 et 6.3 (page Contact et menu commun, décidés par Nicolas le 2026-10-09), 1.5 (les messages de contact comptent dans les contacts, 2026-10-09), 3.2 (page service, 2026-10-10), 6.3 et 4.1 (adresse e-mail en variable protégée, 2026-10-10), 5.1 (pictogrammes, 2026-10-09), 4.1 et 4.3 (règles de fond du référencement des textes, recherche du 2026-10-09), 3.1, 3.2, 3.3, 5.3 et 7.2 (page Contact, pied de page commun et premier écran de l'accueil, validés par Nicolas le 2026-10-11).
 >
 > **Consigne à chaque session :** après la lecture de ce PRD, exécuter la **checklist de démarrage (`docs/checklist/`, D1 à D7)** et afficher le feu vert ou rouge **avant toute action**. En fin de session, exécuter la **checklist de fin (F1 à F6)**. À tout moment : « contrôle la checklist » ou « contrôle le point N ».
 
@@ -150,6 +150,8 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 
 **Menu** (décidé par Nicolas le 2026-10-09) : le même sur toutes les pages. Il contient **Services** (liste déroulante des 7 services, chacun avec sa phrase côté visiteur, « Je construis ma maison »…), **Réalisations**, **L'entreprise** et **Contact** ; à droite, « Appeler » avec le numéro et « Devis gratuit » (le mot « Urgence » est abandonné : il pouvait laisser croire à une disponibilité 24 h/24). Il ne contient aucun raccourci vers une section d'une page : sur l'accueil, les sections se parcourent en défilant. La page en cours est repérée dans la liste des services, et le menu téléphone reprend la même liste.
 
+**Pied de page** (décidé par Nicolas le 2026-10-11) : le même sur toutes les pages. Grand bloc arrondi gris-brun foncé (anthracite chaud) dont le haut porte un filet rouge, séparé de la photo de l'appel final par un petit vide ; cette photo est moins assombrie que dans la première maquette, pour qu'on distingue les deux blocs. Quatre colonnes : le logo avec le nom de l'entreprise, sa phrase d'activité, le SIRET et la TVA ; la liste des 7 services ; « L'entreprise » (Réalisations, L'entreprise, Contact, Devis gratuit) ; « Nous joindre » (numéro de téléphone en grand, adresse complète, mention « Nous intervenons sur place : pas d'accueil au dépôt »). En bas : Mentions légales · Confidentialité · Plan du site, et les crédits des visuels repliés derrière un lien.
+
 ### 3.2 Plan du site
 **Partie publique**
 - **Accueil** : landing page, avec le récit animé d'un chantier au scroll.
@@ -157,7 +159,7 @@ Un site **premium, mais d'abord un site qui convertit**. Chaque page mène au de
 - **Réalisations** : alimentées par Anthony depuis son Espace.
 - **L'entreprise** : Anthony Moreau, son parcours, ses engins.
 - **Devis gratuit** : page `/devis` qui affiche directement le même formulaire en 3 étapes que l'accueil (3.3), avec les trois façons de joindre l'entreprise ; pour les visiteurs qui n'arrivent pas par l'accueil (annonce, SMS).
-- **Contact** : page `/contact` pour les visiteurs qui ont une question sans vouloir de devis. Elle réunit un formulaire simple (nom, téléphone ou e-mail, message), le numéro de téléphone, l'adresse complète (1.6), les horaires, la zone d'intervention, le bouton de rappel et un lien vers la page Devis pour un chantier.
+- **Contact** : page `/contact` pour les visiteurs qui ont une question sans vouloir de devis, selon la maquette validée par Nicolas le 2026-10-11 (elle remplace le logo en arrière-plan demandé le 2026-10-09 : le fond est maintenant une photo plein écran d'engin). Premier écran : titre « Parlons de votre projet », une phrase, et à droite une carte en verre dépoli avec le numéro de téléphone (bouton « Appeler »), le bouton « Me faire rappeler » (nom, téléphone, créneau facultatif) et le formulaire « Écrivez-nous ». **Quatre champs obligatoires** : nom, téléphone, e-mail et message, marqués d'un astérisque rouge ; le téléphone accepte les espaces, points et tirets, le +33, le 0033 et les numéros internationaux ; une erreur s'affiche sous chaque champ concerné, le visiteur ne perd rien de ce qu'il a saisi, et la confirmation n'apparaît qu'une fois l'envoi réellement réussi. Sous la photo, trois colonnes : l'adresse complète (1.6), la zone d'intervention et « Un chantier à chiffrer ? » avec le bouton « Demander un devis gratuit » vers la page Devis. Les horaires seront affichés quand le client les aura confirmés (7.2).
 - **Conseils** : plus tard.
 - **Pages ville**, discrètes et hors menu : une page Perpignan, publiée seulement avec de vrais chantiers sur place.
 - En bas de page : Mentions légales · Confidentialité · Plan du site.
@@ -176,7 +178,8 @@ Le sitemap se met à jour automatiquement à chaque publication, et Bing est pr�
   1. quel projet ? (texte libre) ;
   2. où ? (la commune) ;
   3. nom, téléphone et e-mail.
-- **Au scroll** : services (phrase « Je veux un devis gratuit pour… » dont le mot change, qui ouvre le devis déjà rempli), pelleteuse, méthode, repères chiffrés, vidéo de chantier, avis, bandeaux défilants, **carte animée du 66** (Saint-Jean-Lasseille au centre, rayon, « à 15 minutes de Perpignan »), FAQ, puis devis. Les réalisations et l'avant/après arrivent avec les vraies photos (Lot 3). Un onglet « Accessibilité » permet de couper les animations.
+- **Aspect du premier écran** (validé par Nicolas le 2026-10-11) : la photo d'un engin en plein écran, sans ciel de couleur unie. La pelleteuse est un calque détouré posé exactement sur la photo, ce qui permet aux mots des services de passer derrière elle (5.3).
+- **Au scroll** : services (phrase « Je veux un devis gratuit pour… » dont le mot change, qui ouvre le devis déjà rempli), pelleteuse, méthode, repères chiffrés, vidéo de chantier, avis, bandeaux défilants, **zone d'intervention en carte animée du 66** (section sombre sur une photo de mini-pelle ; zoom sur Saint-Jean-Lasseille avec ondes, trajet rouge « 15 min » vers Perpignan et six communes en pastilles de verre ; validée par Nicolas le 2026-10-11), FAQ, puis devis. Les réalisations et l'avant/après arrivent avec les vraies photos (Lot 3). Un onglet « Accessibilité » permet de couper les animations.
 
 ### 3.4 Les trois portes d'entrée de la conversion
 | Porte | Ce que fait le prospect | Ce qui se passe |
@@ -306,12 +309,12 @@ L'accueil **raconte un chantier au fil du scroll** : premier écran avec photo d
 ### 5.3 Les 14 effets retenus
 1. Écran d'entrée : logo révélé en moins d'une seconde, à la première visite seulement.
 2. Vidéo de chantier dans une section dédiée (« Sur le terrain ») : une fenêtre qui s'ouvre jusqu'au plein écran au scroll, lue seulement quand elle est visible.
-3. Grand mot qui fait défiler les 7 services derrière la pelle du premier écran.
+3. Bande de mots géants (les 7 services) qui traverse le premier écran au scroll : lettres pleines derrière la pelle, en simple contour devant elle. Pendant ce temps, le fond lointain se floute (le sol et la pelle restent nets) et la photo zoome. En fin de scène, le logo TSR66 apparaît dans une tuile de verre de même forme arrondie que le menu : le verre devient de plus en plus visible mais ne devient jamais plein, avec des reflets et un reflet lent qui la traverse ; elle reste en place un moment avant la suite de la page. La scène dure environ 8 hauteurs d'écran sur ordinateur et 6,5 sur téléphone. Validée par Nicolas le 2026-10-11.
 4. Titres révélés ligne par ligne.
 5. Parallaxe des photos de chantier.
 6. Section épinglée « Comment se déroule votre chantier » : Votre demande → Visite et devis → Réalisation → Remise du chantier, une photo par étape, texte écrit au fil du scroll.
 7. Repères chiffrés : trois chiffres à compteur sur photo en parallaxe (valeurs confirmées par le client, 7.2).
-8. Carte animée du 66 autour de Saint-Jean-Lasseille.
+8. Carte animée du 66 autour de Saint-Jean-Lasseille : section sombre sur photo, contour lumineux, ondes, trajet de 15 minutes vers Perpignan, communes en pastilles de verre (direction A, validée le 2026-10-11).
 9. Pelleteuse de la carte de visite animée en 2D : le bras plonge au fil du scroll.
 10. Bandeaux défilants : services, communes.
 11. Menu qui change de couleur selon la section.
@@ -397,6 +400,7 @@ Obligation légale dès que l'entreprise travaille pour des particuliers. **Ce n
 | Accord pour l'achat de tsr66.fr (et avis sur tsr66.com) | Site, e-mails, référencement | 🔴 Urgent |
 | Horaires d'ouverture | Pilotent le bouton « Rappel en moins de 30 min » | 🔴 Avant la mise en ligne |
 | Photos de chantiers, dont des paires avant/après prises sous le même angle | Réalisations, animations, fiche Google | 🔴 Avant la mise en ligne |
+| Photos d'engin du premier écran de l'accueil et de la page Contact | Images générées avec ChatGPT, qui seront publiées (décision de Nicolas, 2026-10-11) ; les vraies photos de chantiers d'Anthony restent attendues pour les réalisations | 🟡 Optionnel |
 | Vidéo de chantier (engin en action, drone si possible), 10 à 20 s, stable, format paysage | Premier écran de l'accueil | 🟠 Important |
 | Logo en fichier d'origine (SVG, AI, EPS ou PDF) | Netteté sur tous les écrans. Sinon, il est redessiné avec son accord | 🟠 Important |
 | Liste de ses engins | Pages service, page L'entreprise | 🟠 Important |
